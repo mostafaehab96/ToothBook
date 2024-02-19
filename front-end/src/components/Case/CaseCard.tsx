@@ -1,12 +1,16 @@
 import { Card, CardBody, HStack, Heading, Image } from "@chakra-ui/react";
+import { useNavigate } from "react-router";
+import { Case } from "./Case";
 
 interface Props {
   casee: Case;
 }
 
 function CaseCard({ casee }: Props) {
+  const navigate = useNavigate();
+
   return (
-    <Card height="100%">
+    <Card height="100%" onClick={() => navigate(`/case/${casee.id}`)}>
       <Image src={casee.images[casee.id % 2]} />
       <CardBody>
         <HStack marginY={2} justifyContent="space-between">

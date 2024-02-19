@@ -1,4 +1,4 @@
-import { HStack, useColorMode, IconButton } from "@chakra-ui/react";
+import { useColorMode, IconButton } from "@chakra-ui/react";
 import { MdOutlineModeNight } from "react-icons/md";
 
 function ColorModeSwitch() {
@@ -7,7 +7,7 @@ function ColorModeSwitch() {
     <IconButton
       colorScheme="blue"
       aria-label="Search database"
-      icon={<MdOutlineModeNight />}
+      icon={<MdOutlineModeNight size={20} />}
       borderRadius="50%"
       onClick={toggleColorMode}
     />

@@ -1,5 +1,4 @@
 import { Grid, GridItem, HStack } from "@chakra-ui/react";
-import React from "react";
 import NavBar from "../../components/NavBar/NavBar";
 import CasesGrid from "../../components/Cases/CasesGrid";
 import SortSelector from "../../components/Selectors/SortSelector";
@@ -15,7 +14,7 @@ function CasesPage() {
       <GridItem area={"nav"} paddingBottom={8}>
         <NavBar />
       </GridItem>
-      <GridItem area={"main"} marginLeft={7} marginRight={3}>
+      <GridItem area={"main"} marginX={7}>
         <HStack>
           <FilterSelector />
           <SortSelector />
