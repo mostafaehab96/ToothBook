@@ -57,4 +57,4 @@ const patientSchema = new Schema({
   photos: [{ type: String, required: true }],
 });
 
-module.exports = patientSchema;
+module.exports = mongoose.model('Patient', patientSchema);

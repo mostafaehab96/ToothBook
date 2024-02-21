@@ -16,6 +16,25 @@ const userSchema = new Schema({
     type: String,
     required: true,
   },
+  role: {
+    type: String,
+    enum: ['Admin', 'User'],
+    default: 'User',
+  },
+  university: {
+    type: String,
+    required: true,
+  },
+  grade: {
+    type: String,
+    enum: ['Fourth', 'Fifth', 'Graduated'],
+  },
+  casesPerSemester: {
+    type: Number,
+  },
+  contactedPatients: {
+    type: Number,
+  },
   assignedPatients: [{ type: Schema.Types.ObjectId, ref: 'Patient' }],
   createdAt: {
     type: Date,
@@ -30,4 +49,4 @@ const userSchema = new Schema({
   },
 });
 
-module.exports = userSchema;
+module.exports = mongoose.model('User', userSchema);
