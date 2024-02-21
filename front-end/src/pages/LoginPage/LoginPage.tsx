@@ -15,19 +15,17 @@ function LoginPage() {
       </GridItem>
       <GridItem area={"main"} marginLeft={7} marginRight={3} height="88vh">
         <Flex width="100%" align="center" justify="center" paddingBottom={6}>
-          <Box>
-            <Box
-              zIndex={0}
-              filter="auto"
-              blur="4px"
-              background="url(https://picsum.photos/id/1080/200/300) center/cover no-repeat"
-            ></Box>
+          <Box
+            overflow="hidden"
+            // background="url(https://live.staticflickr.com/4490/37835996716_477ab51c7e_b.jpg)"
+            backgroundSize="cover"
+            borderRadius={15}
+            borderWidth={2}
+          >
             <Stack
-              borderRadius={15}
-              borderWidth={2}
               paddingX={10}
               paddingY={3}
-              zIndex={5}
+              // backdropFilter="blur(4px) brightness(140%) "
             >
               <Box width="250px" height="250px">
                 <Image src={Logo} />

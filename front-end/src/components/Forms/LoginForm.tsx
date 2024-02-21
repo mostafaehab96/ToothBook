@@ -7,7 +7,7 @@ import {
   Stack,
 } from "@chakra-ui/react";
 import { FormEvent, KeyboardEvent, useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 
 function LoginForm() {
   const [email, setEmail] = useState<string | null>(null);
@@ -81,10 +81,18 @@ function LoginForm() {
         <Button
           type="submit"
           width="fit-content"
-          isDisabled={isInvalidEmail || isInvalidPassword}
+          isDisabled={
+            email === null ||
+            !email.includes("@") ||
+            password === null ||
+            password === "" ||
+            isInvalidEmail ||
+            isInvalidPassword
+          }
         >
           Login
         </Button>
+        <Link to="/signup">dont't have an account?</Link>
       </Stack>
     </form>
   );

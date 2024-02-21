@@ -3,8 +3,12 @@ import NavBar from "../../components/NavBar/NavBar";
 import CasesGrid from "../../components/Cases/CasesGrid";
 import SortSelector from "../../components/Selectors/SortSelector";
 import FilterSelector from "../../components/Selectors/FilterSelector";
+import { useCases } from "../../../contexts/CasesContext";
+import ErrorAlert from "../../components/Alerts/ErrorAlert";
 
 function CasesPage() {
+  const { error } = useCases();
+
   return (
     <Grid
       templateAreas={{
@@ -15,11 +19,19 @@ function CasesPage() {
         <NavBar />
       </GridItem>
       <GridItem area={"main"} marginX={7}>
-        <HStack>
-          <FilterSelector />
-          <SortSelector />
-        </HStack>
-        <CasesGrid />
+        {error ? (
+          <ErrorAlert
+            title="Connect to network"
+            message="An error occurred while fetching the data. Please check your
+        internet connection and try again later."
+          />
+        ) : (
+          <HStack>
+            <FilterSelector />
+            <SortSelector />
+          </HStack>
+        )}
+        {!error && <CasesGrid />}
       </GridItem>
     </Grid>
   );
