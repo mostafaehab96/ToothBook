@@ -16,6 +16,10 @@ const patientSchema = new Schema({
     enum: ['male', 'female'],
     required: true,
   },
+  address: {
+    type: String,
+    required: true,
+  },
   phoneNumber: {
     type: String,
     required: true,
@@ -28,6 +32,7 @@ const patientSchema = new Schema({
     type: String,
     enum: ['pending', 'contacted', 'treated', 'rejected'],
     required: true,
+    default: 'pending',
   },
   lastInteractionDate: {
     type: Date,
@@ -52,10 +57,10 @@ const patientSchema = new Schema({
     type: Boolean,
     default: false,
   },
-  MedicalCompromised: {
+  MedicalCompromised: [{
     type: String,
-    enum: ['Hypertensive', 'Cardiac', 'Disability', 'Diabetic'],
-  },
+    enum: ['Hypertensive', 'Cardiac', 'Disability', 'Diabetic', 'Other'],
+  }],
   photos: [{ type: String, required: true }],
   department: {
     type: String,
