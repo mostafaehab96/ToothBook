@@ -1,95 +1,12 @@
 import { SimpleGrid } from "@chakra-ui/react";
 import CaseCardContainer from "../Case/CaseCardContainer";
 import CaseCard from "../Case/CaseCard";
-
-const fakeCases: Array<Case> = [
-  {
-    id: 1,
-    name: "Mostaafa Ehab",
-    age: 28,
-    gender: "male",
-    address: "7 London, England",
-    title: "software Engineer",
-    description: "very very sick, needs a doctor right now...🤒💉",
-    images: [
-      "https://dawsondental.ca/wp-content/uploads/2022/01/iStock-1304070687.jpg",
-      "https://wallpapercave.com/wp/wp5765934.jpg",
-    ],
-    phone: "01146260031",
-  },
-  {
-    id: 2,
-    name: "Mostaafa Ehab",
-    age: 28,
-    gender: "male",
-    address: "7 London, England",
-    title: "software Engineer",
-    description: "very very sick, needs a doctor right now...🤒💉",
-    images: [
-      "https://dawsondental.ca/wp-content/uploads/2022/01/iStock-1304070687.jpg",
-      "https://wallpapercave.com/wp/wp5765934.jpg",
-    ],
-    phone: "01146260031",
-  },
-  {
-    id: 3,
-    name: "Mostaafa Ehab",
-    age: 28,
-    gender: "male",
-    address: "7 London, England",
-    title: "software Engineer",
-    description: "very very sick, needs a doctor right now...🤒💉",
-    images: [
-      "https://dawsondental.ca/wp-content/uploads/2022/01/iStock-1304070687.jpg",
-      "https://wallpapercave.com/wp/wp5765934.jpg",
-    ],
-    phone: "01146260031",
-  },
-  {
-    id: 4,
-    name: "Mostaafa Ehab",
-    age: 28,
-    gender: "male",
-    address: "7 London, England",
-    title: "software Engineer",
-    description: "very very sick, needs a doctor right now...🤒💉",
-    images: [
-      "https://dawsondental.ca/wp-content/uploads/2022/01/iStock-1304070687.jpg",
-      "https://wallpapercave.com/wp/wp5765934.jpg",
-    ],
-    phone: "01146260031",
-  },
-  {
-    id: 5,
-    name: "Mostaafa Ehab",
-    age: 28,
-    gender: "male",
-    address: "7 London, England",
-    title: "software Engineer",
-    description: "very very sick, needs a doctor right now...🤒💉",
-    images: [
-      "https://dawsondental.ca/wp-content/uploads/2022/01/iStock-1304070687.jpg",
-      "https://wallpapercave.com/wp/wp5765934.jpg",
-    ],
-    phone: "01146260031",
-  },
-  {
-    id: 6,
-    name: "Mostaafa Ehab",
-    age: 28,
-    gender: "male",
-    address: "7 London, England",
-    title: "software Engineer",
-    description: "very very sick, needs a doctor right now...🤒💉",
-    images: [
-      "https://dawsondental.ca/wp-content/uploads/2022/01/iStock-1304070687.jpg",
-      "https://wallpapercave.com/wp/wp5765934.jpg",
-    ],
-    phone: "01146260031",
-  },
-];
+import { useCases } from "../../../contexts/CasesContext";
+import CaseCardSkeleton from "../Case/CaseCardSkeleton";
 
 function CasesGrid() {
+  const { cases, isLoading } = useCases();
+
   return (
     <SimpleGrid
       columns={{ sm: 1, md: 2, lg: 3, "2xl": 4 }}
@@ -97,11 +14,17 @@ function CasesGrid() {
       justifyContent="center"
       paddingY={8}
     >
-      {fakeCases.map((casee) => (
-        <CaseCardContainer key={casee.id}>
-          <CaseCard key={casee.id} casee={casee} />
-        </CaseCardContainer>
-      ))}
+      {isLoading
+        ? Array.from({ length: 10 }, (_, index) => index + 1).map((s) => (
+            <CaseCardContainer key={s}>
+              <CaseCardSkeleton key={s} />
+            </CaseCardContainer>
+          ))
+        : cases.map((casee) => (
+            <CaseCardContainer key={casee.id}>
+              <CaseCard key={casee.id} casee={casee} />
+            </CaseCardContainer>
+          ))}
     </SimpleGrid>
   );
 }

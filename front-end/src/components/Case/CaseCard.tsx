@@ -1,6 +1,6 @@
 import { Card, CardBody, HStack, Heading, Image } from "@chakra-ui/react";
 import { useNavigate } from "react-router";
-import { Case } from "./Case";
+import Case from "./Case";
 
 interface Props {
   casee: Case;
