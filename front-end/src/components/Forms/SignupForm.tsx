@@ -8,6 +8,7 @@ import {
   SimpleGrid,
   HStack,
 } from "@chakra-ui/react";
+import { useNavigate } from "react-router-dom";
 
 interface FormValues {
   firstName: string;
@@ -18,10 +19,9 @@ interface FormValues {
   age: string;
   grade: string;
 }
+const universities = ["University 1", "University 2", "University 3"];
 
 function SignupForm() {
-  const universities = ["University 1", "University 2", "University 3"];
-
   const initialValues = {
     firstName: "",
     lastName: "",
@@ -33,8 +33,11 @@ function SignupForm() {
     grade: "",
   };
 
+  const navigate = useNavigate();
+
   const handleSubmit = (values: FormValues) => {
     console.log(values);
+    navigate("/login");
   };
 
   return (
