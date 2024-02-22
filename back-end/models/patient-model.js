@@ -16,17 +16,23 @@ const patientSchema = new Schema({
     enum: ['male', 'female'],
     required: true,
   },
-  contactInformation: {
+  address: {
+    type: String,
+    required: true,
+  },
+  phoneNumber: {
     type: String,
     required: true,
   },
   diagnosis: {
     type: String,
+    required: true,
   },
   status: {
     type: String,
     enum: ['pending', 'contacted', 'treated', 'rejected'],
     required: true,
+    default: 'pending',
   },
   lastInteractionDate: {
     type: Date,
@@ -49,12 +55,17 @@ const patientSchema = new Schema({
   },
   isEmergency: {
     type: Boolean,
+    default: false,
   },
-  MedicalCompromised: {
+  MedicalCompromised: [{
     type: String,
-    enum: ['Hypertensive', 'Cardiac', 'Disability', 'Diabetic'],
-  },
+    enum: ['Hypertensive', 'Cardiac', 'Disability', 'Diabetic', 'Other'],
+  }],
   photos: [{ type: String, required: true }],
+  department: {
+    type: String,
+    enum: ['Operative', 'Crown', 'Endo', 'Pedo', 'Surgery', 'Perio', 'Prosthesis'],
+  },
 });
 
 module.exports = mongoose.model('Patient', patientSchema);
