@@ -1,4 +1,5 @@
-const mongoose = require('mongoose');
+const mongoose = require("mongoose");
+const patientStatus = require("../utils/patientStatus");
 
 const { Schema } = mongoose;
 
@@ -13,7 +14,7 @@ const patientSchema = new Schema({
   },
   sex: {
     type: String,
-    enum: ['male', 'female'],
+    enum: ["male", "female"],
     required: true,
   },
   address: {
@@ -30,20 +31,30 @@ const patientSchema = new Schema({
   },
   status: {
     type: String,
-    enum: ['pending', 'contacted', 'treated', 'rejected'],
+    enum: [
+      patientStatus.PENDING,
+      patientStatus.CONTACTED,
+      patientStatus.TREATED,
+      patientStatus.REJECTED,
+    ],
     required: true,
-    default: 'pending',
+    default: "pending",
   },
   lastInteractionDate: {
     type: Date,
   },
   lastInteractionStatus: {
     type: String,
-    enum: ['pending', 'contacted', 'treated', 'rejected'],
+    enum: [
+      patientStatus.PENDING,
+      patientStatus.CONTACTED,
+      patientStatus.TREATED,
+      patientStatus.REJECTED,
+    ],
   },
   assignedTo: {
     type: Schema.Types.ObjectId,
-    ref: 'Student',
+    ref: "Student",
   },
   createdAt: {
     type: Date,
@@ -57,15 +68,25 @@ const patientSchema = new Schema({
     type: Boolean,
     default: false,
   },
-  MedicalCompromised: [{
-    type: String,
-    enum: ['Hypertensive', 'Cardiac', 'Disability', 'Diabetic', 'Other'],
-  }],
+  MedicalCompromised: [
+    {
+      type: String,
+      enum: ["Hypertensive", "Cardiac", "Disability", "Diabetic", "Other"],
+    },
+  ],
   photos: [{ type: String, required: true }],
   department: {
     type: String,
-    enum: ['Operative', 'Crown', 'Endo', 'Pedo', 'Surgery', 'Perio', 'Prosthesis'],
+    enum: [
+      "Operative",
+      "Crown",
+      "Endo",
+      "Pedo",
+      "Surgery",
+      "Perio",
+      "Prosthesis",
+    ],
   },
 });
 
-module.exports = mongoose.model('Patient', patientSchema);
+module.exports = mongoose.model("Patient", patientSchema);
