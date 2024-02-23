@@ -38,7 +38,7 @@ const patientSchema = new Schema({
       patientStatus.REJECTED,
     ],
     required: true,
-    default: "pending",
+    default: patientStatus.PENDING,
   },
   lastInteractionDate: {
     type: Date,

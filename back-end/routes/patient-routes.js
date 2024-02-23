@@ -9,7 +9,7 @@ patientRouter
   .post(PatientController.postPatient);
 
 patientRouter
-  .route("/id")
+  .route("/:id")
   .get(PatientController.getPatientById)
   .patch(PatientController.updatePatient)
   .delete(PatientController.deletePatient);
