@@ -9,6 +9,7 @@ import ProfilePage from "./pages/ProfilePage/ProfilePage";
 import AboutPage from "./pages/AboutPage/AboutPage";
 import { CasesProvider } from "../contexts/CasesContext";
 import { AuthenticationProvider } from "../contexts/AuthenticationContext";
+import AddCasePage from "./pages/AddCasePage/AddCasePage";
 
 function App() {
   return (
@@ -23,6 +24,7 @@ function App() {
             <Route path="cases" element={<CasesPage />} />
             <Route path="case/:id" element={<CasePage />} />
             <Route path="profile" element={<ProfilePage />} />
+            <Route path="addCase" element={<AddCasePage />} />
           </Routes>
         </BrowserRouter>
       </CasesProvider>

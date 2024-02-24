@@ -95,6 +95,7 @@ function CasePage() {
               <PicsViewer
                 images={currentCase?.images || []}
                 isLoading={isLoading}
+                handleRemoveImage={undefined}
               />
             </Stack>
             <Show above="lg">

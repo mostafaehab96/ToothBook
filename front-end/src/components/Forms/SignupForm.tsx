@@ -11,20 +11,19 @@ import {
 import { useNavigate } from "react-router-dom";
 
 interface FormValues {
-  firstName: string;
-  lastName: string;
+  name: string;
   email: string;
   password: string;
   confirmPassword: string;
   age: string;
   grade: string;
+  university: string;
 }
 const universities = ["University 1", "University 2", "University 3"];
 
 function SignupForm() {
   const initialValues = {
-    firstName: "",
-    lastName: "",
+    name: "",
     email: "",
     password: "",
     confirmPassword: "",
@@ -45,12 +44,8 @@ function SignupForm() {
       <Form>
         <SimpleGrid columns={{ base: 1, md: 2, lg: 2 }} spacingX={8}>
           <FormControl mb={4}>
-            <FormLabel htmlFor="firstName">First Name</FormLabel>
-            <Input type="text" id="firstName" name="firstName" />
-          </FormControl>
-          <FormControl mb={4}>
-            <FormLabel htmlFor="lastName">Last Name</FormLabel>
-            <Input type="text" id="lastName" name="lastName" />
+            <FormLabel htmlFor="name">Name</FormLabel>
+            <Input type="text" id="name" name="name" />
           </FormControl>
           <FormControl mb={4}>
             <FormLabel htmlFor="email">Email</FormLabel>
