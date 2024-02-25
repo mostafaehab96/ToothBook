@@ -5,94 +5,91 @@ import {
   FormLabel,
   Input,
   Stack,
+  Text,
 } from "@chakra-ui/react";
-import { FormEvent, KeyboardEvent, useState } from "react";
-import { Link, useNavigate } from "react-router-dom";
+import { Link } from "react-router-dom";
+import { useFormik } from "formik";
+import * as Yup from "yup";
+
+const initialValues = {
+  email: "",
+  password: "",
+};
+
+const validationSchema = Yup.object().shape({
+  password: Yup.string().required("Password is required"),
+  email: Yup.string()
+    .required("Email is required")
+    .email("Invalid email address"),
+});
+
+interface FormValues {
+  email: string;
+  password: string;
+}
 
 function LoginForm() {
-  const [email, setEmail] = useState<string | null>(null);
-  const [emailFocus, setEmailFocus] = useState<boolean>(false);
-  const [passwordFocus, setPasswordFocus] = useState<boolean>(false);
-  const [password, setPassword] = useState<string | null>(null);
-
-  const isInvalidEmail =
-    email !== null && !emailFocus && (email === "" || !email.includes("@"));
-  const isInvalidPassword = !passwordFocus && password === "";
-
-  const navigate = useNavigate();
-
-  function handleEnterClicked(e: KeyboardEvent) {
-    if (e.key === "Enter" && !(isInvalidPassword || isInvalidEmail)) {
-      navigate("/cases");
-    }
-  }
-
-  function handleFormSubmit(e: FormEvent) {
-    e.preventDefault();
-    navigate("/cases");
-  }
+  const formik = useFormik<FormValues>({
+    initialValues,
+    onSubmit: (values) => {
+      alert(JSON.stringify(values, null, 2));
+    },
+    validationSchema: validationSchema,
+    validateOnBlur: true,
+    validateOnMount: true,
+  });
 
   return (
-    <form
-      onSubmit={handleFormSubmit}
-      onKeyDown={(e) => {
-        if (e.key === "Enter") {
-          handleEnterClicked(e);
-        }
-      }}
-    >
+    <form onSubmit={formik.handleSubmit}>
       <Stack spacing={3} align="center">
-        <FormControl isInvalid={isInvalidEmail}>
+        <FormControl
+          isInvalid={formik.touched.email && formik.errors.email !== undefined}
+        >
           <FormLabel>Email</FormLabel>
           <Input
             placeholder="Email"
             type="email"
-            value={email === null ? "" : email}
-            onChange={(e) => setEmail(e.target.value)}
-            onFocusCapture={() => {
-              setEmailFocus(true);
-              if (email == null) setEmail("");
-            }}
-            onBlur={() => setEmailFocus(false)}
+            name="email"
+            id="email"
+            onChange={formik.handleChange}
+            onBlur={formik.handleBlur}
+            value={formik.values.email}
           />
-          {isInvalidEmail && (
-            <FormErrorMessage>Email is required.</FormErrorMessage>
+          {formik.touched.email && formik.errors.email && (
+            <FormErrorMessage style={{ color: "red" }}>
+              {formik.errors.email}
+            </FormErrorMessage>
           )}
         </FormControl>
-        <FormControl isInvalid={isInvalidPassword}>
+        <FormControl
+          isInvalid={
+            formik.touched.password && formik.errors.password !== undefined
+          }
+        >
           <FormLabel>Password</FormLabel>
           <Input
             placeholder="Password"
             type="password"
-            value={password === null ? "" : password}
-            onFocusCapture={() => {
-              setPasswordFocus(true);
-              if (password == null) setPassword("");
-            }}
-            onBlur={() => setPasswordFocus(false)}
-            onChange={(e) => {
-              setPassword(e.target.value);
-            }}
+            id="password"
+            name="password"
+            onChange={formik.handleChange}
+            onBlur={formik.handleBlur}
+            value={formik.values.password}
           />
-          {isInvalidPassword && (
-            <FormErrorMessage>No password entered.</FormErrorMessage>
+          {formik.touched.password && formik.errors.password && (
+            <FormErrorMessage style={{ color: "red" }}>
+              {formik.errors.password}
+            </FormErrorMessage>
           )}
         </FormControl>
-        <Button
-          type="submit"
-          width="fit-content"
-          isDisabled={
-            email === null ||
-            !email.includes("@") ||
-            password === null ||
-            password === "" ||
-            isInvalidEmail ||
-            isInvalidPassword
-          }
-        >
+        <Button type="submit" width="fit-content" isDisabled={!formik.isValid}>
           Login
         </Button>
-        <Link to="/signup">dont't have an account?</Link>
+        <Link to="/signup">
+          <Text textDecoration="underline" fontStyle="italic">
+            dont't have an account?
+          </Text>
+        </Link>
       </Stack>
     </form>
   );

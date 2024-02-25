@@ -119,6 +119,7 @@ function SignupForm() {
             </FormErrorMessage>
           )}
         </FormControl>
+
         <FormControl
           mb={4}
           isInvalid={formik.touched.email && formik.errors.email !== undefined}
@@ -138,6 +139,7 @@ function SignupForm() {
             </FormErrorMessage>
           )}
         </FormControl>
+
         <FormControl
           mb={4}
           isInvalid={
