@@ -1,5 +1,7 @@
 const Patient = require('../models/patient-model');
 const httpStatusText = require('../utils/httpStatusText');
+const {validationResult} = require('express-validator');
+const jSend = require('jsend');
 
 class PatientController {
   static async getAllPatients(req, res) {
@@ -14,11 +16,16 @@ class PatientController {
 
     res.status(200).json({
       status: 'success',
-      data: patients,
+      data: {patients},
     });
   }
 
   static async postPatient(req, res) {
+    const errors = validationResult(req);
+
+    if (!errors.isEmpty()) {
+      return res.status(400).json(jSend.fail(errors));
+    }
     const newPatient = new Patient(req.body);
     await newPatient.save();
     res.status(201).json({
@@ -28,38 +35,33 @@ class PatientController {
   }
 
   static async getPatientById(req, res) {
-    const patientId = req.params.id;
-    const patient = await Patient.findById(patientId);
+    const {id} = req.params;
+    const patient = await Patient.findById(id);
 
     if (!patient) {
-      return res.status(404).json({
-        status: httpStatusText.FAIL,
-        message: 'Patient not found',
-      });
+      return res.status(404).json(jSend.error('Patient not found!'));
     }
 
-    return res.status(200).json({
-      status: 'success',
-      data: { patient },
-    });
+    return res.status(200).json(jSend.success({patient}));
   }
 
   static async updatePatient(req, res) {
-    const { patientId } = req.params;
+    const { id } = req.params;
+    const patient = await Patient.findOne({_id: id});
+    if (!patient) {
+      return res.status(404).json(jSend.error('Patient not found!'));
+    }
     const updateResult = await Patient.updateOne(
-      { _id: patientId },
+      { _id: id },
       { $set: {...req.body} }
     );
-    return res.status(200).json({
-      status: httpStatusText.SUCCESS,
-      data: { updateResult },
-    });
+    return res.status(200).json(jSend.success(updateResult));
   }
 
   static async deletePatient(req, res) {
-    const { patientId } = req.params;
-    await Patient.deleteOne({ _id: patientId });
-    return res.status(200).json({ status: httpStatusText.SUCCESS, data: null });
+    const { id } = req.params;
+    await Patient.deleteOne({ _id: id });
+    return res.status(200).json(jSend.success(null));
   }
 }
 module.exports = PatientController;

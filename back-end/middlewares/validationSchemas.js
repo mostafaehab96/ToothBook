@@ -1,4 +1,5 @@
 const { body } = require('express-validator');
+const departments = require('../utils/departments');
 
 const validateUser = () =>  {
   return [
@@ -18,4 +19,30 @@ const validateUser = () =>  {
   ];
 };
 
-module.exports = validateUser;
+const validatePatient = () => {
+  return [
+    body('name')
+      .notEmpty()
+      .withMessage('Name is required'),
+    body('age')
+      .notEmpty()
+      .isNumeric()
+      .withMessage('Age is required'),
+    body('sex')
+      .notEmpty()
+      .withMessage('Sex is required'),
+    body('address')
+      .notEmpty()
+      .withMessage('Address is required'),
+    body('phoneNumber')
+      .notEmpty()
+      .withMessage('Phone number is required'),
+    body('diagnosis')
+      .notEmpty()
+      .withMessage('Diagnosis is required'),
+    body('department')
+      .notEmpty()
+      .isIn(departments)
+  ];
+};
+module.exports = {validateUser, validatePatient};
