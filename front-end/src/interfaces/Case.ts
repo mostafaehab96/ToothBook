@@ -12,4 +12,5 @@ export default interface Case {
   department: Department;
   isEmergency: boolean;
   isMedicalCompromised: boolean;
+  status: string;
 }
