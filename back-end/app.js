@@ -1,7 +1,6 @@
 const express = require('express');
 const mongoose = require('mongoose');
 const usersRouter = require('./routes/user-routes');
-// eslint-disable-next-line import/no-extraneous-dependencies
 require('dotenv').config();
 
 const url = process.env.MONGO_URL;
