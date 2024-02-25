@@ -1,8 +1,7 @@
 import { Grid, GridItem, HStack } from "@chakra-ui/react";
 import NavBar from "../../components/NavBar/NavBar";
 import CasesGrid from "../../components/Cases/CasesGrid";
-import SortSelector from "../../components/Selectors/SortSelector";
-import FilterSelector from "../../components/Selectors/FilterSelector";
+import FilterSelector from "./FilterSelector";
 import { useCases } from "../../../contexts/CasesContext";
 import ErrorAlert from "../../components/Alerts/ErrorAlert";
 
@@ -28,7 +27,6 @@ function CasesPage() {
         ) : (
           <HStack>
             <FilterSelector />
-            <SortSelector />
           </HStack>
         )}
         {!error && <CasesGrid />}
