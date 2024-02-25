@@ -1,3 +1,5 @@
+import Department from "./Department";
+
 export default interface Case {
   name: string;
   age: number;
@@ -7,5 +9,7 @@ export default interface Case {
   address: string | null;
   phone: string | null;
   images: Array<string>;
-  title: string;
+  department: Department;
+  isEmergency: boolean;
+  isMedicalCompromised: boolean;
 }

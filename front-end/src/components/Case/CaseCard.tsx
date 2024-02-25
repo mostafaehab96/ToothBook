@@ -1,6 +1,14 @@
-import { Card, CardBody, HStack, Heading, Image } from "@chakra-ui/react";
+import {
+  Card,
+  CardBody,
+  HStack,
+  Heading,
+  Image,
+  useColorMode,
+} from "@chakra-ui/react";
 import { useNavigate } from "react-router";
-import Case from "./Case";
+import Case from "../../interfaces/Case";
+import CardIconsList from "./CardIconsList";
 
 interface Props {
   casee: Case;
@@ -8,26 +16,34 @@ interface Props {
 
 function CaseCard({ casee }: Props) {
   const navigate = useNavigate();
+  const { colorMode } = useColorMode();
+  const dynamicDepartmentTextValue =
+    colorMode === "light" ? "#303030" : "#d2d2d2";
 
   return (
     <Card height="100%" onClick={() => navigate(`/case/${casee.id}`)}>
-      <Image src={casee.images[casee.id % 2]} />
+      <Image
+        src={casee.images[casee.id % 2]}
+        height={{ base: "auto", md: "68%", lg: "68%" }}
+      />
       <CardBody>
-        <HStack marginY={2} justifyContent="space-between">
-          <Heading fontSize="2xl">{`name: ${casee.name}`}</Heading>
-          <Heading fontSize="2xl">{`age: ${casee.age}`}</Heading>
-        </HStack>
-        <HStack marginY={2} justifyContent="space-between">
-          <Heading fontSize="xl" color="#aaaaaa">
-            {`brief: ${casee.title}`}
+        <Heading marginY={2} fontSize="2xl">{`${casee.name}`}</Heading>
+        <HStack justify={"space-between"} mt={4}>
+          <Heading
+            fontStyle="italic"
+            marginY={2}
+            fontSize={22}
+            color={dynamicDepartmentTextValue}
+          >
+            # {`${casee.department}`}
           </Heading>
-          <Heading fontSize="xl" color="#aaaaaa">
-            {`gender: ${casee.gender}`}
-          </Heading>
+          <CardIconsList
+            gender={casee.gender}
+            age={casee.age}
+            isEmergency={casee.isEmergency}
+            isMedicalCompromised={casee.isMedicalCompromised}
+          />
         </HStack>
-        <Heading fontSize="xl" color="#aaaaaa">
-          {`description: ${casee.description}`}
-        </Heading>
       </CardBody>
     </Card>
   );

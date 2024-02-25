@@ -12,7 +12,10 @@
         "https://dawsondental.ca/wp-content/uploads/2022/01/iStock-1304070687.jpg",
         "https://wallpapercave.com/wp/wp5765934.jpg"
       ],
-      "phone": "01146260031"
+      "phone": "01146260031",
+      "department": "Operative",
+      "isEmergency": "true",
+      "isMedicalCompromised": "true"
     },
     {
       "id": "2",
@@ -26,7 +29,10 @@
         "https://dawsondental.ca/wp-content/uploads/2022/01/iStock-1304070687.jpg",
         "https://wallpapercave.com/wp/wp5765934.jpg"
       ],
-      "phone": "01146260031"
+      "phone": "01146260031",
+      "department": "Operative",
+      "isEmergency": "true",
+      "isMedicalCompromised": "true"
     },
     {
       "id": "3",
@@ -40,7 +46,10 @@
         "https://dawsondental.ca/wp-content/uploads/2022/01/iStock-1304070687.jpg",
         "https://wallpapercave.com/wp/wp5765934.jpg"
       ],
-      "phone": "01146260031"
+      "phone": "01146260031",
+      "department": "Operative",
+      "isEmergency": "true",
+      "isMedicalCompromised": "true"
     },
     {
       "id": "4",
@@ -54,7 +63,10 @@
         "https://dawsondental.ca/wp-content/uploads/2022/01/iStock-1304070687.jpg",
         "https://wallpapercave.com/wp/wp5765934.jpg"
       ],
-      "phone": "01146260031"
+      "phone": "01146260031",
+      "department": "Operative",
+      "isEmergency": "true",
+      "isMedicalCompromised": "true"
     },
     {
       "id": "5",
@@ -68,7 +80,10 @@
         "https://dawsondental.ca/wp-content/uploads/2022/01/iStock-1304070687.jpg",
         "https://wallpapercave.com/wp/wp5765934.jpg"
       ],
-      "phone": "01146260031"
+      "phone": "01146260031",
+      "department": "Operative",
+      "isEmergency": "true",
+      "isMedicalCompromised": "true"
     },
     {
       "id": "6",
@@ -82,7 +97,10 @@
         "https://dawsondental.ca/wp-content/uploads/2022/01/iStock-1304070687.jpg",
         "https://wallpapercave.com/wp/wp5765934.jpg"
       ],
-      "phone": "01146260031"
+      "phone": "01146260031",
+      "department": "Operative",
+      "isEmergency": "true",
+      "isMedicalCompromised": "true"
     }
   ]
 }

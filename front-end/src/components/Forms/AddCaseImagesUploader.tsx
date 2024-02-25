@@ -1,4 +1,4 @@
-import { Button, HStack, Input, Stack, Text, VStack } from "@chakra-ui/react";
+import { Button, HStack, Input, Text, VStack } from "@chakra-ui/react";
 import { ChangeEvent, useRef, useState } from "react";
 import PicsViewer from "../Case/PicsViewer";
 

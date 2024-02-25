@@ -17,23 +17,8 @@ import {
 } from "@chakra-ui/react";
 import { BsChevronDown } from "react-icons/bs";
 import AddCaseImagesUploader from "./AddCaseImagesUploader";
-
-enum Department {
-  Operative = "Operative",
-  Crown = "Crown",
-  Endo = "Endo",
-  Pedo = "Pedo",
-  Surgery = "Surgery",
-  Perio = "Perio",
-  Prosthesis = "Prosthesis",
-}
-
-enum MedicalCompromises {
-  Hypertensive = "Hypertensive",
-  Cardiac = "Cardiac",
-  Disability = "Disability",
-  Diabitic = "Diabitic",
-}
+import Department from "../../interfaces/Department";
+import MedicalCompromises from "../../interfaces/MedicalCompromises";
 
 interface FormValues {
   name: string;
