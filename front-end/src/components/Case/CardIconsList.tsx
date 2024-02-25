@@ -4,7 +4,7 @@ import { IoMdFemale } from "react-icons/io";
 import { IoIosWarning } from "react-icons/io";
 import { RiAlarmWarningFill } from "react-icons/ri";
 
-const iconSize = "30px";
+const iconSize = "25px";
 
 interface Props {
   gender: string;
@@ -25,7 +25,7 @@ function CardIconsList({
   return (
     <HStack marginY={1}>
       <Badge
-        fontSize={20}
+        fontSize={16}
         paddingX={3}
         paddingY={1}
         borderRadius={8}
