@@ -4,6 +4,13 @@ const router = express.Router();
 const {validateUser} = require('../middlewares/validationSchemas');
 
 
+router.route('/')
+  .get(userController.getAllUsers);
+
+router.route('/:id')
+  .get(userController.getUser);
+
+
 router.route('/register')
   .post(validateUser(), userController.registerUser);
 
