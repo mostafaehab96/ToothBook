@@ -14,7 +14,7 @@ function SignupPage() {
         <NavBar />
       </GridItem>
 
-      <GridItem area={"main"} marginX={7} minHeight="88vh">
+      <GridItem area="main" marginX={7} overflow={"hidden"}>
         <VStack
           width="auto"
           display="relative"
@@ -24,7 +24,9 @@ function SignupPage() {
           <Box width="220px" height="220px" mx="auto" marginBottom={7}>
             <Image src={Logo} />
           </Box>
-          <SignupForm />
+          <Box paddingX={{ base: 0, md: "100px" }}>
+            <SignupForm />
+          </Box>
         </VStack>
       </GridItem>
     </Grid>

@@ -1,14 +1,70 @@
-import { Formik, Form } from "formik";
+import { useFormik } from "formik";
 import {
   FormControl,
   FormLabel,
   Input,
-  Select,
   Button,
   SimpleGrid,
   HStack,
+  Menu,
+  FormErrorMessage,
+  MenuButton,
+  MenuList,
+  MenuItem,
 } from "@chakra-ui/react";
-import { useNavigate } from "react-router-dom";
+import { BsChevronDown } from "react-icons/bs";
+import * as Yup from "yup";
+import { useState } from "react";
+
+// import { useNavigate } from "react-router-dom";
+
+const universities = [
+  "Zakazik University",
+  "Mansoura University",
+  "American University in Cairo (AUC)",
+  "Ain Shams University",
+  "Al-Azhar University",
+  "Alexandria University",
+  "Assiut University",
+  "Aswan University",
+  "Banha University",
+  "Beni-Suef University",
+  "Cairo University",
+  "Damanhour University",
+  "Damietta University",
+];
+const grades = ["3rd", "4th", "graduated"];
+const initialValues = {
+  name: "",
+  email: "",
+  password: "",
+  confirmPassword: "",
+  university: "",
+  age: "",
+  grade: "",
+};
+
+const validationSchema = Yup.object().shape({
+  age: Yup.number().required("Age field is required").integer(),
+  name: Yup.string()
+    .required("Name field is required")
+    .min(4, "Name must be at least 4 characters"),
+  password: Yup.string()
+    .required("Password is required")
+    .min(8, "Password must be at least 8 characters")
+    .matches(
+      /^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[!@#\$%&])[a-zA-Z0-9!@#\$%&]{8,}$/,
+      "Password must include lowercase, uppercase, number, and special character"
+    ),
+  confirmPassword: Yup.string()
+    .required("Confirm password is required")
+    .oneOf([Yup.ref("password"), undefined], "Passwords must match"),
+  email: Yup.string()
+    .required("Email is required")
+    .email("Invalid email address"),
+  grade: Yup.string().required("Grade is required"),
+  university: Yup.string().required("University is required"),
+});
 
 interface FormValues {
   name: string;
@@ -19,82 +75,211 @@ interface FormValues {
   grade: string;
   university: string;
 }
-const universities = ["University 1", "University 2", "University 3"];
 
 function SignupForm() {
-  const initialValues = {
-    name: "",
-    email: "",
-    password: "",
-    confirmPassword: "",
-    university: "",
-    age: "",
-    grade: "",
-  };
+  const formik = useFormik<FormValues>({
+    initialValues,
+    onSubmit: (values) => {
+      alert(JSON.stringify(values, null, 2));
+    },
+    validationSchema: validationSchema,
+    validateOnBlur: true,
+    validateOnMount: true,
+  });
+  const [universityMenuTouched, setUniversityMenuTouched] = useState(false);
+  const [gradeMenuTouched, setGradeMenuTouched] = useState(false);
+  const universityErrorIsShown: boolean =
+    universityMenuTouched && formik.values.university === "";
+  const gradeErrorIsShown: boolean =
+    gradeMenuTouched && formik.values.grade === "";
 
-  const navigate = useNavigate();
-
-  const handleSubmit = (values: FormValues) => {
-    console.log(values);
-    navigate("/login");
-  };
+  function handleMenuItemSelected(fieldName: string, value: string) {
+    formik.setFieldValue(fieldName, value);
+  }
 
   return (
-    <Formik initialValues={initialValues} onSubmit={handleSubmit}>
-      <Form>
-        <SimpleGrid columns={{ base: 1, md: 2, lg: 2 }} spacingX={8}>
-          <FormControl mb={4}>
-            <FormLabel htmlFor="name">Name</FormLabel>
-            <Input type="text" id="name" name="name" />
-          </FormControl>
-          <FormControl mb={4}>
-            <FormLabel htmlFor="email">Email</FormLabel>
-            <Input type="email" id="email" name="email" />
-          </FormControl>
-          <FormControl mb={4}>
-            <FormLabel htmlFor="password">Password</FormLabel>
-            <Input type="password" id="password" name="password" />
-          </FormControl>
-          <FormControl mb={4}>
-            <FormLabel htmlFor="confirmPassword">Confirm Password</FormLabel>
-            <Input
-              type="password"
-              id="confirmPassword"
-              name="confirmPassword"
-            />
-          </FormControl>
-          <FormControl mb={4}>
-            <FormLabel htmlFor="university">University</FormLabel>
-            <Select id="university" name="university">
-              {universities.map((uni) => (
-                <option key={uni} value={uni}>
-                  {uni}
-                </option>
-              ))}
-            </Select>
-          </FormControl>
-          <FormControl mb={4}>
-            <FormLabel htmlFor="age">Age</FormLabel>
-            <Input type="number" id="age" name="age" />
-          </FormControl>
-          <FormControl mb={4}>
-            <FormLabel htmlFor="grade">Grade</FormLabel>
-            <Input type="text" id="grade" name="grade" />
-          </FormControl>
-        </SimpleGrid>
-        <HStack justify="center" marginBottom={5}>
-          <Button
-            paddingX={10}
-            width="fit-content"
-            type="submit"
-            colorScheme="blue"
-            mt={4}
+    <form onSubmit={formik.handleSubmit}>
+      <SimpleGrid columns={{ base: 1, md: 2 }} spacingX={8}>
+        <FormControl
+          mb={4}
+          isInvalid={formik.touched.name && formik.errors.name !== undefined}
+        >
+          <FormLabel htmlFor="name">Name</FormLabel>
+          <Input
+            type="text"
+            id="name"
+            name="name"
+            onChange={formik.handleChange}
+            onBlur={formik.handleBlur}
+            value={formik.values.name}
+          />
+          {formik.touched.name && formik.errors.name && (
+            <FormErrorMessage style={{ color: "red" }}>
+              {formik.errors.name}
+            </FormErrorMessage>
+          )}
+        </FormControl>
+
+        <FormControl
+          mb={4}
+          isInvalid={formik.touched.email && formik.errors.email !== undefined}
+        >
+          <FormLabel htmlFor="email">Email</FormLabel>
+          <Input
+            type="email"
+            id="email"
+            name="email"
+            onChange={formik.handleChange}
+            onBlur={formik.handleBlur}
+            value={formik.values.email}
+          />
+          {formik.touched.email && formik.errors.email && (
+            <FormErrorMessage style={{ color: "red" }}>
+              {formik.errors.email}
+            </FormErrorMessage>
+          )}
+        </FormControl>
+
+        <FormControl
+          mb={4}
+          isInvalid={
+            formik.touched.password && formik.errors.password !== undefined
+          }
+        >
+          <FormLabel htmlFor="password">Password</FormLabel>
+          <Input
+            type="password"
+            id="password"
+            name="password"
+            onChange={formik.handleChange}
+            onBlur={formik.handleBlur}
+            value={formik.values.password}
+          />
+          {formik.touched.password && formik.errors.password && (
+            <FormErrorMessage style={{ color: "red" }}>
+              {formik.errors.password}
+            </FormErrorMessage>
+          )}
+        </FormControl>
+        <FormControl
+          mb={4}
+          isInvalid={
+            formik.touched.confirmPassword &&
+            formik.errors.confirmPassword !== undefined
+          }
+        >
+          <FormLabel htmlFor="confirmPassword">Confirm Password</FormLabel>
+          <Input
+            type="password"
+            id="confirmPassword"
+            name="confirmPassword"
+            onChange={formik.handleChange}
+            onBlur={formik.handleBlur}
+            value={formik.values.confirmPassword}
+          />
+          {formik.touched.confirmPassword && formik.errors.confirmPassword && (
+            <FormErrorMessage style={{ color: "red" }}>
+              {formik.errors.confirmPassword}
+            </FormErrorMessage>
+          )}
+        </FormControl>
+
+        <HStack align="">
+          <FormControl
+            mb={4}
+            isInvalid={formik.touched.age && formik.errors.age !== undefined}
           >
-            Sign Up
-          </Button>
+            <FormLabel htmlFor="age">Age</FormLabel>
+            <Input
+              type="number"
+              id="age"
+              name="age"
+              onChange={formik.handleChange}
+              onBlur={formik.handleBlur}
+              value={formik.values.age}
+            />
+            {formik.touched.age && formik.errors.age && (
+              <FormErrorMessage style={{ color: "red" }}>
+                {formik.errors.age}
+              </FormErrorMessage>
+            )}
+          </FormControl>
+          <FormControl mb={4} isInvalid={gradeErrorIsShown}>
+            <FormLabel>Grade</FormLabel>
+            <Menu onClose={() => setGradeMenuTouched(true)}>
+              <MenuButton
+                borderWidth={gradeErrorIsShown ? 1.5 : 0}
+                borderColor="red"
+                as={Button}
+                rightIcon={<BsChevronDown />}
+                width="100%"
+                textAlign="start"
+              >
+                {formik.values.grade || "Grade:"}
+              </MenuButton>
+              <MenuList>
+                {grades.map((grade) => (
+                  <MenuItem
+                    onClick={() => handleMenuItemSelected("grade", grade)}
+                    key={grade}
+                  >
+                    {grade}
+                  </MenuItem>
+                ))}
+              </MenuList>
+            </Menu>
+            {gradeErrorIsShown && (
+              <FormErrorMessage style={{ color: "red" }}>
+                This field is required.
+              </FormErrorMessage>
+            )}
+          </FormControl>
         </HStack>
-      </Form>
-    </Formik>
+
+        <FormControl mb={4} isInvalid={universityErrorIsShown}>
+          <FormLabel htmlFor="university">University</FormLabel>
+          <Menu onClose={() => setUniversityMenuTouched(true)}>
+            <MenuButton
+              borderWidth={universityErrorIsShown ? 1.5 : 0}
+              borderColor="red"
+              as={Button}
+              rightIcon={<BsChevronDown />}
+              width="100%"
+              textAlign="start"
+            >
+              {formik.values.university || "Select University:"}
+            </MenuButton>
+            <MenuList>
+              {universities.map((uni) => (
+                <MenuItem
+                  onClick={() => handleMenuItemSelected("university", uni)}
+                  key={uni}
+                >
+                  {uni}
+                </MenuItem>
+              ))}
+            </MenuList>
+          </Menu>
+          {universityErrorIsShown && (
+            <FormErrorMessage style={{ color: "red" }}>
+              This field is required.
+            </FormErrorMessage>
+          )}
+        </FormControl>
+      </SimpleGrid>
+      <HStack justify="center" marginBottom={5}>
+        <Button
+          paddingX={10}
+          width="fit-content"
+          type="submit"
+          colorScheme="blue"
+          mt={4}
+          isDisabled={!formik.isValid}
+        >
+          Sign Up
+        </Button>
+      </HStack>
+    </form>
   );
 }
 
