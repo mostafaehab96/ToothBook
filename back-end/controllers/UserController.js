@@ -4,6 +4,7 @@ const User = require('../models/user-model');
 const {validationResult} = require('express-validator');
 const asyncWrapper = require('../middlewares/async-wrapper');
 const createError = require('http-errors');
+const generateJWT = require('../utils/generate-jwt');
 class UserController {
 
   static async getAllUsers (req, res) {
@@ -36,8 +37,9 @@ class UserController {
     const hashedPassword = await bcrypt.hash(password, 10);
     const newUser = User({name, email, password: hashedPassword, university});
 
-    newUser.save();
-    return res.json(jSend.success({user: newUser}));
+    const token = await generateJWT({email: newUser.email, id: newUser._id, role: newUser.role});
+    await newUser.save();
+    return res.json(jSend.success({user: newUser, token}));
   });
 
   static loginUser = asyncWrapper( async (req, res, next) =>  {
@@ -47,12 +49,12 @@ class UserController {
     const user = await User.findOne({email});
     if (!user) return next(createError(404, 'User not found!'));
     if (await bcrypt.compare(password, user.password)) {
-      return res.json(jSend.success({user}));
+      const token = await generateJWT({email: user.email, id: user._id, role: user.role});
+      return res.json(jSend.success({token}));
     }
 
     return next(createError(401, 'Wrong password!'));
   });
-
 
 }
 module.exports = UserController;
