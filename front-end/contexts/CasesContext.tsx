@@ -1,10 +1,13 @@
 import { createContext, useContext, useEffect, useReducer } from "react";
-import Case from "../src/components/Case/Case";
+import Case from "../src/interfaces/Case";
 import React from "react";
 
 const URL = "http://localhost:9000/";
 
 interface ContextType {
+  totalPages: number;
+  currentPage: number;
+  setPage: (n: number) => void;
   cases: Array<Case>;
   isLoading: boolean;
   error: string;
@@ -22,6 +25,9 @@ interface ReducerAction {
 }
 
 const initialState: ContextType = {
+  setPage: () => {},
+  totalPages: 8,
+  currentPage: 1,
   cases: [],
   isLoading: false,
   error: "",
@@ -33,6 +39,8 @@ const CasesContext = createContext(initialState);
 
 function reducer(state: ContextType, action: ReducerAction) {
   switch (action.type) {
+    case "set_page":
+      return { ...state, currentPage: action.payload };
     case "rejected":
       return { ...state, error: action.payload, isLoading: false };
     case "loading":
@@ -54,10 +62,8 @@ function reducer(state: ContextType, action: ReducerAction) {
 }
 
 function CasesProvider({ children }: Props) {
-  const [{ cases, isLoading, error }, dispatch] = useReducer(
-    reducer,
-    initialState
-  );
+  const [{ cases, isLoading, error, currentPage, totalPages }, dispatch] =
+    useReducer(reducer, initialState);
 
   useEffect(function () {
     async function fetchCases() {
@@ -111,14 +117,23 @@ function CasesProvider({ children }: Props) {
     }
   }
 
+  function setPage(pageNumber: number) {
+    if (pageNumber <= totalPages && pageNumber >= 1) {
+      dispatch({ type: "set_page", payload: pageNumber });
+    }
+  }
+
   return (
     <CasesContext.Provider
       value={{
+        totalPages,
+        currentPage,
         cases,
         isLoading,
         error,
         createCase,
         deleteCase,
+        setPage,
       }}
     >
       {children}
