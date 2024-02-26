@@ -1,9 +1,10 @@
 import { Grid, GridItem, HStack } from "@chakra-ui/react";
 import NavBar from "../../components/NavBar/NavBar";
 import CasesGrid from "../../components/Cases/CasesGrid";
-import FilterSelector from "./FilterSelector";
+import FilterSelector from "../../components/Cases/FilterSelector";
 import { useCases } from "../../../contexts/CasesContext";
 import ErrorAlert from "../../components/Alerts/ErrorAlert";
+import PageSelector from "../../components/Cases/PageSelector";
 
 function CasesPage() {
   const { error } = useCases();
@@ -30,6 +31,7 @@ function CasesPage() {
           </HStack>
         )}
         {!error && <CasesGrid />}
+        <PageSelector />
       </GridItem>
     </Grid>
   );

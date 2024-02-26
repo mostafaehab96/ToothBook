@@ -92,6 +92,7 @@ function FilterSelectors() {
     <HStack>
       {Object.keys(filterTypes).map((type) => (
         <FilterSelector
+          key={type}
           filterName={type}
           filters={state[type as keyof Filters]}
           dispatch={dispatch}
