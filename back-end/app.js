@@ -4,6 +4,7 @@ const usersRouter = require('./routes/user-routes');
 const patientRouter = require('./routes/patient-routes');
 const jSend = require('jsend');
 const createError = require('http-errors');
+const cors = require('cors');
 require('dotenv').config();
 
 const url = process.env.MONGO_URL;
@@ -12,6 +13,7 @@ const app = express();
 app.use(express.json());
 app.use('/api/users', usersRouter);
 app.use('/api/patients', patientRouter);
+app.use(cors());
 
 app.all('*', (req, res, next) => {
   const error = createError(404, 'Resource not found error');
