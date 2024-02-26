@@ -1,10 +1,12 @@
 const Patient = require('../models/patient-model');
 const httpStatusText = require('../utils/httpStatusText');
-const {validationResult} = require('express-validator');
+const { validationResult } = require('express-validator');
 const jSend = require('jsend');
+const asyncWrapper = require('../middlewares/async-wrapper');
+
 
 class PatientController {
-  static async getAllPatients(req, res) {
+  static getAllPatients = asyncWrapper(async (req, res) => {
     const { query } = req;
     const limit = query.limit || 15;
     const page = query.page || 1;
@@ -16,11 +18,11 @@ class PatientController {
 
     res.status(200).json({
       status: 'success',
-      data: {patients},
+      data: { patients },
     });
-  }
+  });
 
-  static async postPatient(req, res) {
+  static postPatient = asyncWrapper(async (req, res) => {
     const errors = validationResult(req);
 
     if (!errors.isEmpty()) {
@@ -32,36 +34,37 @@ class PatientController {
       status: httpStatusText.SUCCESS,
       data: { patient: newPatient },
     });
-  }
+  });
 
-  static async getPatientById(req, res) {
-    const {id} = req.params;
+  static getPatientById = asyncWrapper(async (req, res) => {
+    const { id } = req.params;
     const patient = await Patient.findById(id);
 
     if (!patient) {
       return res.status(404).json(jSend.error('Patient not found!'));
     }
 
-    return res.status(200).json(jSend.success({patient}));
-  }
+    return res.status(200).json(jSend.success({ patient }));
+  });
 
-  static async updatePatient(req, res) {
+  static updatePatient = asyncWrapper(async (req, res) => {
     const { id } = req.params;
-    const patient = await Patient.findOne({_id: id});
+    const patient = await Patient.findOne({ _id: id });
     if (!patient) {
       return res.status(404).json(jSend.error('Patient not found!'));
     }
     const updateResult = await Patient.updateOne(
       { _id: id },
-      { $set: {...req.body} }
+      { $set: { ...req.body } }
     );
     return res.status(200).json(jSend.success(updateResult));
-  }
+  });
 
-  static async deletePatient(req, res) {
+  static deletePatient = asyncWrapper(async (req, res) => {
     const { id } = req.params;
     await Patient.deleteOne({ _id: id });
     return res.status(200).json(jSend.success(null));
-  }
+  });
 }
+
 module.exports = PatientController;
