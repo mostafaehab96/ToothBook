@@ -64,5 +64,12 @@ class UserController {
 
     return next(createError(401, 'Wrong password!'));
   });
+
+  static deleteUser = asyncWrapper(async (req, res) => {
+    const { id } = req.params;
+    await User.deleteOne({_id: id});
+    return res.json(jSend.success(null));
+  });
+
 }
 module.exports = UserController;

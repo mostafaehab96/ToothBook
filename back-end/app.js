@@ -11,9 +11,10 @@ const url = process.env.MONGO_URL;
 const port = process.env.PORT;
 const app = express();
 app.use(express.json());
+app.use(cors());
 app.use('/api/users', usersRouter);
 app.use('/api/patients', patientRouter);
-app.use(cors());
+
 
 app.all('*', (req, res, next) => {
   const error = createError(404, 'Resource not found error');
