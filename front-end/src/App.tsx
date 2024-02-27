@@ -1,7 +1,7 @@
 import { Route, Routes, BrowserRouter } from "react-router-dom";
 
 import LoginPage from "./pages/LoginPage/LoginPage";
-import Homepage from "./pages/Homepage/Homepage";
+import LandingPage from "./pages/LandingPage/LandingPage";
 import CasesPage from "./pages/CasesPage/CasesPage";
 import CasePage from "./pages/CasePage/CasePage";
 import SignupPage from "./pages/SignupPage/SignupPage";
@@ -17,10 +17,10 @@ function App() {
       <CasesProvider>
         <BrowserRouter>
           <Routes>
-            <Route path="/" element={<Homepage />} />
+            <Route path="/" element={<LandingPage />} />
             <Route path="about" element={<AboutPage />} />
             <Route path="login" element={<LoginPage />} />
-            <Route path="signup" element={<SignupPage />} />
+            <Route path="register" element={<SignupPage />} />
             <Route path="cases" element={<CasesPage />} />
             <Route path="case/:id" element={<CasePage />} />
             <Route path="profile" element={<ProfilePage />} />

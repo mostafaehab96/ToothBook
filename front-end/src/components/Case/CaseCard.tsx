@@ -9,6 +9,7 @@ import {
 import { useNavigate } from "react-router";
 import Case from "../../interfaces/Case";
 import CardIconsList from "./CardIconsList";
+import placeHolderImage from "../../../public/imagePlaceholder.jpg";
 
 interface Props {
   casee: Case;
@@ -21,9 +22,9 @@ function CaseCard({ casee }: Props) {
     colorMode === "light" ? "#303030" : "#d2d2d2";
 
   return (
-    <Card height="100%" onClick={() => navigate(`/case/${casee.id}`)}>
+    <Card height="100%" onClick={() => navigate(`/case/${casee._id}`)}>
       <Image
-        src={casee.images[casee.id % 2]}
+        src={casee.photos[0] || placeHolderImage}
         height={{ base: "auto", md: "68%", lg: "68%" }}
       />
       <CardBody>
@@ -38,10 +39,10 @@ function CaseCard({ casee }: Props) {
             # {`${casee.department}`}
           </Heading>
           <CardIconsList
-            gender={casee.gender}
+            gender={casee.sex}
             age={casee.age}
             isEmergency={casee.isEmergency}
-            isMedicalCompromised={casee.isMedicalCompromised}
+            isMedicalCompromised={casee.MedicalCompromised.length !== 0}
           />
         </HStack>
       </CardBody>

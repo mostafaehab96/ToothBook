@@ -11,6 +11,7 @@ import {
 import { useState } from "react";
 import { GrPrevious } from "react-icons/gr";
 import { GrNext } from "react-icons/gr";
+import placeHolderImage from "../../../public/placeholder-image.webp";
 
 interface Props {
   images: Array<string> | Array<File>;
@@ -19,7 +20,6 @@ interface Props {
 }
 
 const PicsViewer = ({ images, isLoading, handleRemoveImage }: Props) => {
-  console.log(`renderd with images.len = ${images.length}`);
   const [currentImageIndex, setCurrentImageIndex] = useState(0);
 
   const isArrayOfFiles = (
@@ -96,10 +96,14 @@ const PicsViewer = ({ images, isLoading, handleRemoveImage }: Props) => {
           ) : (
             <Image
               borderRadius={12}
-              src={images[currentImageIndex] as string}
+              src={
+                images.length
+                  ? (images[currentImageIndex] as string)
+                  : placeHolderImage
+              }
               alt={`Image ${currentImageIndex + 1}`}
               className="image"
-              objectFit="contain"
+              objectFit="fill"
               objectPosition="centre"
             />
           )}

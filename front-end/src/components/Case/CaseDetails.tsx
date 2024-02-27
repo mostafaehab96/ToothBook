@@ -6,7 +6,7 @@ interface Props {
   isLoading: boolean;
 }
 
-const displayedProperties = ["name", "age", "gender", "address", "description"];
+const displayedProperties = ["name", "age", "sex", "address", "diagnosis"];
 
 function CaseDetails({ casee, isLoading }: Props) {
   const dynamicGreyTextColor = useColorModeValue("#444444", "#aaaaaa");

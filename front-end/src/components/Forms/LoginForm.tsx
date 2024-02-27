@@ -10,6 +10,7 @@ import {
 import { Link } from "react-router-dom";
 import { useFormik } from "formik";
 import * as Yup from "yup";
+import api_client from "../../Services/api_client";
 
 const initialValues = {
   email: "",
@@ -32,12 +33,29 @@ function LoginForm() {
   const formik = useFormik<FormValues>({
     initialValues,
     onSubmit: (values) => {
-      alert(JSON.stringify(values, null, 2));
+      loginPostRequest(values);
     },
     validationSchema: validationSchema,
     validateOnBlur: true,
     validateOnMount: true,
   });
+
+  async function loginPostRequest(body: FormValues) {
+    console.log(JSON.stringify(body));
+    try {
+      const response = await api_client.post("/users/login", body);
+      console.log(response);
+
+      if (response.data.status !== "success") {
+        throw new Error(`HTTP error! Status: ${response.status}`);
+      }
+
+      const data = response.data;
+      console.log("POST request successful:\n", data);
+    } catch (error) {
+      console.error("Error during POST request:", error);
+    }
+  }
 
   return (
     <form onSubmit={formik.handleSubmit}>
@@ -85,7 +103,7 @@ function LoginForm() {
         <Button type="submit" width="fit-content" isDisabled={!formik.isValid}>
           Login
         </Button>
-        <Link to="/signup">
+        <Link to="/register">
           <Text textDecoration="underline" fontStyle="italic">
             dont't have an account?
           </Text>

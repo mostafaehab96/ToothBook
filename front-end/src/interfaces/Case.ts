@@ -1,16 +1,18 @@
 import Department from "./Department";
 
 export default interface Case {
+  _id: string;
   name: string;
   age: number;
-  id: number;
-  description: string;
-  gender: string;
+  sex: string;
   address: string | null;
-  phone: string | null;
-  images: Array<string>;
-  department: Department;
-  isEmergency: boolean;
-  isMedicalCompromised: boolean;
+  diagnosis: string;
   status: string;
+  phoneNumber: string | null;
+  isEmergency: boolean;
+  photos: Array<string>;
+  MedicalCompromised: string[];
+  department: Department;
+  createdAt: string;
+  updatedAt: string;
 }

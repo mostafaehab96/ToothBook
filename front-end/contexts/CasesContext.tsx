@@ -2,7 +2,7 @@ import { createContext, useContext, useEffect, useReducer } from "react";
 import Case from "../src/interfaces/Case";
 import React from "react";
 
-const URL = "http://localhost:9000/";
+const URL = "http://localhost:4000/api/";
 
 interface ContextType {
   totalPages: number;
@@ -46,6 +46,7 @@ function reducer(state: ContextType, action: ReducerAction) {
     case "loading":
       return { ...state, isLoading: true, error: "" };
     case "case/loaded":
+      console.log(action.payload);
       return { ...state, isLoading: false, currentCase: action.payload };
     case "cases/loaded":
       return { ...state, isLoading: false, cases: action.payload };
@@ -69,9 +70,12 @@ function CasesProvider({ children }: Props) {
     async function fetchCases() {
       dispatch({ type: "loading", payload: undefined });
       try {
-        const res = await fetch(`${URL}cases`);
-        const data = await res.json();
-        dispatch({ type: "cases/loaded", payload: data });
+        const res = await fetch(`${URL}patients?page=1&limit=15`);
+        const jsRes = await res.json();
+        if (jsRes.status === "success") {
+          console.log("fetch success");
+          dispatch({ type: "cases/loaded", payload: jsRes.data.patients });
+        }
       } catch (e) {
         dispatch({
           type: "rejected",

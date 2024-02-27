@@ -21,17 +21,19 @@ function NavBar() {
         />
       </Link>
       <SearchInput />
-      <Link to="/login" className="nav-item">
-        <IconButton
-          colorScheme="blue"
-          aria-label="Profile picture"
-          overflow="hidden"
-          icon={<RiLoginBoxFill size={20} />}
-          borderRadius="50%"
-        />
-      </Link>
-      <ColorModeSwitch />
-      <ProfilePic />
+      <HStack>
+        <Link to="/login" className="nav-item">
+          <IconButton
+            colorScheme="blue"
+            aria-label="Profile picture"
+            overflow="hidden"
+            icon={<RiLoginBoxFill size={20} />}
+            borderRadius="50%"
+          />
+        </Link>
+        <ColorModeSwitch />
+        <ProfilePic />
+      </HStack>
     </HStack>
   );
 }

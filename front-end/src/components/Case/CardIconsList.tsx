@@ -7,18 +7,13 @@ import { RiAlarmWarningFill } from "react-icons/ri";
 const iconSize = "25px";
 
 interface Props {
-  gender: string;
+  sex: string;
   age: number;
   isEmergency: boolean;
   isMedicalCompromised: boolean;
 }
 
-function CardIconsList({
-  gender,
-  age,
-  isEmergency,
-  isMedicalCompromised,
-}: Props) {
+function CardIconsList({ sex, age, isEmergency, isMedicalCompromised }: Props) {
   const { colorMode } = useColorMode();
   const dynamicValue = colorMode === "light" ? "#2a4365" : "#90cdf4";
 
@@ -34,7 +29,7 @@ function CardIconsList({
       >
         {age} y
       </Badge>
-      {gender == "male" ? (
+      {sex == "male" ? (
         <IoMdMale size={iconSize} color={dynamicValue} />
       ) : (
         <IoMdFemale size={iconSize} color={dynamicValue} />

@@ -21,8 +21,8 @@ function CasesGrid() {
             </CaseCardContainer>
           ))
         : cases.map((casee) => (
-            <CaseCardContainer key={casee.id}>
-              <CaseCard key={casee.id} casee={casee} />
+            <CaseCardContainer key={casee._id}>
+              <CaseCard key={casee._id} casee={casee} />
             </CaseCardContainer>
           ))}
     </SimpleGrid>

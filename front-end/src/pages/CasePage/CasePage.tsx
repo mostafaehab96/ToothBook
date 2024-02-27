@@ -5,10 +5,10 @@ import PicsViewer from "../../components/Case/PicsViewer";
 import CaseDetails from "../../components/Case/CaseDetails";
 import Actions from "../../components/Case/Actions";
 import { useEffect, useState } from "react";
-import Case from "../../components/Case/Case";
+import Case from "../../interfaces/Case";
 import ErrorAlert from "../../components/Alerts/ErrorAlert";
 
-const BASE_URL = "http://localhost:9000/";
+const BASE_URL = "http://localhost:4000/api/";
 
 function CasePage() {
   const { id } = useParams();
@@ -19,12 +19,14 @@ function CasePage() {
 
   useEffect(
     function () {
-      async function getCase(id: number) {
+      async function getCase(id: string) {
         setIsLoading(true);
         try {
-          const res = await fetch(`${BASE_URL}cases/${id}`);
-          const data = await res.json();
-          setCurrentCase(data);
+          const res = await fetch(`${BASE_URL}patients/${id}`);
+          const jsRes = await res.json();
+          if (jsRes.status === "success") {
+            setCurrentCase(jsRes.data.patient);
+          }
         } catch (e) {
           console.log(e);
           setError("error happened during fetching case");
@@ -32,7 +34,7 @@ function CasePage() {
           setIsLoading(false);
         }
       }
-      getCase(Number(id));
+      getCase(id as string);
     },
     [id]
   );
@@ -90,17 +92,17 @@ function CasePage() {
             <Stack
               width="100%"
               justify="center"
-              height={{ sm: "auto", md: "auto", lg: "30rem" }}
+              height={{ sm: "auto", md: "auto", lg: "100%" }}
             >
               <PicsViewer
-                images={currentCase?.images || []}
+                images={currentCase?.photos || []}
                 isLoading={isLoading}
                 handleRemoveImage={undefined}
               />
+              <Show above="lg">
+                <Actions />
+              </Show>
             </Stack>
-            <Show above="lg">
-              <Actions />
-            </Show>
           </GridItem>
         </>
       )}
