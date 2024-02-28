@@ -15,7 +15,7 @@ class PatientController {
       .limit(limit)
       .skip(skip);
 
-    const totalCount = patients.length;
+    const totalCount = await Patient.countDocuments(filter);
 
     res.json(jSend.success({patients, totalCount}));
   });
