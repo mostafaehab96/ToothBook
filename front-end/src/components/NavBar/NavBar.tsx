@@ -11,7 +11,7 @@ function NavBar() {
   return (
     <HStack paddingY={2} paddingX={3} spacing={2}>
       <Logo />
-      <Link to="/about" className="nav-item">
+      <Link to="/" className="nav-item">
         <IconButton
           colorScheme="blue"
           aria-label="Profile picture"

@@ -4,9 +4,9 @@ import {
   Image,
   Box,
   Stack,
-  Spinner,
   Button,
   VStack,
+  Skeleton,
 } from "@chakra-ui/react";
 import { useState } from "react";
 import { GrPrevious } from "react-icons/gr";
@@ -51,7 +51,15 @@ const PicsViewer = ({ images, isLoading, handleRemoveImage }: Props) => {
       <Stack justify="center" width="100%">
         <Box borderRadius={12} overflow="hidden">
           {isLoading ? (
-            <Spinner />
+            <Skeleton
+              height={{
+                base: "230px",
+                md: "400px",
+                lg: "280px",
+                xl: "460px",
+                "2xl": "780px",
+              }}
+            />
           ) : isArrayOfFiles(images) ? (
             <VStack
               justify="center"

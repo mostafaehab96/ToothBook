@@ -1,40 +1,67 @@
-import { Spinner, Stack, Text, useColorModeValue } from "@chakra-ui/react";
-import { Case } from "./Case";
+import {
+  Box,
+  GridItem,
+  SimpleGrid,
+  Spinner,
+  Stack,
+  Text,
+  VStack,
+  useColorModeValue,
+} from "@chakra-ui/react";
+import Case from "../../interfaces/Case";
+import toTitleCase from "../../utils/toTitleCase";
 
 interface Props {
   casee: Case | null;
-  isLoading: boolean;
 }
 
-const displayedProperties = ["name", "age", "sex", "address", "diagnosis"];
+const displayedProperties = [
+  "name",
+  "age",
+  "address",
+  "sex",
+  "diagnosis",
+  "MedicalCompromised",
+];
 
-function CaseDetails({ casee, isLoading }: Props) {
+const largeInfoBoxes = ["diagnosis", "MedicalCompromised"];
+
+function CaseDetails({ casee }: Props) {
   const dynamicGreyTextColor = useColorModeValue("#444444", "#aaaaaa");
 
   return (
-    <Stack paddingX={5}>
-      {isLoading && <Spinner />}
+    <SimpleGrid
+      columns={{ base: 1, md: 2 }}
+      spacingY={{ lg: "40px" }}
+      spacingX={{ lg: "40px" }}
+      paddingX={5}
+    >
       {casee !== null &&
         Object.keys(casee)
           .filter((key) => displayedProperties.includes(key))
           .map((key) => (
-            <Stack paddingY={2} key={key}>
-              <Text
-                fontSize={{ sm: "1rem", md: "2rem", lg: "2rem" }}
-                fontWeight={700}
-              >
-                {key.charAt(0).toUpperCase() + key.slice(1)}:{" "}
-              </Text>
-              <Text
-                fontSize={{ sm: "0.7rem", md: "1.5rem", lg: "1.5rem" }}
-                fontWeight={700}
-                color={dynamicGreyTextColor}
-              >
-                {casee[key as keyof Case] ?? "-"}
-              </Text>
-            </Stack>
+            <GridItem key={key} colSpan={largeInfoBoxes.includes(key) ? 2 : 1}>
+              <Box paddingY={2} borderColor="#ffffff" borderWidth={2}>
+                <Text
+                  fontSize={{ sm: "1rem", md: "2rem", lg: "2rem" }}
+                  fontWeight={700}
+                >
+                  {toTitleCase(key)}:{" "}
+                </Text>
+                <Text
+                  fontSize={{ sm: "0.7rem", md: "1.5rem", lg: "1.5rem" }}
+                  fontWeight={700}
+                  color={dynamicGreyTextColor}
+                >
+                  {key === "MedicalCompromised" &&
+                    casee.MedicalCompromised.length === 0 &&
+                    "N/A"}
+                  {casee[key as keyof Case] || "-"}
+                </Text>
+              </Box>
+            </GridItem>
           ))}
-    </Stack>
+    </SimpleGrid>
   );
 }
 

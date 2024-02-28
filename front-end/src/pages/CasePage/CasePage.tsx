@@ -1,4 +1,12 @@
-import { Grid, GridItem, Show, Stack } from "@chakra-ui/react";
+import {
+  Grid,
+  GridItem,
+  HStack,
+  Show,
+  Spinner,
+  Stack,
+  VStack,
+} from "@chakra-ui/react";
 import { useParams } from "react-router-dom";
 import NavBar from "../../components/NavBar/NavBar";
 import PicsViewer from "../../components/Case/PicsViewer";
@@ -72,20 +80,28 @@ function CasePage() {
               "::-webkit-scrollbar": {
                 display: "none",
               },
-              "-ms-overflow-style": "none",
-              "scrollbar-width": "none",
+              MsOverflowStyle: "none",
+              scrollbarWidth: "none",
             }}
             area={"main"}
-            justifySelf="center"
+            // justifySelf="center"
+            display="flex"
+            alignItems="center"
             overflow={"scroll"}
-            height={{ sm: "60vh", md: "50vh", lg: "86vh" }}
+            minHeight={{ base: "50vh", md: "50vh", lg: "86vh" }}
           >
-            <Stack w="100%" paddingBottom={4} paddingRight={2}>
-              <CaseDetails isLoading={isLoading} casee={currentCase} />
-              <Show below="lg">
-                <Actions />
-              </Show>
-            </Stack>
+            {isLoading ? (
+              <VStack justify="center" width="100%">
+                <Spinner />
+              </VStack>
+            ) : (
+              <Stack w="100%" paddingBottom={4} paddingLeft={4} spacing={4}>
+                <CaseDetails casee={currentCase} />
+                <Show below="lg">
+                  <Actions />
+                </Show>
+              </Stack>
+            )}
           </GridItem>
 
           <GridItem area={"pics"} padding={3}>

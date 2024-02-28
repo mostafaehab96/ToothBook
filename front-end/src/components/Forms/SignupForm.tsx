@@ -15,8 +15,8 @@ import {
 import { BsChevronDown } from "react-icons/bs";
 import * as Yup from "yup";
 import { useState } from "react";
-import api_client from "../../Services/api_client";
-
+import { useAuth } from "../../../contexts/AuthenticationContext";
+import RegisterFormValues from "../../interfaces/RegisterFormValues";
 // import { useNavigate } from "react-router-dom";
 
 const universities = [
@@ -67,21 +67,12 @@ const validationSchema = Yup.object().shape({
   university: Yup.string().required("University is required"),
 });
 
-interface FormValues {
-  name: string;
-  email: string;
-  password: string;
-  confirmPassword: string;
-  age: string;
-  grade: string;
-  university: string;
-}
-
 function SignupForm() {
-  const formik = useFormik<FormValues>({
+  const { register } = useAuth();
+  const formik = useFormik<RegisterFormValues>({
     initialValues,
     onSubmit: (values) => {
-      registerPostRequest(values);
+      if (register) register(values);
     },
     validationSchema: validationSchema,
     validateOnBlur: true,
@@ -93,23 +84,6 @@ function SignupForm() {
     universityMenuTouched && formik.values.university === "";
   const gradeErrorIsShown: boolean =
     gradeMenuTouched && formik.values.grade === "";
-
-  async function registerPostRequest(body: FormValues) {
-    console.log(JSON.stringify(body));
-    try {
-      const response = await api_client.post("/users/register", body);
-      console.log(response);
-
-      if (response.data.status !== "success") {
-        throw new Error(`HTTP error! Status: ${response.status}`);
-      }
-
-      const data = response.data;
-      console.log("POST request successful:\n", data);
-    } catch (error) {
-      console.error("Error during POST request:", error);
-    }
-  }
 
   function handleMenuItemSelected(fieldName: string, value: string) {
     formik.setFieldValue(fieldName, value);

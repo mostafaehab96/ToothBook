@@ -1,21 +1,17 @@
 import React, { createContext, useContext, useReducer } from "react";
+import api_client from "../src/Services/api_client";
+import User from "../src/interfaces/User";
+import RegisterFormValues from "../src/interfaces/RegisterFormValues";
 
 interface AuthProviderProps {
   children: React.JSX.Element;
-}
-
-interface User {
-  id: string;
-  email: string;
-  avatar: string;
-  firstName: string;
-  lastName: string;
 }
 
 interface Auth {
   user: User | null;
   isAuthenticated: boolean;
   login: undefined | ((email: string, password: string) => void);
+  register: undefined | ((body: RegisterFormValues) => void);
   logout: undefined | (() => void);
 }
 
@@ -29,11 +25,14 @@ const initialState: Auth = {
   isAuthenticated: false,
   login: undefined,
   logout: undefined,
+  register: undefined,
 };
 const AuthContext = createContext<Auth | null>(null);
 
 function reducer(state: Auth, action: Action): Auth {
   switch (action.type) {
+    case "REGISTER":
+      return action.payload;
     case "LOGIN":
       return action.payload;
     case "LOGUT":
@@ -50,11 +49,48 @@ function AuthenticationProvider({ children }: AuthProviderProps) {
     initialState
   );
 
-  function login(email: string, password: string) {}
+  async function login(email: string, password: string) {
+    const body = {
+      email,
+      password,
+    };
+    console.log(body);
+    try {
+      const response = await api_client.post("/users/login", body);
+      console.log(response);
+
+      if (response.data.status !== "success") {
+        throw new Error(`HTTP error! Status: ${response.status}`);
+      }
+
+      const data = response.data;
+      console.log("POST request successful:\n", data);
+    } catch (error) {
+      console.error("Error during POST request:", error);
+    }
+  }
+  async function register(body: RegisterFormValues) {
+    console.log(JSON.stringify(body));
+    try {
+      const response = await api_client.post("/users/register", body);
+      console.log(response);
+
+      if (response.data.status !== "success") {
+        throw new Error(`HTTP error! Status: ${response.status}`);
+      }
+
+      const data = response.data;
+      console.log("POST request successful:\n", data);
+    } catch (error) {
+      console.error("Error during POST request:", error);
+    }
+  }
   function logout() {}
 
   return (
-    <AuthContext.Provider value={{ user, isAuthenticated, login, logout }}>
+    <AuthContext.Provider
+      value={{ user, isAuthenticated, register, login, logout }}
+    >
       {children}
     </AuthContext.Provider>
   );

@@ -115,7 +115,11 @@ function LandingPage() {
           paddingBottom={{ base: "20px", md: "100px" }}
           fontFamily="Rubik"
         >
-          <Heading fontSize={{ base: 34, md: 52 }} fontWeight={800}>
+          <Heading
+            fontSize={{ base: 34, md: 52 }}
+            fontWeight={800}
+            textShadow="2px 2px 4px rgba(0, 0, 0, 0.5);"
+          >
             What you can do...
           </Heading>
           <Stack
@@ -162,7 +166,7 @@ function LandingPage() {
               fontFamily="Rubik"
               fontSize={{ base: 55, md: 65 }}
               fontWeight={700}
-              textShadow="2px 2px 4px rgba(0, 0, 0, 0.5);"
+              textShadow="2px 2px 4px rgba(0, 0, 0, 0.5)"
               color={dynamicTextColorValue}
             >
               Join Now
@@ -217,12 +221,16 @@ function LandingPage() {
             fontSize={{ base: 34, md: 52 }}
             fontWeight={800}
             marginBottom={10}
+            textShadow="2px 2px 4px rgba(0, 0, 0, 0.5);"
           >
             About
           </Heading>
           <Text fontSize={24} width="100%" paddingX={{ base: 7, md: 20 }}>
-            We are a great team. We are a great team. We are a great team. We
-            are a great team. We are a great team. We are a great team.
+            ToothBook is your go-to platform for connecting dental students with
+            patients in need of quality dental care. Our user-friendly interface
+            simplifies the patient-student matching process, ensuring efficient
+            communication and seamless treatment experiences. Join us in
+            revolutionizing dental education and improving patient outcomes.
           </Text>
         </Flex>
         {/* Contact us section */}

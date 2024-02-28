@@ -1,16 +1,5 @@
 import { Card, CardBody, Skeleton, SkeletonText } from "@chakra-ui/react";
 
-// function CaseCardSkeleton() {
-//   return (
-//     <Card>
-//       <Skeleton height="200px" />
-//       <CardBody>
-//         <SkeletonText />
-//       </CardBody>
-//     </Card>
-//   );
-// }
-
 function CaseCardSkeleton() {
   return (
     <Card>
