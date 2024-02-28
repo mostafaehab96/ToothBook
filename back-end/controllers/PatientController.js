@@ -15,7 +15,7 @@ class PatientController {
       .limit(limit)
       .skip(skip);
 
-    const totalCount = patients.length;
+    const totalCount = await Patient.countDocuments(filter);
 
     res.json(jSend.success({patients, totalCount}));
   });
@@ -27,7 +27,8 @@ class PatientController {
       const errorsMessages = errors.errors.map((err) => err.msg);
       return next(createError(400, errorsMessages.toString()));
     }
-    const newPatient = new Patient(req.body);
+    let files = req.files.map((file) => file.filename);
+    const newPatient = new Patient({...req.body, photos: files});
     await newPatient.save();
     res.json(jSend.success({patient: newPatient}));
   });
