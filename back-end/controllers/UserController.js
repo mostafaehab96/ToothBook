@@ -36,7 +36,13 @@ class UserController {
       return next(createError(400, 'User already exists'));
     }
     const hashedPassword = await bcrypt.hash(password, 10);
-    const newUser = User({ name, email, password: hashedPassword, university });
+    const newUser = User({
+      name,
+      email,
+      password: hashedPassword,
+      university,
+      photo: req.file.filename
+    });
 
     const token = await generateJWT({
       email: newUser.email,
@@ -59,7 +65,7 @@ class UserController {
         id: user._id,
         role: user.role,
       });
-      return res.json(jSend.success({ token }));
+      return res.json(jSend.success({ user, token }));
     }
 
     return next(createError(401, 'Wrong password!'));

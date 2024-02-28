@@ -5,6 +5,7 @@ const patientRouter = require('./routes/patient-routes');
 const jSend = require('jsend');
 const createError = require('http-errors');
 const cors = require('cors');
+const path = require('path');
 require('dotenv').config();
 
 const url = process.env.MONGO_URL;
@@ -12,6 +13,7 @@ const port = process.env.PORT;
 const app = express();
 app.use(express.json());
 app.use(cors());
+app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
 app.use('/api/users', usersRouter);
 app.use('/api/patients', patientRouter);
 
