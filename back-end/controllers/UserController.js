@@ -1,11 +1,12 @@
 const bcrypt = require('bcryptjs');
 const jSend = require('jsend');
 const User = require('../models/user-model');
-const {validationResult} = require('express-validator');
+const { validationResult } = require('express-validator');
 const asyncWrapper = require('../middlewares/async-wrapper');
 const createError = require('http-errors');
 const generateJWT = require('../utils/generate-jwt');
-
+const fs = require('fs');
+const path = require('path');
 
 class UserController {
   static getAllUsers = asyncWrapper(async (req, res) => {
@@ -41,7 +42,8 @@ class UserController {
       email,
       password: hashedPassword,
       university,
-      photo: req.file.filename
+      photo: req.file.path
+
     });
 
     const token = await generateJWT({
@@ -49,6 +51,20 @@ class UserController {
       id: newUser._id,
       role: newUser.role,
     });
+
+    const ext = req.file.filename.split('.')[1];
+    const photoNewPath = path.join(
+      req.file.destination,
+      newUser._id.toString(),
+    ) + '.' + ext;
+    fs.rename(req.file.path, photoNewPath, (err) => {
+      if (err) {
+        console.log(err);
+        return;
+      }
+      newUser.photo = photoNewPath;
+    });
+
     await newUser.save();
     return res.json(jSend.success({ user: newUser, token }));
   });
@@ -73,9 +89,8 @@ class UserController {
 
   static deleteUser = asyncWrapper(async (req, res) => {
     const { id } = req.params;
-    await User.deleteOne({_id: id});
+    await User.deleteOne({ _id: id });
     return res.json(jSend.success(null));
   });
-
 }
 module.exports = UserController;
