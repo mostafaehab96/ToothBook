@@ -42,7 +42,6 @@ const validatePatient = () => {
       .withMessage('Diagnosis is required'),
     body('departments')
       .notEmpty()
-      .isIn(departments)
   ];
 };
 module.exports = {validateUser, validatePatient};
