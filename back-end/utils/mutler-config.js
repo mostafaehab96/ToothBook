@@ -23,7 +23,7 @@ const fileFilter = (req, file, cb) => {
   const type = file.mimetype.split('/')[0];
   const errors = validationResult(req);
   if (!errors.isEmpty()) {
-    return cb(error, false);
+    return cb(errors, false);
   }
   if (type === 'image') {
     return cb(null, true);

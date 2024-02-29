@@ -6,12 +6,15 @@
   "scripts": {
     "test": "nodemon app.js",
     "lint": "node_modules/eslint/bin/eslint.js --fix",
-    "check-lint": "lint *.js"
+    "check-lint": "lint *.js",
+    "fake-data": "node utils/generate-fakes.js",
+    "fake-data-clear": "node utils/generate-fakes.js clear"
   },
   "keywords": [],
   "author": "",
   "license": "ISC",
   "devDependencies": {
+    "@faker-js/faker": "^8.4.1",
     "dotenv": "^16.4.5",
     "eslint": "^8.56.0",
     "nodemon": "^3.0.3"

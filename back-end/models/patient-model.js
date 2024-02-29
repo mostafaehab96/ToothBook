@@ -68,17 +68,17 @@ const patientSchema = new Schema({
     type: Boolean,
     default: false,
   },
-  MedicalCompromised: [
+  medicalCompromised: [
     {
       type: String,
       enum: ['Hypertensive', 'Cardiac', 'Disability', 'Diabetic', 'Other'],
     },
   ],
   photos: [{ type: String, required: true }],
-  department: {
+  departments: [{
     type: String,
     enum: departments,
-  },
+  }],
 });
 
 module.exports = mongoose.model('Patient', patientSchema);
