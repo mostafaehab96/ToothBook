@@ -51,4 +51,4 @@ const generateFakePatients = async (numPatients, clearFirst) => {
   }
 };
 
-generateFakePatients(3, clearFirst);
+generateFakePatients(10, clearFirst);
