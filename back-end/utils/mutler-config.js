@@ -1,8 +1,6 @@
 const multer = require('multer');
 const createError = require('http-errors');
 const {validationResult} = require('express-validator');
-const fs = require('fs');
-
 
 const storage = multer.diskStorage({
   destination: function (req, file, cb) {
@@ -12,16 +10,11 @@ const storage = multer.diskStorage({
     } else if (req.route.path === '/register') {
       dest = 'uploads/users';
     }
-
-    if (!fs.existsSync(dest)) {
-      fs.mkdirSync(dest, { recursive: true });
-    }
-
     cb(null, dest);
   },
   filename: function (req, file, cb) {
     const ext = file.mimetype.split('/')[1];
-    const fileName = `user-${Date.now()}.${ext}`;
+    const fileName = `${req.currentUser?.id || 'user'}-${Date.now()}.${ext}`;
     cb(null, fileName);
   }
 });
