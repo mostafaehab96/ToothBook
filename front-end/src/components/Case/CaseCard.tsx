@@ -39,10 +39,10 @@ function CaseCard({ casee }: Props) {
             # {`${casee.department}`}
           </Heading>
           <CardIconsList
-            gender={casee.sex}
+            sex={casee.sex}
             age={casee.age}
             isEmergency={casee.isEmergency}
-            isMedicalCompromised={casee.MedicalCompromised.length !== 0}
+            isMedicalCompromised={casee.medicalCompromised.length !== 0}
           />
         </HStack>
       </CardBody>

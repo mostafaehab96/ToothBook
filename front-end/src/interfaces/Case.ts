@@ -11,7 +11,7 @@ export default interface Case {
   phoneNumber: string | null;
   isEmergency: boolean;
   photos: Array<string>;
-  MedicalCompromised: string[];
+  medicalCompromised: string[];
   department: Department;
   createdAt: string;
   updatedAt: string;
