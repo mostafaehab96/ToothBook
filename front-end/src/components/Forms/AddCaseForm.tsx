@@ -14,30 +14,34 @@ import {
   Stack,
   Text,
   Box,
+  GridItem,
 } from "@chakra-ui/react";
 import { BsChevronDown } from "react-icons/bs";
 import AddCaseImagesUploader from "./AddCaseImagesUploader";
 import Department from "../../interfaces/Department";
 import MedicalCompromises from "../../interfaces/MedicalCompromises";
+import api_client from "../../Services/api_client";
 
 interface FormValues {
   name: string;
   age: string;
-  gender: string;
+  sex: string;
   phoneNumber: string;
   diagnosis: string;
   isEmergency: boolean;
   isMedicalCompromised: boolean;
   medicalCompromised: MedicalCompromises[] | undefined;
   departments: Department[] | undefined;
+  address: string;
 }
 
 const initialValues = {
   name: "",
   age: "",
-  gender: "",
+  sex: "",
   phoneNumber: "",
   diagnosis: "",
+  address: "",
   isEmergency: false,
   isMedicalCompromised: false,
   medicalCompromised: undefined,
@@ -48,9 +52,26 @@ function AddCaseForm() {
   const formik = useFormik<FormValues>({
     initialValues,
     onSubmit: (values) => {
-      alert(JSON.stringify(values, null, 2));
+      addCasePostRequest(values);
     },
   });
+
+  async function addCasePostRequest(body: FormValues) {
+    console.log(JSON.stringify(body));
+    try {
+      const response = await api_client.post("/patients/", body);
+      console.log(response);
+
+      if (response.data.status !== "success") {
+        throw new Error(`HTTP error! Status: ${response.status}`);
+      }
+
+      const data = response.data;
+      console.log("POST request successful:\n", data);
+    } catch (error) {
+      console.error("Error during POST request:", error);
+    }
+  }
 
   const handleMedicalCompromisedCheckboxChange = (value: string) => {
     if (formik.values.medicalCompromised !== undefined) {
@@ -104,22 +125,66 @@ function AddCaseForm() {
       <SimpleGrid columns={{ base: 1, md: 2, lg: 2 }} spacingX={8}>
         <FormControl mb={4}>
           <FormLabel htmlFor="name">Name</FormLabel>
-          <Input type="text" id="name" name="name" />
+          <Input
+            type="text"
+            id="name"
+            name="name"
+            onChange={formik.handleChange}
+            onBlur={formik.handleBlur}
+            value={formik.values.name}
+          />
         </FormControl>
 
         <FormControl mb={4}>
           <FormLabel htmlFor="diagnosis">Diagnosis</FormLabel>
-          <Input type="text" id="diagnosis" name="diagnosis" />
+          <Input
+            type="text"
+            id="diagnosis"
+            name="diagnosis"
+            onChange={formik.handleChange}
+            onBlur={formik.handleBlur}
+            value={formik.values.diagnosis}
+          />
         </FormControl>
 
-        <FormControl mb={4}>
-          <FormLabel htmlFor="age">Age</FormLabel>
-          <Input type="number" id="age" name="age" />
-        </FormControl>
+        <GridItem mb={4}>
+          <HStack spacing={4}>
+            <FormControl>
+              <FormLabel htmlFor="age">Age</FormLabel>
+              <Input
+                type="number"
+                id="age"
+                name="age"
+                onChange={formik.handleChange}
+                onBlur={formik.handleBlur}
+                value={formik.values.age}
+              />
+            </FormControl>
+
+            <FormControl>
+              <FormLabel htmlFor="phoneNumber">Phone Number</FormLabel>
+              <Input
+                type="number"
+                id="phoneNumber"
+                name="phoneNumber"
+                onChange={formik.handleChange}
+                onBlur={formik.handleBlur}
+                value={formik.values.phoneNumber}
+              />
+            </FormControl>
+          </HStack>
+        </GridItem>
 
         <FormControl mb={4}>
-          <FormLabel htmlFor="phoneNumber">Phone Number</FormLabel>
-          <Input type="number" id="phoneNumber" name="phoneNumber" />
+          <FormLabel htmlFor="address">Address</FormLabel>
+          <Input
+            type="text"
+            id="address"
+            name="address"
+            onChange={formik.handleChange}
+            onBlur={formik.handleBlur}
+            value={formik.values.address}
+          />
         </FormControl>
 
         <Stack direction={["column", "row"]} justifyContent="space-around">
@@ -128,9 +193,9 @@ function AddCaseForm() {
               <FormLabel>Gender</FormLabel>
               <Menu id="gender">
                 <MenuButton as={Button} rightIcon={<BsChevronDown />}>
-                  {formik.values.gender
-                    ? formik.values.gender.charAt(0).toUpperCase() +
-                      formik.values.gender.slice(1)
+                  {formik.values.sex
+                    ? formik.values.sex.charAt(0).toUpperCase() +
+                      formik.values.sex.slice(1)
                     : "Gender"}
                 </MenuButton>
                 <MenuList>

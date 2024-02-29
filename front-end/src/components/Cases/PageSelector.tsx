@@ -11,7 +11,7 @@ function PageSelector() {
     colorMode === "light" ? "#3182ce" : "#90cdf4";
 
   function handlePageChange(page: number) {
-    setPage(page);
+    if (page !== currentPage) setPage(page);
   }
   function renderPageButtons() {
     let pageButtons = [];

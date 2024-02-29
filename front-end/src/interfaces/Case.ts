@@ -4,8 +4,8 @@ export default interface Case {
   _id: string;
   name: string;
   age: number;
-  sex: string;
   address: string | null;
+  sex: string;
   diagnosis: string;
   status: string;
   phoneNumber: string | null;

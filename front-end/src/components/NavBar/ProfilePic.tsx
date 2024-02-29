@@ -1,6 +1,11 @@
 import { IconButton, Image } from "@chakra-ui/react";
+import profilePicPlaceHolder from "../../../public/profilePicPlaceHolder.webp";
 
-function ProfilePic() {
+interface Props {
+  pic: string | undefined;
+}
+
+function ProfilePic({ pic }: Props) {
   return (
     <IconButton
       aria-label="Profile picture"
@@ -10,7 +15,8 @@ function ProfilePic() {
         <Image
           boxSize="40px"
           objectFit="cover"
-          src="https://wallpapercave.com/wp/wp5765934.jpg"
+          src={pic}
+          fallbackSrc={profilePicPlaceHolder}
           alt="Profile Picture"
         />
       }

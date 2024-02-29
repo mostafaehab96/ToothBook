@@ -1,17 +1,21 @@
 import { HStack, IconButton } from "@chakra-ui/react";
 import { Link } from "react-router-dom";
+import { RiLoginBoxFill } from "react-icons/ri";
+import { RiLogoutBoxFill } from "react-icons/ri";
 import Logo from "./Logo";
 import SearchInput from "./SearchInput";
 import ColorModeSwitch from "./ColorModeSwitch";
 import ProfilePic from "./ProfilePic";
 import { FaInfo } from "react-icons/fa";
-import { RiLoginBoxFill } from "react-icons/ri";
+import { useAuth } from "../../../contexts/AuthenticationContext";
 
 function NavBar() {
+  const { isAuthenticated, user, logout } = useAuth();
+  console.log(user);
   return (
     <HStack paddingY={2} paddingX={3} spacing={2}>
       <Logo />
-      <Link to="/about" className="nav-item">
+      <Link to="/" className="nav-item">
         <IconButton
           colorScheme="blue"
           aria-label="Profile picture"
@@ -22,17 +26,28 @@ function NavBar() {
       </Link>
       <SearchInput />
       <HStack>
-        <Link to="/login" className="nav-item">
+        {isAuthenticated ? (
           <IconButton
             colorScheme="blue"
-            aria-label="Profile picture"
+            aria-label="Logout button"
             overflow="hidden"
-            icon={<RiLoginBoxFill size={20} />}
+            icon={<RiLogoutBoxFill size={20} />}
             borderRadius="50%"
+            onClick={logout}
           />
-        </Link>
+        ) : (
+          <Link to="/login" className="nav-item">
+            <IconButton
+              colorScheme="blue"
+              aria-label="Login button"
+              overflow="hidden"
+              icon={<RiLoginBoxFill size={20} />}
+              borderRadius="50%"
+            />
+          </Link>
+        )}
         <ColorModeSwitch />
-        <ProfilePic />
+        {isAuthenticated && <ProfilePic pic={user?.photo} />}
       </HStack>
     </HStack>
   );

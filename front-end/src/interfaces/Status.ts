@@ -1,8 +1,8 @@
 enum Status {
-  Active = "Active",
-  Waiting = "Waiting",
-  Treated = "Treated",
-  Cancelled = "Cancelled",
+  contacted = "contacted",
+  pending = "pending",
+  treated = "treated",
+  rejected = "rejected",
 }
 
 export default Status;

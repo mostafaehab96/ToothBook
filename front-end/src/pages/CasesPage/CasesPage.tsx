@@ -5,6 +5,7 @@ import FilterSelector from "../../components/Cases/FilterSelector";
 import { useCases } from "../../../contexts/CasesContext";
 import ErrorAlert from "../../components/Alerts/ErrorAlert";
 import PageSelector from "../../components/Cases/PageSelector";
+import AddCaseButton from "../../components/Cases/AddCaseButton";
 
 function CasesPage() {
   const { error } = useCases();
@@ -26,8 +27,9 @@ function CasesPage() {
         internet connection and try again later."
           />
         ) : (
-          <HStack>
+          <HStack justify="space-between" paddingX={1}>
             <FilterSelector />
+            <AddCaseButton />
           </HStack>
         )}
         {!error && <CasesGrid />}

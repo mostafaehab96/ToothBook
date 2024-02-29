@@ -10,7 +10,7 @@ import {
 import { Link } from "react-router-dom";
 import { useFormik } from "formik";
 import * as Yup from "yup";
-import api_client from "../../Services/api_client";
+import { useAuth } from "../../../contexts/AuthenticationContext";
 
 const initialValues = {
   email: "",
@@ -30,32 +30,33 @@ interface FormValues {
 }
 
 function LoginForm() {
+  const { login } = useAuth();
   const formik = useFormik<FormValues>({
     initialValues,
     onSubmit: (values) => {
-      loginPostRequest(values);
+      if (login) login(values.email, values.password);
     },
     validationSchema: validationSchema,
     validateOnBlur: true,
     validateOnMount: true,
   });
 
-  async function loginPostRequest(body: FormValues) {
-    console.log(JSON.stringify(body));
-    try {
-      const response = await api_client.post("/users/login", body);
-      console.log(response);
+  // async function loginPostRequest(body: FormValues) {
+  //   console.log(JSON.stringify(body));
+  //   try {
+  //     const response = await api_client.post("/users/login", body);
+  //     console.log(response);
 
-      if (response.data.status !== "success") {
-        throw new Error(`HTTP error! Status: ${response.status}`);
-      }
+  //     if (response.data.status !== "success") {
+  //       throw new Error(`HTTP error! Status: ${response.status}`);
+  //     }
 
-      const data = response.data;
-      console.log("POST request successful:\n", data);
-    } catch (error) {
-      console.error("Error during POST request:", error);
-    }
-  }
+  //     const data = response.data;
+  //     console.log("POST request successful:\n", data);
+  //   } catch (error) {
+  //     console.error("Error during POST request:", error);
+  //   }
+  // }
 
   return (
     <form onSubmit={formik.handleSubmit}>
