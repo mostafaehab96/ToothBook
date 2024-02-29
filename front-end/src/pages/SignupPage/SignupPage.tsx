@@ -1,7 +1,7 @@
-import { Box, Image, Grid, GridItem, VStack } from "@chakra-ui/react";
+import { Box, Grid, GridItem, VStack } from "@chakra-ui/react";
 import NavBar from "../../components/NavBar/NavBar";
 import SignupForm from "../../components/Forms/SignupForm";
-import Logo from "../../../public/logo.png";
+import RegisterImageUploader from "../../components/Forms/RegisterImagesUploader";
 
 function SignupPage() {
   return (
@@ -22,7 +22,7 @@ function SignupPage() {
           justifyContent="center"
         >
           <Box width="220px" height="220px" mx="auto" marginBottom={7}>
-            <Image src={Logo} />
+            <RegisterImageUploader />
           </Box>
           <Box paddingX={{ base: 0, md: "100px" }}>
             <SignupForm />

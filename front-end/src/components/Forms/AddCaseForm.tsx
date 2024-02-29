@@ -17,7 +17,7 @@ import {
   GridItem,
 } from "@chakra-ui/react";
 import { BsChevronDown } from "react-icons/bs";
-import RegisterImageUploader from "./AddCaseImagesUploader";
+import AddCaseImagesUploader from "./AddCaseImagesUploader";
 import Department from "../../interfaces/Department";
 import MedicalCompromises from "../../interfaces/MedicalCompromises";
 import api_client from "../../Services/api_client";
@@ -74,8 +74,8 @@ function AddCaseForm() {
       formData.append("phoneNumber", body.phoneNumber);
       formData.append("diagnosis", body.diagnosis);
       formData.append("address", body.address);
-      // formData.append("department", JSON.stringify(body.departments));
-      formData.append("department", "Pedo");
+      formData.append("departments", JSON.stringify(body.departments));
+      // formData.append("departments", "Pedo");
       formData.append("isEmergency", body.isEmergency.toString());
       // formData.append(
       //   "isMedicalCompromised",
@@ -92,7 +92,8 @@ function AddCaseForm() {
 
       // #endregion adding formdata
 
-      console.log(formData.get("department"));
+      console.log(formData.get("departments"));
+      // console.log(formData.get("medicalCompromised"));
 
       const response = await api_client.post("/patients", formData, {
         headers: {
@@ -341,7 +342,7 @@ function AddCaseForm() {
         </Stack>
       </SimpleGrid>
       <Box paddingY={8} paddingX={2}>
-        <RegisterImageUploader
+        <AddCaseImagesUploader
           selectedImages={selectedImages}
           setSelectedImages={setSelectedImages}
         />

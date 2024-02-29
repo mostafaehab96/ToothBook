@@ -3,11 +3,11 @@ import { ChangeEvent, useRef, useState } from "react";
 import PicsViewer from "../Case/PicsViewer";
 
 interface Props {
-  selectedImage: File;
-  setSelectedImage: React.Dispatch<React.SetStateAction<File[]>>;
+  selectedImages: File[];
+  setSelectedImages: React.Dispatch<React.SetStateAction<File[]>>;
 }
 
-function RegisterImageUploader({ selectedImage, setSelectedImage }: Props) {
+function AddCaseImagesUploader({ selectedImages, setSelectedImages }: Props) {
   const [inputKey, setInputKey] = useState<string>(Math.random().toString(36));
   const inputRef = useRef<HTMLInputElement | null>(null);
 
@@ -16,7 +16,7 @@ function RegisterImageUploader({ selectedImage, setSelectedImage }: Props) {
 
     if (files && files.length > 0) {
       const newImages = Array.from(files);
-      setSelectedImage((prevImages) => [...prevImages, ...newImages]);
+      setSelectedImages((prevImages) => [...prevImages, ...newImages]);
     }
   }
 
@@ -27,12 +27,12 @@ function RegisterImageUploader({ selectedImage, setSelectedImage }: Props) {
   }
 
   function handleRemoveImage(index: number) {
-    setSelectedImage((prevImages) => {
+    setSelectedImages((prevImages) => {
       const updatedImages = [...prevImages];
       updatedImages.splice(index, 1);
       return updatedImages;
     });
-    if (selectedImage.length === 1) {
+    if (selectedImages.length === 1) {
       resetInput();
     }
   }
@@ -60,17 +60,23 @@ function RegisterImageUploader({ selectedImage, setSelectedImage }: Props) {
           hidden={true}
           key={inputKey}
         />
-        {selectedImage && (
+        {selectedImages.length && (
           <HStack
             justifyContent="center"
             // paddingX={{ base: "0px", lg: "10%" }}
             paddingBottom={4}
             width="100%"
-          ></HStack>
+          >
+            <PicsViewer
+              isLoading={false}
+              images={selectedImages}
+              handleRemoveImage={handleRemoveImage}
+            />
+          </HStack>
         )}
       </VStack>
     </>
   );
 }
 
-export default RegisterImageUploader;
+export default AddCaseImagesUploader;
