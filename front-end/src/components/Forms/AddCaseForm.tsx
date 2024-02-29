@@ -25,7 +25,7 @@ import api_client from "../../Services/api_client";
 interface FormValues {
   name: string;
   age: string;
-  gender: string;
+  sex: string;
   phoneNumber: string;
   diagnosis: string;
   isEmergency: boolean;
@@ -38,7 +38,7 @@ interface FormValues {
 const initialValues = {
   name: "",
   age: "",
-  gender: "",
+  sex: "",
   phoneNumber: "",
   diagnosis: "",
   address: "",
@@ -193,9 +193,9 @@ function AddCaseForm() {
               <FormLabel>Gender</FormLabel>
               <Menu id="gender">
                 <MenuButton as={Button} rightIcon={<BsChevronDown />}>
-                  {formik.values.gender
-                    ? formik.values.gender.charAt(0).toUpperCase() +
-                      formik.values.gender.slice(1)
+                  {formik.values.sex
+                    ? formik.values.sex.charAt(0).toUpperCase() +
+                      formik.values.sex.slice(1)
                     : "Gender"}
                 </MenuButton>
                 <MenuList>

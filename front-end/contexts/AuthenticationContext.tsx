@@ -2,6 +2,7 @@ import React, { createContext, useContext, useReducer } from "react";
 import api_client from "../src/Services/api_client";
 import User from "../src/interfaces/User";
 import RegisterFormValues from "../src/interfaces/RegisterFormValues";
+import { useNavigate } from "react-router";
 
 interface AuthProviderProps {
   children: React.JSX.Element;
@@ -17,7 +18,7 @@ interface Auth {
 
 interface Action {
   type: string;
-  payload: Auth;
+  payload: any;
 }
 
 const initialState: Auth = {
@@ -32,10 +33,18 @@ const AuthContext = createContext<Auth | null>(null);
 function reducer(state: Auth, action: Action): Auth {
   switch (action.type) {
     case "REGISTER":
-      return action.payload;
+      return {
+        ...state,
+        isAuthenticated: true,
+        user: { ...action.payload.user, token: action.payload.token },
+      };
     case "LOGIN":
-      return action.payload;
-    case "LOGUT":
+      return {
+        ...state,
+        isAuthenticated: true,
+        user: { ...action.payload.user, token: action.payload.token },
+      };
+    case "LOGOUT":
       return initialState;
     default:
       break;
@@ -48,21 +57,27 @@ function AuthenticationProvider({ children }: AuthProviderProps) {
     reducer,
     initialState
   );
+  const navigate = useNavigate();
 
   async function login(email: string, password: string) {
     const body = {
       email,
       password,
     };
-    console.log(body);
     try {
       const response = await api_client.post("/users/login", body);
-      console.log(response);
-
       if (response.data.status !== "success") {
         throw new Error(`HTTP error! Status: ${response.status}`);
       }
 
+      dispatch({
+        type: "LOGIN",
+        payload: {
+          token: response.data.token,
+          user: response.data.data.user,
+        },
+      });
+      navigate("cases");
       const data = response.data;
       console.log("POST request successful:\n", data);
     } catch (error) {
@@ -85,7 +100,10 @@ function AuthenticationProvider({ children }: AuthProviderProps) {
       console.error("Error during POST request:", error);
     }
   }
-  function logout() {}
+  function logout() {
+    dispatch({ type: "LOGOUT", payload: {} });
+    navigate("/login");
+  }
 
   return (
     <AuthContext.Provider

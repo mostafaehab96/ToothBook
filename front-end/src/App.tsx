@@ -10,12 +10,13 @@ import AboutPage from "./pages/AboutPage/AboutPage";
 import { CasesProvider } from "../contexts/CasesContext";
 import { AuthenticationProvider } from "../contexts/AuthenticationContext";
 import AddCasePage from "./pages/AddCasePage/AddCasePage";
+import ProtectedRoute from "./components/ProtectedRoute/ProtectedRoute";
 
 function App() {
   return (
-    <AuthenticationProvider>
-      <CasesProvider>
-        <BrowserRouter>
+    <BrowserRouter>
+      <AuthenticationProvider>
+        <CasesProvider>
           <Routes>
             <Route path="/" element={<LandingPage />} />
             <Route path="about" element={<AboutPage />} />
@@ -23,12 +24,26 @@ function App() {
             <Route path="register" element={<SignupPage />} />
             <Route path="cases" element={<CasesPage />} />
             <Route path="case/:id" element={<CasePage />} />
-            <Route path="profile" element={<ProfilePage />} />
-            <Route path="addCase" element={<AddCasePage />} />
+            <Route
+              path="profile"
+              element={
+                <ProtectedRoute>
+                  <ProfilePage />
+                </ProtectedRoute>
+              }
+            />
+            <Route
+              path="addCase"
+              element={
+                <ProtectedRoute>
+                  <AddCasePage />
+                </ProtectedRoute>
+              }
+            />
           </Routes>
-        </BrowserRouter>
-      </CasesProvider>
-    </AuthenticationProvider>
+        </CasesProvider>
+      </AuthenticationProvider>
+    </BrowserRouter>
   );
 }
 

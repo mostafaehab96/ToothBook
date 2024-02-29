@@ -3,6 +3,7 @@ import Case from "../src/interfaces/Case";
 import React from "react";
 
 const URL = "http://localhost:4000/api/";
+const CASES_LIMIT_PER_PAGE = 15;
 
 interface ContextType {
   totalPages: number;
@@ -49,7 +50,12 @@ function reducer(state: ContextType, action: ReducerAction) {
       console.log(action.payload);
       return { ...state, isLoading: false, currentCase: action.payload };
     case "cases/loaded":
-      return { ...state, isLoading: false, cases: action.payload };
+      return {
+        ...state,
+        isLoading: false,
+        cases: action.payload.patients,
+        totalPages: Math.ceil(action.payload.totalCount / CASES_LIMIT_PER_PAGE),
+      };
     case "case/created":
       return {
         ...state,
@@ -70,11 +76,18 @@ function CasesProvider({ children }: Props) {
     async function fetchCases() {
       dispatch({ type: "loading", payload: undefined });
       try {
-        const res = await fetch(`${URL}patients?page=1&limit=15`);
+        const res = await fetch(
+          `${URL}patients?page=1&limit=${CASES_LIMIT_PER_PAGE}`
+        );
         const jsRes = await res.json();
         if (jsRes.status === "success") {
-          console.log("fetch success");
-          dispatch({ type: "cases/loaded", payload: jsRes.data.patients });
+          dispatch({
+            type: "cases/loaded",
+            payload: {
+              patients: jsRes.data.patients,
+              totalCount: jsRes.data.totalCount,
+            },
+          });
         }
       } catch (e) {
         dispatch({
