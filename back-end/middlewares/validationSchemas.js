@@ -40,7 +40,7 @@ const validatePatient = () => {
     body('diagnosis')
       .notEmpty()
       .withMessage('Diagnosis is required'),
-    body('department')
+    body('departments')
       .notEmpty()
       .isIn(departments)
   ];
