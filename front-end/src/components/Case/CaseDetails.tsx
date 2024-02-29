@@ -21,10 +21,10 @@ const displayedProperties = [
   "address",
   "sex",
   "diagnosis",
-  "MedicalCompromised",
+  "medicalCompromised",
 ];
 
-const largeInfoBoxes = ["diagnosis", "MedicalCompromised"];
+const largeInfoBoxes = ["diagnosis", "medicalCompromised"];
 
 function CaseDetails({ casee }: Props) {
   const dynamicGreyTextColor = useColorModeValue("#444444", "#aaaaaa");
@@ -41,7 +41,7 @@ function CaseDetails({ casee }: Props) {
           .filter((key) => displayedProperties.includes(key))
           .map((key) => (
             <GridItem key={key} colSpan={largeInfoBoxes.includes(key) ? 2 : 1}>
-              <Box paddingY={2} borderColor="#ffffff" borderWidth={2}>
+              <Box paddingY={2}>
                 <Text
                   fontSize={{ sm: "1rem", md: "2rem", lg: "2rem" }}
                   fontWeight={700}
@@ -53,8 +53,8 @@ function CaseDetails({ casee }: Props) {
                   fontWeight={700}
                   color={dynamicGreyTextColor}
                 >
-                  {key === "MedicalCompromised" &&
-                    casee.MedicalCompromised.length === 0 &&
+                  {key === "medicalCompromised" &&
+                    casee.medicalCompromised.length === 0 &&
                     "N/A"}
                   {casee[key as keyof Case] || "-"}
                 </Text>

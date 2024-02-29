@@ -12,7 +12,7 @@ export default interface Case {
   isEmergency: boolean;
   photos: Array<string>;
   medicalCompromised: string[];
-  department: Department;
+  departments: Department[];
   createdAt: string;
   updatedAt: string;
 }

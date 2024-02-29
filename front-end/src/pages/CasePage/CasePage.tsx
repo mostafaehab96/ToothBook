@@ -100,6 +100,7 @@ function CasePage() {
               width="100%"
               justify="center"
               height={{ sm: "auto", md: "auto", lg: "100%" }}
+              spacing={10}
             >
               <PicsViewer
                 images={currentCase?.photos || []}

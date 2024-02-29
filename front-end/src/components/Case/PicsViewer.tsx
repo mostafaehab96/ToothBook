@@ -49,7 +49,11 @@ const PicsViewer = ({ images, isLoading, handleRemoveImage }: Props) => {
         Previous
       </IconButton>
       <Stack justify="center" width="100%">
-        <Box borderRadius={12} overflow="hidden">
+        <Box
+          borderRadius={12}
+          overflow="hidden"
+          maxHeight={{ base: "300px", lg: "500px" }}
+        >
           {isLoading ? (
             <Skeleton
               height={{
@@ -103,6 +107,8 @@ const PicsViewer = ({ images, isLoading, handleRemoveImage }: Props) => {
             </VStack>
           ) : (
             <Image
+              height={"100%"}
+              width="100%"
               borderRadius={12}
               src={
                 images.length
@@ -111,7 +117,7 @@ const PicsViewer = ({ images, isLoading, handleRemoveImage }: Props) => {
               }
               alt={`Image ${currentImageIndex + 1}`}
               className="image"
-              objectFit="fill"
+              objectFit="contain"
               objectPosition="centre"
             />
           )}

@@ -6,9 +6,11 @@ import { useCases } from "../../../contexts/CasesContext";
 import ErrorAlert from "../../components/Alerts/ErrorAlert";
 import PageSelector from "../../components/Cases/PageSelector";
 import AddCaseButton from "../../components/Cases/AddCaseButton";
+import { useAuth } from "../../../contexts/AuthenticationContext";
 
 function CasesPage() {
   const { error } = useCases();
+  const { isAuthenticated } = useAuth();
 
   return (
     <Grid
@@ -29,7 +31,7 @@ function CasesPage() {
         ) : (
           <HStack justify="space-between" paddingX={1}>
             <FilterSelector />
-            <AddCaseButton />
+            {isAuthenticated && <AddCaseButton />}
           </HStack>
         )}
         {!error && <CasesGrid />}

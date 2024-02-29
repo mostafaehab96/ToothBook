@@ -9,7 +9,7 @@ import {
 import { useNavigate } from "react-router";
 import Case from "../../interfaces/Case";
 import CardIconsList from "./CardIconsList";
-import placeHolderImage from "../../../public/imagePlaceholder.jpg";
+import placeHolderImage from "../../../public/placeholder-image.webp";
 
 interface Props {
   casee: Case;
@@ -22,9 +22,13 @@ function CaseCard({ casee }: Props) {
     colorMode === "light" ? "#303030" : "#d2d2d2";
 
   return (
-    <Card height="100%" onClick={() => navigate(`/case/${casee._id}`)}>
+    <Card
+      height={{ base: "100%", md: "500px", lg: "400px" }}
+      onClick={() => navigate(`/case/${casee._id}`)}
+    >
       <Image
         src={casee.photos[0] || placeHolderImage}
+        fallbackSrc={placeHolderImage}
         height={{ base: "auto", md: "68%", lg: "68%" }}
       />
       <CardBody>
@@ -36,7 +40,7 @@ function CaseCard({ casee }: Props) {
             fontSize={22}
             color={dynamicDepartmentTextValue}
           >
-            # {`${casee.department}`}
+            {casee.departments.map((dep) => `#${dep} `)}
           </Heading>
           <CardIconsList
             sex={casee.sex}

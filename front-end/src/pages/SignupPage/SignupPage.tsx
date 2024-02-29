@@ -1,9 +1,32 @@
-import { Box, Grid, GridItem, VStack } from "@chakra-ui/react";
+import { Box, Grid, GridItem, Text, VStack } from "@chakra-ui/react";
 import NavBar from "../../components/NavBar/NavBar";
-import SignupForm from "../../components/Forms/SignupForm";
+import SignupForm, { initialValues } from "../../components/Forms/SignupForm";
 import RegisterImageUploader from "../../components/Forms/RegisterImagesUploader";
+import { useAuth } from "../../../contexts/AuthenticationContext";
+import RegisterFormValues from "../../interfaces/RegisterFormValues";
+import { useCallback, useEffect, useState } from "react";
 
 function SignupPage() {
+  const { register } = useAuth();
+  const [selectedImage, setSelectedImage] = useState<File>();
+  const [formValues, setFormValues] =
+    useState<RegisterFormValues>(initialValues);
+  console.log("rerendered");
+
+  useEffect(
+    function () {
+      function handleFormValuesChange() {
+        if (register) register(formValues, selectedImage);
+      }
+      console.log("rerendered");
+      if (formValues && register) {
+        console.log(formValues);
+        handleFormValuesChange();
+      }
+    },
+    [formValues, register]
+  );
+
   return (
     <Grid
       templateAreas={{
@@ -21,11 +44,32 @@ function SignupPage() {
           alignItems="center"
           justifyContent="center"
         >
-          <Box width="220px" height="220px" mx="auto" marginBottom={7}>
-            <RegisterImageUploader />
+          <Box
+            flexDirection="column"
+            display="flex"
+            alignItems="center"
+            mb={10}
+          >
+            <Box
+              width="220px"
+              height="220px"
+              mx="auto"
+              marginBottom={7}
+              borderRadius="50%"
+              overflow="hidden"
+            >
+              <RegisterImageUploader
+                selectedImage={selectedImage}
+                setSelectedImage={setSelectedImage}
+              />
+            </Box>
+            <Text fontSize={20} fontWeight={600}>
+              Choose a profile picture
+            </Text>
           </Box>
+
           <Box paddingX={{ base: 0, md: "100px" }}>
-            <SignupForm />
+            <SignupForm setFormValues={setFormValues} />
           </Box>
         </VStack>
       </GridItem>

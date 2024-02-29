@@ -74,17 +74,14 @@ function AddCaseForm() {
       formData.append("phoneNumber", body.phoneNumber);
       formData.append("diagnosis", body.diagnosis);
       formData.append("address", body.address);
-      formData.append("departments", JSON.stringify(body.departments));
-      // formData.append("departments", "Pedo");
+      body.departments.forEach((value) => {
+        formData.append("departments", value);
+      });
       formData.append("isEmergency", body.isEmergency.toString());
-      // formData.append(
-      //   "isMedicalCompromised",
-      //   body.isMedicalCompromised.toString()
-      // );
-      // formData.append(
-      //   "medicalCompromised",
-      //   JSON.stringify(body.medicalCompromised)
-      // );
+
+      body.medicalCompromised.forEach((value) => {
+        formData.append("medicalCompromised", value);
+      });
 
       selectedImages.forEach((file, index) => {
         formData.append(`photos`, file, `image${index}.jpg`);
@@ -93,7 +90,6 @@ function AddCaseForm() {
       // #endregion adding formdata
 
       console.log(formData.get("departments"));
-      // console.log(formData.get("medicalCompromised"));
 
       const response = await api_client.post("/patients", formData, {
         headers: {

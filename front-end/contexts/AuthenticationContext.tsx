@@ -12,7 +12,9 @@ interface Auth {
   user: User | null;
   isAuthenticated: boolean;
   login: undefined | ((email: string, password: string) => void);
-  register: undefined | ((body: RegisterFormValues) => void);
+  register:
+    | undefined
+    | ((body: RegisterFormValues, profilePicture: File | undefined) => void);
   logout: undefined | (() => void);
 }
 
@@ -84,17 +86,38 @@ function AuthenticationProvider({ children }: AuthProviderProps) {
       console.error("Error during POST request:", error);
     }
   }
-  async function register(body: RegisterFormValues) {
+  async function register(
+    body: RegisterFormValues,
+    profilePicture: File | undefined
+  ) {
     console.log(JSON.stringify(body));
     try {
-      const response = await api_client.post("/users/register", body);
+      const formData = new FormData();
+      formData.append("name", body.name);
+      formData.append("email", body.email);
+      formData.append("password", body.password);
+      formData.append("university", body.university);
+      if (profilePicture != null && profilePicture)
+        formData.append("photo", profilePicture, `image${Math.random()}.jpg`);
+
+      const response = await api_client.post("/users/register", formData, {
+        headers: {
+          "Content-Type": "multipart/form-data",
+        },
+      });
+
       console.log(response);
 
       if (response.data.status !== "success") {
         throw new Error(`HTTP error! Status: ${response.status}`);
       }
 
-      const data = response.data;
+      const data = response.data.data;
+      dispatch({
+        type: "REGISTER",
+        payload: { user: data.user, token: data.token },
+      });
+      navigate("/cases");
       console.log("POST request successful:\n", data);
     } catch (error) {
       console.error("Error during POST request:", error);

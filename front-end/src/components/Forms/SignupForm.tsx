@@ -15,9 +15,7 @@ import {
 import { BsChevronDown } from "react-icons/bs";
 import * as Yup from "yup";
 import { useState } from "react";
-import { useAuth } from "../../../contexts/AuthenticationContext";
 import RegisterFormValues from "../../interfaces/RegisterFormValues";
-// import { useNavigate } from "react-router-dom";
 
 const universities = [
   "Zakazik University",
@@ -35,7 +33,7 @@ const universities = [
   "Damietta University",
 ];
 const grades = ["4th grade", "5th grade", "graduated"];
-const initialValues = {
+export const initialValues = {
   name: "",
   email: "",
   password: "",
@@ -67,12 +65,15 @@ const validationSchema = Yup.object().shape({
   university: Yup.string().required("University is required"),
 });
 
-function SignupForm() {
-  const { register } = useAuth();
+interface Props {
+  setFormValues: React.Dispatch<React.SetStateAction<RegisterFormValues>>;
+}
+
+function SignupForm({ setFormValues }: Props) {
   const formik = useFormik<RegisterFormValues>({
     initialValues,
     onSubmit: (values) => {
-      if (register) register(values);
+      if (setFormValues) setFormValues(values);
     },
     validationSchema: validationSchema,
     validateOnBlur: true,
