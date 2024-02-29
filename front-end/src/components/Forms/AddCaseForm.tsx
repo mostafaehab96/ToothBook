@@ -73,25 +73,27 @@ function AddCaseForm() {
       formData.append("sex", body.sex);
       formData.append("phoneNumber", body.phoneNumber);
       formData.append("diagnosis", body.diagnosis);
-      formData.append("isEmergency", body.isEmergency.toString());
-      formData.append(
-        "isMedicalCompromised",
-        body.isMedicalCompromised.toString()
-      );
-      formData.append(
-        "medicalCompromised",
-        JSON.stringify(body.medicalCompromised)
-      );
-      formData.append("departments", JSON.stringify(body.departments));
       formData.append("address", body.address);
+      formData.append("department", JSON.stringify(body.departments));
+      formData.append("isEmergency", body.isEmergency.toString());
+      // formData.append(
+      //   "isMedicalCompromised",
+      //   body.isMedicalCompromised.toString()
+      // );
+      // formData.append(
+      //   "medicalCompromised",
+      //   JSON.stringify(body.medicalCompromised)
+      // );
 
       selectedImages.forEach((file, index) => {
-        formData.append(`photos[${index}]`, file);
+        formData.append(`photos`, file, `image${index}.jpg`);
       });
+
       // #endregion adding formdata
 
-      console.log(user.token);
-      const response = await api_client.post("/patients/", formData, {
+      console.log(formData.get("department"));
+
+      const response = await api_client.post("/patients", formData, {
         headers: {
           Authorization: `Bearer ${user.token}`,
           "Content-Type": "multipart/form-data",
@@ -238,7 +240,7 @@ function AddCaseForm() {
                   {["male", "female"].map((gender) => (
                     <MenuItem
                       key={gender}
-                      onClick={() => formik.setFieldValue("gender", gender)}
+                      onClick={() => formik.setFieldValue("sex", gender)}
                     >
                       {gender.charAt(0).toUpperCase() + gender.slice(1)}
                     </MenuItem>
