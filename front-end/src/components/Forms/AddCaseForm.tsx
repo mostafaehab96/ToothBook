@@ -21,6 +21,8 @@ import AddCaseImagesUploader from "./AddCaseImagesUploader";
 import Department from "../../interfaces/Department";
 import MedicalCompromises from "../../interfaces/MedicalCompromises";
 import api_client from "../../Services/api_client";
+import { useState } from "react";
+import { useAuth } from "../../../contexts/AuthenticationContext";
 
 interface FormValues {
   name: string;
@@ -30,9 +32,10 @@ interface FormValues {
   diagnosis: string;
   isEmergency: boolean;
   isMedicalCompromised: boolean;
-  medicalCompromised: MedicalCompromises[] | undefined;
-  departments: Department[] | undefined;
+  medicalCompromised: MedicalCompromises[];
+  departments: Department[];
   address: string;
+  photos: File[];
 }
 
 const initialValues = {
@@ -44,11 +47,15 @@ const initialValues = {
   address: "",
   isEmergency: false,
   isMedicalCompromised: false,
-  medicalCompromised: undefined,
-  departments: undefined,
+  medicalCompromised: [],
+  departments: [],
+  photos: [],
 };
 
 function AddCaseForm() {
+  const [selectedImages, setSelectedImages] = useState<File[]>([]);
+  const { user } = useAuth();
+
   const formik = useFormik<FormValues>({
     initialValues,
     onSubmit: (values) => {
@@ -57,10 +64,39 @@ function AddCaseForm() {
   });
 
   async function addCasePostRequest(body: FormValues) {
-    console.log(JSON.stringify(body));
+    if (!user) return;
+    const formData = new FormData();
     try {
-      const response = await api_client.post("/patients/", body);
-      console.log(response);
+      // #region adding formdata
+      formData.append("name", body.name);
+      formData.append("age", body.age);
+      formData.append("sex", body.sex);
+      formData.append("phoneNumber", body.phoneNumber);
+      formData.append("diagnosis", body.diagnosis);
+      formData.append("isEmergency", body.isEmergency.toString());
+      formData.append(
+        "isMedicalCompromised",
+        body.isMedicalCompromised.toString()
+      );
+      formData.append(
+        "medicalCompromised",
+        JSON.stringify(body.medicalCompromised)
+      );
+      formData.append("departments", JSON.stringify(body.departments));
+      formData.append("address", body.address);
+
+      selectedImages.forEach((file, index) => {
+        formData.append(`photos[${index}]`, file);
+      });
+      // #endregion adding formdata
+
+      console.log(user.token);
+      const response = await api_client.post("/patients/", formData, {
+        headers: {
+          Authorization: `Bearer ${user.token}`,
+          "Content-Type": "multipart/form-data",
+        },
+      });
 
       if (response.data.status !== "success") {
         throw new Error(`HTTP error! Status: ${response.status}`);
@@ -302,7 +338,10 @@ function AddCaseForm() {
         </Stack>
       </SimpleGrid>
       <Box paddingY={8} paddingX={2}>
-        <AddCaseImagesUploader />
+        <AddCaseImagesUploader
+          selectedImages={selectedImages}
+          setSelectedImages={setSelectedImages}
+        />
       </Box>
       <HStack justify="center" marginBottom={5}>
         <Button

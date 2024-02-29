@@ -72,32 +72,35 @@ function CasesProvider({ children }: Props) {
   const [{ cases, isLoading, error, currentPage, totalPages }, dispatch] =
     useReducer(reducer, initialState);
 
-  useEffect(function () {
-    async function fetchCases() {
-      dispatch({ type: "loading", payload: undefined });
-      try {
-        const res = await fetch(
-          `${URL}patients?page=1&limit=${CASES_LIMIT_PER_PAGE}`
-        );
-        const jsRes = await res.json();
-        if (jsRes.status === "success") {
+  useEffect(
+    function () {
+      async function fetchCases() {
+        dispatch({ type: "loading", payload: undefined });
+        try {
+          const res = await fetch(
+            `${URL}patients?page=${currentPage}&limit=${CASES_LIMIT_PER_PAGE}`
+          );
+          const jsRes = await res.json();
+          if (jsRes.status === "success") {
+            dispatch({
+              type: "cases/loaded",
+              payload: {
+                patients: jsRes.data.patients,
+                totalCount: jsRes.data.totalCount,
+              },
+            });
+          }
+        } catch (e) {
           dispatch({
-            type: "cases/loaded",
-            payload: {
-              patients: jsRes.data.patients,
-              totalCount: jsRes.data.totalCount,
-            },
+            type: "rejected",
+            payload: "error happened during fetching cases",
           });
         }
-      } catch (e) {
-        dispatch({
-          type: "rejected",
-          payload: "error happened during fetching cases",
-        });
       }
-    }
-    fetchCases();
-  }, []);
+      fetchCases();
+    },
+    [currentPage]
+  );
 
   async function createCase(newCase: Case) {
     dispatch({ type: "loading", payload: undefined });

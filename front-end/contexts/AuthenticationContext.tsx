@@ -73,7 +73,7 @@ function AuthenticationProvider({ children }: AuthProviderProps) {
       dispatch({
         type: "LOGIN",
         payload: {
-          token: response.data.token,
+          token: response.data.data.token,
           user: response.data.data.user,
         },
       });

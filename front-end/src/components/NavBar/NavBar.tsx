@@ -11,7 +11,6 @@ import { useAuth } from "../../../contexts/AuthenticationContext";
 
 function NavBar() {
   const { isAuthenticated, user, logout } = useAuth();
-  console.log(user);
   return (
     <HStack paddingY={2} paddingX={3} spacing={2}>
       <Logo />

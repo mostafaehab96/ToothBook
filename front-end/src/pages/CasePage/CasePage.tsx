@@ -1,12 +1,4 @@
-import {
-  Grid,
-  GridItem,
-  HStack,
-  Show,
-  Spinner,
-  Stack,
-  VStack,
-} from "@chakra-ui/react";
+import { Grid, GridItem, Show, Spinner, Stack, VStack } from "@chakra-ui/react";
 import { useParams } from "react-router-dom";
 import NavBar from "../../components/NavBar/NavBar";
 import PicsViewer from "../../components/Case/PicsViewer";
@@ -84,7 +76,6 @@ function CasePage() {
               scrollbarWidth: "none",
             }}
             area={"main"}
-            // justifySelf="center"
             display="flex"
             alignItems="center"
             overflow={"scroll"}

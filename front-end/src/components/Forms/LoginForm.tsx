@@ -41,23 +41,6 @@ function LoginForm() {
     validateOnMount: true,
   });
 
-  // async function loginPostRequest(body: FormValues) {
-  //   console.log(JSON.stringify(body));
-  //   try {
-  //     const response = await api_client.post("/users/login", body);
-  //     console.log(response);
-
-  //     if (response.data.status !== "success") {
-  //       throw new Error(`HTTP error! Status: ${response.status}`);
-  //     }
-
-  //     const data = response.data;
-  //     console.log("POST request successful:\n", data);
-  //   } catch (error) {
-  //     console.error("Error during POST request:", error);
-  //   }
-  // }
-
   return (
     <form onSubmit={formik.handleSubmit}>
       <Stack spacing={3} align="center">

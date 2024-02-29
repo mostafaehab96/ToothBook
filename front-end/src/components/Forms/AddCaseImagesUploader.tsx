@@ -2,8 +2,12 @@ import { Button, HStack, Input, Text, VStack } from "@chakra-ui/react";
 import { ChangeEvent, useRef, useState } from "react";
 import PicsViewer from "../Case/PicsViewer";
 
-function AddCaseImagesUploader() {
-  const [selectedImages, setSelectedImages] = useState<File[]>([]);
+interface Props {
+  selectedImages: File[];
+  setSelectedImages: React.Dispatch<React.SetStateAction<File[]>>;
+}
+
+function AddCaseImagesUploader({ selectedImages, setSelectedImages }: Props) {
   const [inputKey, setInputKey] = useState<string>(Math.random().toString(36));
   const inputRef = useRef<HTMLInputElement | null>(null);
 

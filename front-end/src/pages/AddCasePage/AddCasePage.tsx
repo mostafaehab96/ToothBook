@@ -31,7 +31,6 @@ function AddCasePage() {
         area="main"
         marginX={7}
         overflow={"scroll"}
-        // height={{ sm: "auto", md: "auto", lg: "auto" }}
         height="auto"
       >
         <VStack
