@@ -31,9 +31,11 @@ const userSchema = new Schema({
   },
   casesPerSemester: {
     type: Number,
+    default: 10
   },
   contactedPatients: {
     type: Number,
+    default: 0
   },
   assignedPatients: [{ type: Schema.Types.ObjectId, ref: 'Patient' }],
   createdAt: {
