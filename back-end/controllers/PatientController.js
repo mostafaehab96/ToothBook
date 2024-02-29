@@ -27,7 +27,7 @@ class PatientController {
       const errorsMessages = errors.errors.map((err) => err.msg);
       return next(createError(400, errorsMessages.toString()));
     }
-    let files = req.files.map((file) => file.filename);
+    let files = req.files.map((file) => `patients/${file.filename}`);
     const newPatient = new Patient({...req.body, photos: files});
     await newPatient.save();
     res.json(jSend.success({patient: newPatient}));
