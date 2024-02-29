@@ -11,6 +11,7 @@ interface AuthProviderProps {
 interface Auth {
   user: User | null;
   isAuthenticated: boolean;
+  error: string;
   login: undefined | ((email: string, password: string) => void);
   register:
     | undefined
@@ -26,6 +27,7 @@ interface Action {
 const initialState: Auth = {
   user: null,
   isAuthenticated: false,
+  error: "",
   login: undefined,
   logout: undefined,
   register: undefined,
@@ -34,17 +36,24 @@ const AuthContext = createContext<Auth | null>(null);
 
 function reducer(state: Auth, action: Action): Auth {
   switch (action.type) {
+    case "error":
+      return {
+        ...state,
+        error: action.payload as string,
+      };
     case "REGISTER":
       return {
         ...state,
         isAuthenticated: true,
         user: { ...action.payload.user, token: action.payload.token },
+        error: "",
       };
     case "LOGIN":
       return {
         ...state,
         isAuthenticated: true,
         user: { ...action.payload.user, token: action.payload.token },
+        error: "",
       };
     case "LOGOUT":
       return initialState;
@@ -55,7 +64,7 @@ function reducer(state: Auth, action: Action): Auth {
 }
 
 function AuthenticationProvider({ children }: AuthProviderProps) {
-  const [{ user, isAuthenticated }, dispatch] = useReducer(
+  const [{ user, isAuthenticated, error }, dispatch] = useReducer(
     reducer,
     initialState
   );
@@ -121,6 +130,7 @@ function AuthenticationProvider({ children }: AuthProviderProps) {
       console.log("POST request successful:\n", data);
     } catch (error) {
       console.error("Error during POST request:", error);
+      dispatch({ type: "error", payload: "this user already exists" });
     }
   }
   function logout() {
@@ -130,7 +140,7 @@ function AuthenticationProvider({ children }: AuthProviderProps) {
 
   return (
     <AuthContext.Provider
-      value={{ user, isAuthenticated, register, login, logout }}
+      value={{ user, isAuthenticated, error, register, login, logout }}
     >
       {children}
     </AuthContext.Provider>

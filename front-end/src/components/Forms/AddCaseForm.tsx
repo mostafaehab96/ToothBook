@@ -23,6 +23,7 @@ import MedicalCompromises from "../../interfaces/MedicalCompromises";
 import api_client from "../../Services/api_client";
 import { useState } from "react";
 import { useAuth } from "../../../contexts/AuthenticationContext";
+import { useNavigate } from "react-router-dom";
 
 interface FormValues {
   name: string;
@@ -55,7 +56,7 @@ const initialValues = {
 function AddCaseForm() {
   const [selectedImages, setSelectedImages] = useState<File[]>([]);
   const { user } = useAuth();
-
+  const navigate = useNavigate();
   const formik = useFormik<FormValues>({
     initialValues,
     onSubmit: (values) => {
@@ -104,6 +105,8 @@ function AddCaseForm() {
 
       const data = response.data;
       console.log("POST request successful:\n", data);
+      formik.resetForm();
+      navigate("/cases");
     } catch (error) {
       console.error("Error during POST request:", error);
     }
