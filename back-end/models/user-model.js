@@ -48,7 +48,7 @@ const userSchema = new Schema({
   },
   photo: {
     type: String,
-    default: 'uploads/avatar.jpeg',
+    default: null,
   },
 });
 

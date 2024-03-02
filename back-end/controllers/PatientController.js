@@ -6,11 +6,10 @@ const createError = require('http-errors');
 
 
 const getAllPatients = asyncWrapper(async (req, res) => {
-  const { query } = req;
-  const limit = query.limit || 15;
-  const page = query.page || 1;
+  let { page, limit, ...filter } = req.query;
+  limit = limit || 15;
+  page = page || 1;
   const skip = (page - 1) * limit;
-  const filter = query.params;
   const patients = await Patient.find(filter, { __v: false })
     .limit(limit)
     .skip(skip);
