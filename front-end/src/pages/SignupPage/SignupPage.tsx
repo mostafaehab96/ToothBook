@@ -4,34 +4,53 @@ import SignupForm, { initialValues } from "../../components/Forms/SignupForm";
 import RegisterImageUploader from "../../components/Forms/RegisterImagesUploader";
 import { useAuth } from "../../../contexts/AuthenticationContext";
 import RegisterFormValues from "../../interfaces/RegisterFormValues";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import ErrorAlert from "../../components/Alerts/ErrorAlert";
+// import api_client from "../../Services/api_client";
 
 function SignupPage() {
   const { register, error } = useAuth();
   const [selectedImage, setSelectedImage] = useState<File>();
-  const [formValues, setFormValues] =
-    useState<RegisterFormValues>(initialValues);
-  console.log("rerendered");
+  // const [formValues, setFormValues] =
+  //   useState<RegisterFormValues>(initialValues);
+  // console.log("rerendered");
 
-  useEffect(
-    function () {
-      function handleFormValuesChange() {
-        if (
-          register &&
-          Object.values(formValues).every((val) => val as boolean)
-        ) {
-          register(formValues, selectedImage);
-        }
-      }
-      console.log("rerendered");
-      if (formValues && register) {
-        console.log(formValues);
-        handleFormValuesChange();
-      }
-    },
-    [formValues]
-  );
+  function handleRegisterSubmit(values: RegisterFormValues) {
+    if (register) register(values, selectedImage);
+  }
+
+  // useEffect(
+  //   function () {
+  //     function handleFormValuesChange() {
+  //       if (
+  //         register &&
+  //         Object.values(formValues).every((val) => val as boolean)
+  //       ) {
+  //         register(formValues, selectedImage);
+  //       }
+  //     }
+  //     console.log("rerendered");
+  //     if (formValues && register) {
+  //       console.log(formValues);
+  //       handleFormValuesChange();
+  //     }
+  //   },
+  //   [formValues]
+  // );
+
+  // async function handleRegisterSubmit(values: RegisterFormValues) {
+  //   // send request to ask of the user exists
+  //   try {
+  //     const response = await api_client.get("/users/exists");
+  //     console.log(response);
+  //     if (response.data.status === "success") {
+  //       if (response.data.data === null) {
+  //         setError;
+  //       }
+  //     }
+  //   } catch (e) {}
+  //   // if not register with the values and the photo
+  // }
 
   return (
     <Grid
@@ -77,7 +96,9 @@ function SignupPage() {
           </Box>
 
           <Box paddingX={{ base: 0, md: "100px" }}>
-            <SignupForm setFormValues={setFormValues} />
+            <SignupForm
+              registerSubmit={(values) => handleRegisterSubmit(values)}
+            />
           </Box>
         </VStack>
       </GridItem>
