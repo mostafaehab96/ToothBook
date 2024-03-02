@@ -12,6 +12,7 @@ import { useState } from "react";
 import { GrPrevious } from "react-icons/gr";
 import { GrNext } from "react-icons/gr";
 import placeHolderImage from "../../../public/placeholder-image.webp";
+import getLocalImage from "../../utils/getLocalImage";
 
 interface Props {
   images: Array<string> | Array<File>;
@@ -112,7 +113,7 @@ const PicsViewer = ({ images, isLoading, handleRemoveImage }: Props) => {
               borderRadius={12}
               src={
                 images.length
-                  ? (images[currentImageIndex] as string)
+                  ? (getLocalImage(images[currentImageIndex]) as string)
                   : placeHolderImage
               }
               alt={`Image ${currentImageIndex + 1}`}

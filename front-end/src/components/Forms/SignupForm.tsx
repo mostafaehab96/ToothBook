@@ -66,14 +66,15 @@ const validationSchema = Yup.object().shape({
 });
 
 interface Props {
-  setFormValues: React.Dispatch<React.SetStateAction<RegisterFormValues>>;
+  // setFormValues: React.Dispatch<React.SetStateAction<RegisterFormValues>>;
+  registerSubmit: (values: RegisterFormValues) => void;
 }
 
-function SignupForm({ setFormValues }: Props) {
+function SignupForm({ registerSubmit }: Props) {
   const formik = useFormik<RegisterFormValues>({
     initialValues,
     onSubmit: (values) => {
-      if (setFormValues) setFormValues(values);
+      if (registerSubmit) registerSubmit(values);
     },
     validationSchema: validationSchema,
     validateOnBlur: true,

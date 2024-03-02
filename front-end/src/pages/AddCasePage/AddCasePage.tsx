@@ -1,8 +1,12 @@
 import { Grid, GridItem, VStack } from "@chakra-ui/react";
 import NavBar from "../../components/NavBar/NavBar";
 import AddCaseForm from "../../components/Forms/AddCaseForm";
+import { useState } from "react";
+import ErrorAlert from "../../components/Alerts/ErrorAlert";
 
 function AddCasePage() {
+  const [error, setError] = useState("");
+
   return (
     <Grid
       templateAreas={{
@@ -18,6 +22,7 @@ function AddCasePage() {
     >
       <GridItem area="nav" paddingBottom={8}>
         <NavBar />
+        {error && <ErrorAlert title="Error" message={error} />}
       </GridItem>
 
       <GridItem
@@ -39,7 +44,7 @@ function AddCasePage() {
           alignItems="center"
           justifyContent="center"
         >
-          <AddCaseForm />
+          <AddCaseForm setError={setError} />
         </VStack>
       </GridItem>
     </Grid>

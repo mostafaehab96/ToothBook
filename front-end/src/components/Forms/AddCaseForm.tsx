@@ -53,13 +53,24 @@ const initialValues = {
   photos: [],
 };
 
-function AddCaseForm() {
+interface Props {
+  setError: React.Dispatch<React.SetStateAction<string>>;
+}
+
+function AddCaseForm({ setError }: Props) {
   const [selectedImages, setSelectedImages] = useState<File[]>([]);
   const { user } = useAuth();
   const navigate = useNavigate();
   const formik = useFormik<FormValues>({
     initialValues,
     onSubmit: (values) => {
+      if (!user) return;
+      if (selectedImages.length === 0) {
+        setError("Please select at least one image");
+        return;
+      } else {
+        setError("");
+      }
       addCasePostRequest(values);
     },
   });
@@ -90,8 +101,6 @@ function AddCaseForm() {
 
       // #endregion adding formdata
 
-      console.log(formData.get("departments"));
-
       const response = await api_client.post("/patients", formData, {
         headers: {
           Authorization: `Bearer ${user.token}`,
@@ -100,6 +109,7 @@ function AddCaseForm() {
       });
 
       if (response.data.status !== "success") {
+        setError("Unexpected error adding a new case");
         throw new Error(`HTTP error! Status: ${response.status}`);
       }
 
@@ -108,6 +118,7 @@ function AddCaseForm() {
       formik.resetForm();
       navigate("/cases");
     } catch (error) {
+      setError("Error adding a new case, check your internet connection");
       console.error("Error during POST request:", error);
     }
   }

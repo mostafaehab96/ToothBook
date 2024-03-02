@@ -10,6 +10,7 @@ import { useNavigate } from "react-router";
 import Case from "../../interfaces/Case";
 import CardIconsList from "./CardIconsList";
 import placeHolderImage from "../../../public/placeholder-image.webp";
+import getLocalImage from "../../utils/getLocalImage";
 
 interface Props {
   casee: Case;
@@ -27,7 +28,7 @@ function CaseCard({ casee }: Props) {
       onClick={() => navigate(`/case/${casee._id}`)}
     >
       <Image
-        src={casee.photos[0] || placeHolderImage}
+        src={getLocalImage(casee.photos[0]) || placeHolderImage}
         fallbackSrc={placeHolderImage}
         height={{ base: "auto", md: "68%", lg: "68%" }}
       />
