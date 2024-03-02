@@ -7,7 +7,7 @@ const patientRouter = express.Router();
 
 patientRouter
   .route('/')
-  .get(PatientController.getAllPatients)
+  .post(PatientController.getAllPatients)
   .post(verifyToken, uploadPatientPhotos, validatePatient(), PatientController.postPatient);
 
 patientRouter

@@ -10,7 +10,7 @@ const getAllPatients = asyncWrapper(async (req, res) => {
   const limit = query.limit || 15;
   const page = query.page || 1;
   const skip = (page - 1) * limit;
-  const filter = req.body;
+  const filter = query.params;
   const patients = await Patient.find(filter, { __v: false })
     .limit(limit)
     .skip(skip);
