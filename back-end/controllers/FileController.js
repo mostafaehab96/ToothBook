@@ -1,11 +1,14 @@
 const upload = require('../utils/mutler-config');
 
-class FileController {
-
-  static uploadPatientPhotos = upload.array('photos');
-
-  static uploadUserPhoto = upload.single('photo');
-}
 
 
-module.exports = FileController;
+const uploadPatientPhotos = upload.array('photos');
+
+const uploadUserPhoto = upload.single('photo');
+
+
+
+module.exports = {
+  uploadUserPhoto,
+  uploadPatientPhotos
+};

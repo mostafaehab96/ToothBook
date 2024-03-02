@@ -1,8 +1,8 @@
 const express = require('express');
-const PatientController = require('../controllers/PatientController');
+const { PatientController } = require('../controllers/PatientController');
 const {validatePatient} = require('../middlewares/validationSchemas');
 const verifyToken = require('../middlewares/verify-token');
-const {uploadPatientPhotos} = require('../controllers/FileController');
+const { uploadPatientPhotos } = require('../controllers/FileController');
 const patientRouter = express.Router();
 
 patientRouter

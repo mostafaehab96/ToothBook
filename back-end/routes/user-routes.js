@@ -1,14 +1,16 @@
 const express = require('express');
-const userController = require('../controllers/UserController');
+const { UserController } = require('../controllers/UserController');
 const router = express.Router();
-const {uploadUserPhoto} = require('../controllers/FileController');
+const { uploadUserPhoto } = require('../controllers/FileController');
 const { validateUser } = require('../middlewares/validationSchemas');
 
-router.route('/').get(userController.getAllUsers);
+router.route('/').get(UserController.getAllUsers);
+router.route('/exists').get(UserController.userExists);
 router.route('/register')
-  .post(uploadUserPhoto, validateUser(), userController.registerUser);
+  .post(uploadUserPhoto, validateUser(), UserController.registerUser);
+router.route('/:id').get(UserController.getUser);
 
 router.route('/login')
-  .post(userController.loginUser);
+  .post(UserController.loginUser);
 
 module.exports = router;
