@@ -4,7 +4,7 @@ const jSend = require('jsend');
 const asyncWrapper = require('../middlewares/async-wrapper');
 const createError = require('http-errors');
 const patientStatus = require('../utils/patientStatus');
-const { allDepartments, medicalStatus } = require('../utils/departments-medical');
+const { allDepartments } = require('../utils/departments-medical');
 
 const getAllPatients = asyncWrapper(async (req, res) => {
   let { page, limit, departments, medicalCompromised, ...filter } = req.query;
@@ -13,13 +13,16 @@ const getAllPatients = asyncWrapper(async (req, res) => {
   page = page || 1;
   const skip = (page - 1) * limit;
   departments = departments || allDepartments;
-  medicalCompromised = medicalCompromised || medicalStatus;
 
   const myFilter = {
     ...filter,
     departments: { $in: departments },
-    medicalCompromised: { $in: medicalCompromised }
   };
+  if (medicalCompromised) {
+    myFilter.medicalCompromised = medicalCompromised === 'true'? { $ne: [] } : [];
+  }
+
+
   const patients = await Patient.find(myFilter, { __v: false })
     .limit(limit)
     .skip(skip);
