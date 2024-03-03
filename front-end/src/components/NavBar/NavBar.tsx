@@ -8,6 +8,7 @@ import ColorModeSwitch from "./ColorModeSwitch";
 import ProfilePic from "./ProfilePic";
 import { FaInfo } from "react-icons/fa";
 import { useAuth } from "../../../contexts/AuthenticationContext";
+import getLocalImage from "../../utils/getLocalImage";
 
 function NavBar() {
   const { isAuthenticated, user, logout } = useAuth();
@@ -46,7 +47,9 @@ function NavBar() {
           </Link>
         )}
         <ColorModeSwitch />
-        {isAuthenticated && <ProfilePic pic={user?.photo} />}
+        {isAuthenticated && (
+          <ProfilePic pic={user?.photo ? getLocalImage(user.photo) : ""} />
+        )}
       </HStack>
     </HStack>
   );

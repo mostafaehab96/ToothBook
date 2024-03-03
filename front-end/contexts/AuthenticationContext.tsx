@@ -3,7 +3,6 @@ import api_client from "../src/Services/api_client";
 import User from "../src/interfaces/User";
 import RegisterFormValues from "../src/interfaces/RegisterFormValues";
 import { useNavigate } from "react-router";
-import axios from "axios";
 
 interface AuthProviderProps {
   children: React.JSX.Element;
@@ -99,16 +98,24 @@ function AuthenticationProvider({ children }: AuthProviderProps) {
     profilePicture: File | undefined
   ) {
     try {
-      // const cehckRequestBody = { email: body.email };
+      const cehckRequestBody = { email: body.email };
       // const params = new URLSearchParams(cehckRequestBody).toString();
       // const fullUrl = `${"http://localhost:4000/api/users/exists"}?${params}`;
 
-      const checkUserExistsResponse = await api_client.get("/users/exists", {
-        data: { email: body.email },
-      });
+      const checkUserExistsResponse = await api_client.post(
+        "/users/exists",
+        cehckRequestBody
+      );
       console.log(checkUserExistsResponse.data);
-      return;
-      // if user doesn't exist  on the server, create a new one with given data
+      if (checkUserExistsResponse.data.status !== "success") {
+        throw new Error(
+          `HTTP errorrrrr! Status: ${checkUserExistsResponse.status}`
+        );
+      }
+      if (checkUserExistsResponse.data.data) {
+        throw new Error(`this user already exists:`);
+      }
+
       const formData = new FormData();
       formData.append("name", body.name);
       formData.append("email", body.email);
@@ -135,10 +142,14 @@ function AuthenticationProvider({ children }: AuthProviderProps) {
         payload: { user: data.user, token: data.token },
       });
       navigate("/cases");
-      console.log("POST request successful:\n", data);
-    } catch (error) {
-      // console.error("Error during POST request:", error);
-      dispatch({ type: "error", payload: "this user already exists" });
+    } catch (err) {
+      console.error("Error during POST request:", error);
+      let errorMessage: string = "";
+      if (err instanceof Error) errorMessage = err.message;
+      dispatch({
+        type: "error",
+        payload: errorMessage,
+      });
     }
   }
   function logout() {
