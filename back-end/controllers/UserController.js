@@ -41,7 +41,7 @@ const registerUser = asyncWrapper(async (req, res, next) => {
     email,
     password: hashedPassword,
     university,
-    photo: req.file.filename
+    photo: req.file?.filename || null
   });
 
   const token = await generateJWT({
