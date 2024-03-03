@@ -150,6 +150,25 @@ const returnPatient = asyncWrapper(async (req, res, next) => {
   res.json(jSend.success({activePatients: user.activePatients}));
 });
 
+const rejectPatient = asyncWrapper(async (req, res, next) => {
+  const { patientId } = req.body;
+  const user = await User.findById(req.params.id);
+  if (!user) return next(createError(404, 'User not found!'));
+  if (!patientId) return next(createError(400, 'Patient id must be sent'));
+  const patient = await Patient.findById(patientId);
+  if (!patient) return next(createError(404, 'Patient not found!'));
+
+  const patientIndex = user.activePatients.indexOf(patientId);
+  if (patientIndex === -1) {
+    return next(createError(401, 'Patient wasn\'t contacted by this user!'));
+  }
+  user.activePatients.splice(patientIndex, 1);
+  patient.status = patientStatus.REJECTED;
+  await user.save();
+  await patient.save();
+
+  res.json(jSend.success({activePatients: user.activePatients}));
+});
 
 const UserController = {
   getAllUsers,
@@ -160,7 +179,8 @@ const UserController = {
   userExists,
   contactPatient,
   treatPatient,
-  returnPatient
+  returnPatient,
+  rejectPatient
 };
 
 module.exports = { UserController };

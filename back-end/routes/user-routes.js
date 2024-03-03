@@ -15,7 +15,7 @@ router.route('/:id')
 
 router.post('/:id/contact', verifyToken, UserController.contactPatient);
 router.post('/:id/treat', UserController.treatPatient);
-router.delete('/:id/reject');
+router.post('/:id/reject', UserController.rejectPatient);
 router.post('/:id/return', UserController.returnPatient);
 
 module.exports = router;
