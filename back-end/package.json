@@ -5,6 +5,7 @@
   "main": "index.js",
   "scripts": {
     "test": "nodemon app.js",
+    "dev": "node app.js",
     "lint": "node_modules/eslint/bin/eslint.js --fix",
     "check-lint": "lint *.js",
     "fake-data": "node utils/generate-fakes.js",
