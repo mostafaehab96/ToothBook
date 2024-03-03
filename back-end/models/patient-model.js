@@ -1,6 +1,6 @@
 const mongoose = require('mongoose');
 const patientStatus = require('../utils/patientStatus');
-const departments = require('../utils/departments');
+const { allDepartments, medicalStatus} = require('../utils/departments-medical');
 const { Schema } = mongoose;
 
 const patientSchema = new Schema({
@@ -71,13 +71,13 @@ const patientSchema = new Schema({
   medicalCompromised: [
     {
       type: String,
-      enum: ['Hypertensive', 'Cardiac', 'Disability', 'Diabetic', 'Other'],
+      enum: medicalStatus,
     },
   ],
   photos: [{ type: String, required: true }],
   departments: [{
     type: String,
-    enum: departments,
+    enum: allDepartments,
   }],
 });
 

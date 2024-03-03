@@ -3,7 +3,7 @@ const Patient  = require('../models/patient-model');
 const mongoose = require('mongoose');
 require('dotenv').config();
 const url = process.env.MONGO_URL;
-const departments = require('./departments');
+const { allDepartments } = require('./departments-medical');
 const patientsImages = require('./temporary-images');
 const clearFirst = process.argv[2] === 'clear';
 
@@ -37,7 +37,7 @@ const generateFakePatients = async (numPatients, clearFirst) => {
         medicalCompromised: faker.helpers.arrayElements(['Hypertensive', 'Cardiac', 'Disability', 'Diabetic'], {min: 0, max: 3}),
         createdAt: faker.date.past(),
         updatedAt: faker.date.recent(),
-        departments: faker.helpers.arrayElements(departments, {min: 1, max: 3}),
+        departments: faker.helpers.arrayElements(allDepartments, {min: 1, max: 3}),
         photos: [image]
       });
 
