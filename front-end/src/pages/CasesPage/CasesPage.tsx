@@ -1,7 +1,7 @@
 import { Grid, GridItem, HStack } from "@chakra-ui/react";
 import NavBar from "../../components/NavBar/NavBar";
 import CasesGrid from "../../components/Cases/CasesGrid";
-import FilterSelector from "../../components/Cases/FilterSelector";
+import { FilterSelectors } from "../../components/Cases/FilterSelector";
 import { useCases } from "../../../contexts/CasesContext";
 import ErrorAlert from "../../components/Alerts/ErrorAlert";
 import PageSelector from "../../components/Cases/PageSelector";
@@ -30,7 +30,7 @@ function CasesPage() {
           />
         ) : (
           <HStack justify="space-between" paddingX={1}>
-            <FilterSelector />
+            <FilterSelectors />
             {isAuthenticated && <AddCaseButton />}
           </HStack>
         )}

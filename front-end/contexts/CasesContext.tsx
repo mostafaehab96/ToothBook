@@ -1,6 +1,15 @@
 import { createContext, useContext, useEffect, useReducer } from "react";
 import Case from "../src/interfaces/Case";
 import React from "react";
+import {
+  createObjectWithFalseValues,
+  createObjectWithTrueValues,
+} from "../src/utils/createObjectOfFalse";
+import Department from "../src/interfaces/Department";
+import MedicalCompromises from "../src/interfaces/MedicalCompromises";
+import Status from "../src/interfaces/Status";
+import { Filters } from "../src/components/Cases/FilterSelector";
+import api_client from "../src/Services/api_client";
 
 const URL = "http://localhost:4000/api/";
 const CASES_LIMIT_PER_PAGE = 15;
@@ -12,6 +21,8 @@ interface ContextType {
   cases: Array<Case>;
   isLoading: boolean;
   error: string;
+  filters: Filters;
+  filterItemChecked: null | ((filter: string, filterItem: string) => void);
   createCase: null | ((newCase: Case) => void);
   deleteCase: null | ((id: number) => void);
 }
@@ -33,13 +44,44 @@ const initialState: ContextType = {
   isLoading: false,
   error: "",
   createCase: null,
+  filterItemChecked: null,
   deleteCase: null,
+  filters: {
+    department: createObjectWithFalseValues(Object.keys(Department)),
+    medicalCompromises: createObjectWithFalseValues(
+      Object.keys(MedicalCompromises)
+    ),
+    status: createObjectWithFalseValues(Object.keys(Status)),
+    emergency: createObjectWithTrueValues(["Emergency", "notEmergency"]),
+  },
 };
 
 const CasesContext = createContext(initialState);
 
 function reducer(state: ContextType, action: ReducerAction) {
   switch (action.type) {
+    case "filterItemChecked":
+      if (
+        state.filters[action.payload.filter as keyof Filters] &&
+        state.filters[action.payload.filter as keyof Filters][
+          action.payload.filterItem
+        ] !== undefined
+      ) {
+        const updatedFilters: Filters = {
+          ...state.filters,
+          [action.payload.filter]: {
+            ...state.filters[action.payload.filter as keyof Filters],
+            [action.payload.filterItem]:
+              !state.filters[action.payload.filter as keyof Filters][
+                action.payload.filterItem
+              ],
+          },
+        };
+
+        return { ...state, filters: updatedFilters };
+      } else {
+        return state;
+      }
     case "set_page":
       return { ...state, currentPage: action.payload };
     case "rejected":
@@ -69,18 +111,36 @@ function reducer(state: ContextType, action: ReducerAction) {
 }
 
 function CasesProvider({ children }: Props) {
-  const [{ cases, isLoading, error, currentPage, totalPages }, dispatch] =
-    useReducer(reducer, initialState);
+  const [
+    { cases, isLoading, error, currentPage, totalPages, filters },
+    dispatch,
+  ] = useReducer(reducer, initialState);
+  console.log(filters);
 
   useEffect(
     function () {
       async function fetchCases() {
         dispatch({ type: "loading", payload: undefined });
         try {
-          const res = await fetch(
-            `${URL}patients?page=${currentPage}&limit=${CASES_LIMIT_PER_PAGE}`
-          );
-          const jsRes = await res.json();
+          const filterParams = {
+            page: currentPage,
+            limit: CASES_LIMIT_PER_PAGE,
+          };
+
+          if (filters.emergency.Emergency !== filters.emergency.notEmergency) {
+            if (filters.emergency.Emergency)
+              filterParams["isEmergency" as keyof typeof filterParams] = true;
+            else
+              filterParams["isEmergency" as keyof typeof filterParams] = false;
+          }
+
+          // console.log(filterParams);
+
+          const res = await api_client.get("patients", {
+            params: filterParams,
+          });
+          const jsRes = await res.data;
+
           if (jsRes.status === "success") {
             dispatch({
               type: "cases/loaded",
@@ -99,7 +159,7 @@ function CasesProvider({ children }: Props) {
       }
       fetchCases();
     },
-    [currentPage]
+    [currentPage, filters]
   );
 
   async function createCase(newCase: Case) {
@@ -143,6 +203,10 @@ function CasesProvider({ children }: Props) {
     }
   }
 
+  function filterItemChecked(filter: string, filterItem: string) {
+    dispatch({ type: "filterItemChecked", payload: { filter, filterItem } });
+  }
+
   return (
     <CasesContext.Provider
       value={{
@@ -151,6 +215,8 @@ function CasesProvider({ children }: Props) {
         cases,
         isLoading,
         error,
+        filters,
+        filterItemChecked,
         createCase,
         deleteCase,
         setPage,
