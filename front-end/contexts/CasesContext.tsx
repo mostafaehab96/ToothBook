@@ -1,18 +1,15 @@
 import { createContext, useContext, useEffect, useReducer } from "react";
 import Case from "../src/interfaces/Case";
 import React from "react";
-import {
-  createObjectWithFalseValues,
-  createObjectWithTrueValues,
-} from "../src/utils/createObjectOfFalse";
+import { createObjectWithFalseValues } from "../src/utils/createObjectOfFalse";
 import Department from "../src/interfaces/Department";
 import { Filters } from "../src/components/Cases/FilterSelector";
 import api_client from "../src/Services/api_client";
 import IsMedicalCompromised from "../src/interfaces/IsMedicalCompromised";
 import createFilterParams from "../src/utils/createFilterParams";
 import Sex from "../src/interfaces/Sex";
+import { backendUrl } from "../src/Services/api_client";
 
-const URL = "http://localhost:4000/api/";
 const CASES_LIMIT_PER_PAGE = 15;
 
 interface ContextType {
@@ -158,7 +155,7 @@ function CasesProvider({ children }: Props) {
   async function createCase(newCase: Case) {
     dispatch({ type: "loading", payload: undefined });
     try {
-      const res = await fetch(`${URL}cases`, {
+      const res = await fetch(`${backendUrl}cases`, {
         method: "POST",
         body: JSON.stringify(newCase),
         headers: {
@@ -178,7 +175,7 @@ function CasesProvider({ children }: Props) {
   async function deleteCase(caseId: number) {
     dispatch({ type: "loading", payload: undefined });
     try {
-      await fetch(`${URL}cases/${caseId}`, {
+      await fetch(`${backendUrl}cases/${caseId}`, {
         method: "DELETE",
       });
       dispatch({ type: "case/deleted", payload: caseId });

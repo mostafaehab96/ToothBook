@@ -1,12 +1,11 @@
 interface User {
-  id: string;
+  _id: string;
   email: string;
   photo: string;
   name: string;
   token: string;
   university: string;
   role: string;
-
   casesPerSemester: number;
   contactedPatients: number;
   activePatients: Array<string>;

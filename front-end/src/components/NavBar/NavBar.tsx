@@ -12,7 +12,7 @@ import getLocalImage from "../../utils/getLocalImage";
 
 function NavBar() {
   const { isAuthenticated, user, logout } = useAuth();
-  // console.log(user);
+  console.log(user?._id);
   return (
     <HStack paddingY={2} paddingX={3} spacing={2}>
       <Logo />

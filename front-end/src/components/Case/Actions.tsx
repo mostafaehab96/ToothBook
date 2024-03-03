@@ -1,7 +1,12 @@
 import { HStack, IconButton, useBreakpointValue } from "@chakra-ui/react";
-import { IoMdAdd } from "react-icons/io";
 import { FaCheck } from "react-icons/fa6";
 import { MdDoNotDisturbAlt } from "react-icons/md";
+import { FaPhone } from "react-icons/fa6";
+import { useAuth } from "../../../contexts/AuthenticationContext";
+import { useParams } from "react-router";
+import api_client from "../../Services/api_client";
+import { backendUrl } from "../../Services/api_client";
+import axios, { AxiosRequestConfig } from "axios";
 
 const iconButtonSize = { base: "40px", md: "60px", lg: "60px" };
 function Actions() {
@@ -13,6 +18,44 @@ function Actions() {
     xl: "xl",
     "2xl": "2xl",
   });
+  const { user } = useAuth();
+  const { id } = useParams();
+  let activeCase: boolean = false;
+  let treatedCase: boolean = false;
+  if (id) {
+    treatedCase = user?.treatedPatients.includes(id) || false;
+    activeCase = user?.activePatients.includes(id) || false;
+  }
+
+  async function contact() {
+    if (user === null) return;
+
+    const URL = `${backendUrl}/api/` + `users/${user._id}/contact`;
+
+    const requestData = {
+      patientId: id,
+    };
+
+    const axiosConfig: AxiosRequestConfig = {
+      method: "post",
+      url: URL,
+      data: requestData,
+      headers: {
+        Authorization: `Bearer ${user.token}`,
+        "Content-Type": "application/json",
+      },
+    };
+
+    axios(axiosConfig)
+      .then((response) => {
+        console.log("Response:", response.data);
+      })
+      .catch((error) => {
+        console.error("Error:", error);
+      });
+  }
+  async function treat() {}
+  async function reject() {}
 
   return (
     <HStack justify="center" spacing={14}>
@@ -22,6 +65,8 @@ function Actions() {
         colorScheme="blue"
         aria-label="Profile picture"
         overflow="hidden"
+        isDisabled={!activeCase || treatedCase}
+        onClick={() => treat()}
         icon={<FaCheck size={breakpoint === "base" ? "20px" : "30px"} />}
       >
         Complete
@@ -30,9 +75,11 @@ function Actions() {
         width={iconButtonSize}
         height={iconButtonSize}
         colorScheme="green"
-        aria-label="Profile picture"
+        aria-label="contact"
+        isDisabled={activeCase || treatedCase || user === null}
         overflow="hidden"
-        icon={<IoMdAdd size={breakpoint === "base" ? "20px" : "30px"} />}
+        icon={<FaPhone size={breakpoint === "base" ? "20px" : "30px"} />}
+        onClick={() => contact()}
       >
         Contact
       </IconButton>
@@ -40,11 +87,13 @@ function Actions() {
         width={iconButtonSize}
         height={iconButtonSize}
         colorScheme="red"
-        aria-label="Profile picture"
+        aria-label="reject"
         overflow="hidden"
+        isDisabled={!activeCase}
         icon={
           <MdDoNotDisturbAlt size={breakpoint === "base" ? "20px" : "30px"} />
         }
+        onClick={() => reject()}
       >
         Reject
       </IconButton>
