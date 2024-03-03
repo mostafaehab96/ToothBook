@@ -4,7 +4,7 @@
   "description": "**ToothBook** is the portfolio project for the 12-month ALX SE program.<br/> It is a website service for manageing communication between dentists and patients during the diagnostic process and curing journey.",
   "main": "index.js",
   "scripts": {
-    "build": "concurrently \"cd front-end && npm i \" \"cd back-end && npm i\"",
+    "build": "npm i && cd front-end && npm i && cd ../back-end && npm i",
     "start": "concurrently \"cd front-end && npm run dev\" \"cd back-end && npm run dev\""
   },
   "keywords": [],
