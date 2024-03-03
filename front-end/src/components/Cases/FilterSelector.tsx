@@ -8,14 +8,13 @@ import {
   MenuList,
   Text,
 } from "@chakra-ui/react";
-import { useReducer } from "react";
 import { BsChevronDown } from "react-icons/bs";
 import Department from "../../interfaces/Department";
 import toTitleCase from "../../utils/toTitleCase";
-import createObjectWithFalseValues from "../../utils/createObjectOfFalse";
 import MedicalCompromises from "../../interfaces/MedicalCompromises";
 import Status from "../../interfaces/Status";
 import Emergency from "../../interfaces/Emergency";
+import { useCases } from "../../../contexts/CasesContext";
 
 interface Filters {
   department: Record<string, boolean>;
@@ -24,14 +23,14 @@ interface Filters {
   emergency: Record<string, boolean>;
 }
 
-const initialState: Filters = {
-  department: createObjectWithFalseValues(Object.keys(Department)),
-  medicalCompromises: createObjectWithFalseValues(
-    Object.keys(MedicalCompromises)
-  ),
-  status: createObjectWithFalseValues(Object.keys(Status)),
-  emergency: createObjectWithFalseValues(["Emergency", "notEmergency"]),
-};
+// const initialState: Filters = {
+//   department: createObjectWithFalseValues(Object.keys(Department)),
+//   medicalCompromises: createObjectWithFalseValues(
+//     Object.keys(MedicalCompromises)
+//   ),
+//   status: createObjectWithFalseValues(Object.keys(Status)),
+//   emergency: createObjectWithTrueValues(["Emergency", "notEmergency"]),
+// };
 
 const filterTypes = {
   department: Department,
@@ -40,53 +39,48 @@ const filterTypes = {
   emergency: Emergency,
 };
 
-interface ActionInterface {
-  type: string;
-  payload: string;
-}
-
-function reducer(state: Filters, action: ActionInterface) {
-  switch (action.type) {
-    case "department/checked":
-      return {
-        ...state,
-        department: {
-          ...state.department,
-          [action.payload]: !state.department[action.payload],
-        },
-      };
-    case "status/checked":
-      return {
-        ...state,
-        status: {
-          ...state.status,
-          [action.payload]: !state.status[action.payload],
-        },
-      };
-    case "medicalCompromises/checked":
-      return {
-        ...state,
-        medicalCompromises: {
-          ...state.medicalCompromises,
-          [action.payload]: !state.medicalCompromises[action.payload],
-        },
-      };
-    case "emergency/checked":
-      return {
-        ...state,
-        emergency: {
-          ...state.emergency,
-          [action.payload]: !state.emergency[action.payload],
-        },
-      };
-    default:
-      break;
-  }
-  return state;
-}
+// function reducer(state: Filters, action: ActionInterface) {
+//   switch (action.type) {
+//     case "department/checked":
+//       return {
+//         ...state,
+//         department: {
+//           ...state.department,
+//           [action.payload]: !state.department[action.payload],
+//         },
+//       };
+//     case "status/checked":
+//       return {
+//         ...state,
+//         status: {
+//           ...state.status,
+//           [action.payload]: !state.status[action.payload],
+//         },
+//       };
+//     case "medicalCompromises/checked":
+//       return {
+//         ...state,
+//         medicalCompromises: {
+//           ...state.medicalCompromises,
+//           [action.payload]: !state.medicalCompromises[action.payload],
+//         },
+//       };
+//     case "emergency/checked":
+//       return {
+//         ...state,
+//         emergency: {
+//           ...state.emergency,
+//           [action.payload]: !state.emergency[action.payload],
+//         },
+//       };
+//     default:
+//       break;
+//   }
+//   return state;
+// }
 
 function FilterSelectors() {
-  const [state, dispatch] = useReducer(reducer, initialState);
+  const { filters, filterItemChecked } = useCases();
 
   // const params = new URLSearchParams(JSON.stringify(state)).toString();
   // const fullUrl = `${"http://localhost:4000/api/patients"}?${params}`;
@@ -98,8 +92,8 @@ function FilterSelectors() {
         <FilterSelector
           key={type}
           filterName={type}
-          filters={state[type as keyof Filters]}
-          dispatch={dispatch}
+          filters={filters[type as keyof Filters]}
+          filterItemChecked={filterItemChecked}
         />
       ))}
     </HStack>
@@ -109,13 +103,13 @@ function FilterSelectors() {
 interface FilterSelectorProps {
   filters: Record<string, boolean>;
   filterName: string;
-  dispatch: React.Dispatch<ActionInterface>;
+  filterItemChecked: null | ((filter: string, filterItem: string) => void);
 }
 
 function FilterSelector({
   filters,
   filterName,
-  dispatch,
+  filterItemChecked,
 }: FilterSelectorProps) {
   return (
     <Menu closeOnSelect={false}>
@@ -130,8 +124,10 @@ function FilterSelector({
                 <Text>{toTitleCase(dep)}</Text>
                 <Checkbox
                   isChecked={filters[dep]}
-                  onChange={() =>
-                    dispatch({ type: `${filterName}/checked`, payload: dep })
+                  onChange={
+                    filterItemChecked
+                      ? () => filterItemChecked(filterName, dep)
+                      : () => {}
                   }
                 />
               </HStack>
@@ -143,4 +139,5 @@ function FilterSelector({
   );
 }
 
-export default FilterSelectors;
+export { FilterSelectors };
+export type { Filters };
