@@ -3,14 +3,19 @@ const { UserController } = require('../controllers/UserController');
 const router = express.Router();
 const { uploadUserPhoto } = require('../controllers/FileController');
 const { validateUser } = require('../middlewares/validationSchemas');
+const verifyToken = require('../middlewares/verify-token');
 
-router.route('/').get(UserController.getAllUsers);
-router.route('/exists').post(UserController.userExists);
-router.route('/register')
-  .post(uploadUserPhoto, validateUser(), UserController.registerUser);
-router.route('/:id').get(UserController.getUser);
+router.get('/', UserController.getAllUsers);
+router.post('/exists', UserController.userExists);
+router.post('/register', uploadUserPhoto, validateUser(), UserController.registerUser);
+router.post('/login', UserController.loginUser);
+router.route('/:id')
+  .get(UserController.getUser)
+  .delete(UserController.deleteUser);
 
-router.route('/login')
-  .post(UserController.loginUser);
+router.post('/:id/contact', verifyToken, UserController.contactPatient);
+router.post('/:id/treat', UserController.treatPatient);
+router.delete('/:id/reject');
+router.post('/:id/return', UserController.returnPatient);
 
 module.exports = router;

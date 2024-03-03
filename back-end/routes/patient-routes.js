@@ -3,17 +3,16 @@ const { PatientController } = require('../controllers/PatientController');
 const {validatePatient} = require('../middlewares/validationSchemas');
 const verifyToken = require('../middlewares/verify-token');
 const { uploadPatientPhotos } = require('../controllers/FileController');
-const patientRouter = express.Router();
+const router = express.Router();
 
-patientRouter
-  .route('/')
+router.route('/')
   .get(PatientController.getAllPatients)
   .post(verifyToken, uploadPatientPhotos, validatePatient(), PatientController.postPatient);
 
-patientRouter
-  .route('/:id')
+router.route('/:id')
   .get(PatientController.getPatientById)
   .patch(PatientController.updatePatient)
   .delete(PatientController.deletePatient);
 
-module.exports = patientRouter;
+
+module.exports = router;

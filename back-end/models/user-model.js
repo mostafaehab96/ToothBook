@@ -37,7 +37,10 @@ const userSchema = new Schema({
     type: Number,
     default: 0
   },
-  activePatients: [{ type: Schema.Types.ObjectId, ref: 'Patient' }],
+  activePatients: [{
+    type: Schema.Types.ObjectId,
+    ref: 'Patient'
+  }],
   treatedPatients: [{ type: Schema.Types.ObjectId, ref: 'Patient'}],
   createdAt: {
     type: Date,

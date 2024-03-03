@@ -3,10 +3,11 @@ const { validationResult } = require('express-validator');
 const jSend = require('jsend');
 const asyncWrapper = require('../middlewares/async-wrapper');
 const createError = require('http-errors');
-
+const patientStatus = require('../utils/patientStatus');
 
 const getAllPatients = asyncWrapper(async (req, res) => {
   let { page, limit, ...filter } = req.query;
+  filter.status = filter.status || patientStatus.PENDING;
   limit = limit || 15;
   page = page || 1;
   const skip = (page - 1) * limit;

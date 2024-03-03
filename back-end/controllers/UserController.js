@@ -5,8 +5,8 @@ const {validationResult} = require('express-validator');
 const asyncWrapper = require('../middlewares/async-wrapper');
 const createError = require('http-errors');
 const generateJWT = require('../utils/generate-jwt');
-
-
+const Patient = require('../models/patient-model');
+const patientStatus = require('../utils/patientStatus');
 
 const getAllUsers = asyncWrapper(async (req, res) => {
   const users = await User.find({}, { __v: false, password: false });
@@ -89,13 +89,78 @@ const userExists = asyncWrapper(async (req, res, next) => {
 });
 
 
+const contactPatient = asyncWrapper(async (req, res, next) => {
+  const { patientId } = req.body;
+  const user = await User.findById(req.params.id);
+  if (!user) return next(createError(404, 'User not found!'));
+  if (!patientId) return next(createError(400, 'Patient id must be sent'));
+  const patient = await Patient.findById(patientId);
+  if (!patient) return next(createError(404, 'Patient not found!'));
+
+  if (user.activePatients.includes(patientId)) {
+    return next(createError(401, 'Patient is already contacted by this user'));
+  }
+  user.activePatients.push(patientId);
+  patient.status = patientStatus.CONTACTED;
+  await user.save();
+  await patient.save();
+
+  res.json(jSend.success({activePatients: user.activePatients}));
+
+});
+
+const treatPatient = asyncWrapper(async (req, res, next) => {
+  const { patientId } = req.body;
+  const user = await User.findById(req.params.id);
+  if (!user) return next(createError(404, 'User not found!'));
+  if (!patientId) return next(createError(400, 'Patient id must be sent'));
+  const patient = await Patient.findById(patientId);
+  if (!patient) return next(createError(404, 'Patient not found!'));
+
+  const patientIndex = user.activePatients.indexOf(patientId);
+  if (patientIndex === -1) {
+    return next(createError(401, 'Patient wasn\'t contacted by this user!'));
+  }
+  user.activePatients.splice(patientIndex, 1);
+  user.treatedPatients.push(patientId);
+  patient.status = patientStatus.TREATED;
+  await user.save();
+  await patient.save();
+
+  res.json(jSend.success({treatedPatients: user.treatedPatients}));
+});
+
+const returnPatient = asyncWrapper(async (req, res, next) => {
+  const { patientId } = req.body;
+  const user = await User.findById(req.params.id);
+  if (!user) return next(createError(404, 'User not found!'));
+  if (!patientId) return next(createError(400, 'Patient id must be sent'));
+  const patient = await Patient.findById(patientId);
+  if (!patient) return next(createError(404, 'Patient not found!'));
+
+  const patientIndex = user.activePatients.indexOf(patientId);
+  if (patientIndex === -1) {
+    return next(createError(401, 'Patient wasn\'t contacted by this user!'));
+  }
+  user.activePatients.splice(patientIndex, 1);
+  patient.status = patientStatus.PENDING;
+  await user.save();
+  await patient.save();
+
+  res.json(jSend.success({activePatients: user.activePatients}));
+});
+
+
 const UserController = {
   getAllUsers,
   getUser,
   registerUser,
   loginUser,
   deleteUser,
-  userExists
+  userExists,
+  contactPatient,
+  treatPatient,
+  returnPatient
 };
 
 module.exports = { UserController };
