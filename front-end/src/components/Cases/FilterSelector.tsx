@@ -14,17 +14,20 @@ import toTitleCase from "../../utils/toTitleCase";
 import Emergency from "../../interfaces/Emergency";
 import { useCases } from "../../../contexts/CasesContext";
 import IsMedicalCompromised from "../../interfaces/IsMedicalCompromised";
+import Sex from "../../interfaces/Sex";
 
 interface Filters {
   department: Record<string, boolean>;
   medicalCompromised: Record<string, boolean>;
   emergency: Record<string, boolean>;
+  sex: Record<string, boolean>;
 }
 
 const filterTypes = {
   department: Department,
   medicalCompromised: IsMedicalCompromised,
   emergency: Emergency,
+  sex: Sex,
 };
 
 function FilterSelectors() {

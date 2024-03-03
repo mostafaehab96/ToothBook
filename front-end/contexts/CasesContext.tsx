@@ -10,6 +10,7 @@ import { Filters } from "../src/components/Cases/FilterSelector";
 import api_client from "../src/Services/api_client";
 import IsMedicalCompromised from "../src/interfaces/IsMedicalCompromised";
 import createFilterParams from "../src/utils/createFilterParams";
+import Sex from "../src/interfaces/Sex";
 
 const URL = "http://localhost:4000/api/";
 const CASES_LIMIT_PER_PAGE = 15;
@@ -48,10 +49,11 @@ const initialState: ContextType = {
   deleteCase: null,
   filters: {
     department: createObjectWithFalseValues(Object.keys(Department)),
+    sex: createObjectWithFalseValues(Object.keys(Sex)),
     medicalCompromised: createObjectWithFalseValues(
       Object.keys(IsMedicalCompromised)
     ),
-    emergency: createObjectWithTrueValues(["Emergency", "notEmergency"]),
+    emergency: createObjectWithFalseValues(["Emergency", "notEmergency"]),
   },
 };
 
@@ -114,7 +116,6 @@ function CasesProvider({ children }: Props) {
     { cases, isLoading, error, currentPage, totalPages, filters },
     dispatch,
   ] = useReducer(reducer, initialState);
-  console.log(filters);
 
   useEffect(
     function () {

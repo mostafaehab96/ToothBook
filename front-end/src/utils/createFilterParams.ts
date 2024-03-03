@@ -3,6 +3,14 @@ import { Filters } from "../components/Cases/FilterSelector";
 function createFilterParams(filters: Filters) {
   const filterParams = {};
 
+  filterParams["departments"] = Object.keys(filters.department).filter(
+    (key) => filters.department[key]
+  );
+  if (filters.sex.Male !== filters.sex.Female) {
+    if (filters.sex.Male)
+      filterParams["sex" as keyof typeof filterParams] = "male";
+    else filterParams["sex" as keyof typeof filterParams] = "female";
+  }
   if (filters.emergency.Emergency !== filters.emergency.notEmergency) {
     if (filters.emergency.Emergency)
       filterParams["isEmergency" as keyof typeof filterParams] = true;
