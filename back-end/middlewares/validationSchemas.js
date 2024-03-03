@@ -1,5 +1,4 @@
 const { body } = require('express-validator');
-const departments = require('../utils/departments');
 
 const validateUser = () =>  {
   return [

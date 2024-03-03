@@ -4,18 +4,30 @@ const jSend = require('jsend');
 const asyncWrapper = require('../middlewares/async-wrapper');
 const createError = require('http-errors');
 const patientStatus = require('../utils/patientStatus');
+const { allDepartments } = require('../utils/departments-medical');
 
 const getAllPatients = asyncWrapper(async (req, res) => {
-  let { page, limit, ...filter } = req.query;
+  let { page, limit, departments, medicalCompromised, ...filter } = req.query;
   filter.status = filter.status || patientStatus.PENDING;
   limit = limit || 15;
   page = page || 1;
   const skip = (page - 1) * limit;
-  const patients = await Patient.find(filter, { __v: false })
+  departments = departments || allDepartments;
+
+  const myFilter = {
+    ...filter,
+    departments: { $in: departments },
+  };
+  if (medicalCompromised) {
+    myFilter.medicalCompromised = medicalCompromised === 'true'? { $ne: [] } : [];
+  }
+
+
+  const patients = await Patient.find(myFilter, { __v: false })
     .limit(limit)
     .skip(skip);
 
-  const totalCount = await Patient.countDocuments(filter);
+  const totalCount = await Patient.countDocuments(myFilter);
 
   res.json(jSend.success({patients, totalCount}));
 });
