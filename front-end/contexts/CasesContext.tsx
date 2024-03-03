@@ -6,10 +6,10 @@ import {
   createObjectWithTrueValues,
 } from "../src/utils/createObjectOfFalse";
 import Department from "../src/interfaces/Department";
-import MedicalCompromises from "../src/interfaces/MedicalCompromises";
-import Status from "../src/interfaces/Status";
 import { Filters } from "../src/components/Cases/FilterSelector";
 import api_client from "../src/Services/api_client";
+import IsMedicalCompromised from "../src/interfaces/IsMedicalCompromised";
+import createFilterParams from "../src/utils/createFilterParams";
 
 const URL = "http://localhost:4000/api/";
 const CASES_LIMIT_PER_PAGE = 15;
@@ -48,10 +48,9 @@ const initialState: ContextType = {
   deleteCase: null,
   filters: {
     department: createObjectWithFalseValues(Object.keys(Department)),
-    medicalCompromises: createObjectWithFalseValues(
-      Object.keys(MedicalCompromises)
+    medicalCompromised: createObjectWithFalseValues(
+      Object.keys(IsMedicalCompromised)
     ),
-    status: createObjectWithFalseValues(Object.keys(Status)),
     emergency: createObjectWithTrueValues(["Emergency", "notEmergency"]),
   },
 };
@@ -122,22 +121,15 @@ function CasesProvider({ children }: Props) {
       async function fetchCases() {
         dispatch({ type: "loading", payload: undefined });
         try {
-          const filterParams = {
+          const filterParams = createFilterParams(filters);
+          const params = {
             page: currentPage,
             limit: CASES_LIMIT_PER_PAGE,
+            ...filterParams,
           };
 
-          if (filters.emergency.Emergency !== filters.emergency.notEmergency) {
-            if (filters.emergency.Emergency)
-              filterParams["isEmergency" as keyof typeof filterParams] = true;
-            else
-              filterParams["isEmergency" as keyof typeof filterParams] = false;
-          }
-
-          // console.log(filterParams);
-
           const res = await api_client.get("patients", {
-            params: filterParams,
+            params,
           });
           const jsRes = await res.data;
 

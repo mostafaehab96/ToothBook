@@ -6,5 +6,10 @@ interface User {
   token: string;
   university: string;
   role: string;
+
+  casesPerSemester: number;
+  contactedPatients: number;
+  activePatients: Array<string>;
+  treatedPatients: Array<string>;
 }
 export default User;
