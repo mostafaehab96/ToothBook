@@ -4,7 +4,6 @@ import { MdDoNotDisturbAlt } from "react-icons/md";
 import { FaPhone } from "react-icons/fa6";
 import { useAuth } from "../../../contexts/AuthenticationContext";
 import { useParams } from "react-router";
-import api_client from "../../Services/api_client";
 import { backendUrl } from "../../Services/api_client";
 import axios, { AxiosRequestConfig } from "axios";
 
@@ -29,9 +28,7 @@ function Actions() {
 
   async function contact() {
     if (user === null) return;
-
     const URL = `${backendUrl}/api/` + `users/${user._id}/contact`;
-
     const requestData = {
       patientId: id,
     };
@@ -45,7 +42,6 @@ function Actions() {
         "Content-Type": "application/json",
       },
     };
-
     axios(axiosConfig)
       .then((response) => {
         console.log("Response:", response.data);
@@ -57,8 +53,87 @@ function Actions() {
         console.error("Error:", error);
       });
   }
-  async function treat() {}
-  async function reject() {}
+  async function treat() {
+    if (user === null) return;
+    const URL = `${backendUrl}/api/` + `users/${user._id}/treat`;
+    const requestData = {
+      patientId: id,
+    };
+
+    const axiosConfig: AxiosRequestConfig = {
+      method: "post",
+      url: URL,
+      data: requestData,
+      headers: {
+        Authorization: `Bearer ${user.token}`,
+        "Content-Type": "application/json",
+      },
+    };
+    axios(axiosConfig)
+      .then((response) => {
+        console.log("Response:", response.data);
+      })
+      .then(() => {
+        if (updateUser) updateUser();
+      })
+      .catch((error) => {
+        console.error("Error:", error);
+      });
+  }
+  async function returnCase() {
+    if (user === null) return;
+    const URL = `${backendUrl}/api/` + `users/${user._id}/return`;
+    const requestData = {
+      patientId: id,
+    };
+
+    const axiosConfig: AxiosRequestConfig = {
+      method: "post",
+      url: URL,
+      data: requestData,
+      headers: {
+        Authorization: `Bearer ${user.token}`,
+        "Content-Type": "application/json",
+      },
+    };
+    axios(axiosConfig)
+      .then((response) => {
+        console.log("Response:", response.data);
+      })
+      .then(() => {
+        if (updateUser) updateUser();
+      })
+      .catch((error) => {
+        console.error("Error:", error);
+      });
+  }
+  async function reject() {
+    if (user === null) return;
+    const URL = `${backendUrl}/api/` + `users/${user._id}/reject`;
+    const requestData = {
+      patientId: id,
+    };
+
+    const axiosConfig: AxiosRequestConfig = {
+      method: "post",
+      url: URL,
+      data: requestData,
+      headers: {
+        Authorization: `Bearer ${user.token}`,
+        "Content-Type": "application/json",
+      },
+    };
+    axios(axiosConfig)
+      .then((response) => {
+        console.log("Response:", response.data);
+      })
+      .then(() => {
+        if (updateUser) updateUser();
+      })
+      .catch((error) => {
+        console.error("Error:", error);
+      });
+  }
 
   return (
     <HStack justify="center" spacing={14}>

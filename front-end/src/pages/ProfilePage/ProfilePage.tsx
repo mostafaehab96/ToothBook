@@ -1,15 +1,11 @@
 import { Grid, GridItem, HStack, Text } from "@chakra-ui/react";
 import NavBar from "../../components/NavBar/NavBar";
-import CasesGrid from "../../components/Cases/CasesGrid";
 import { useCases } from "../../../contexts/CasesContext";
 import ErrorAlert from "../../components/Alerts/ErrorAlert";
-import PageSelector from "../../components/Cases/PageSelector";
-import { useAuth } from "../../../contexts/AuthenticationContext";
 import UserCasesGrid from "../../components/Cases/UserCasesGrid";
 
 function ProfilePage() {
-  const { isAuthenticated, user } = useAuth();
-  const { userCases, error } = useCases();
+  const { error } = useCases();
 
   return (
     <Grid

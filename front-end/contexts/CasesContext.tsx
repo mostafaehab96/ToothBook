@@ -9,7 +9,6 @@ import IsMedicalCompromised from "../src/interfaces/IsMedicalCompromised";
 import createFilterParams from "../src/utils/createFilterParams";
 import Sex from "../src/interfaces/Sex";
 import { backendUrl } from "../src/Services/api_client";
-import User from "../src/interfaces/User";
 import { useAuth } from "./AuthenticationContext";
 
 const CASES_LIMIT_PER_PAGE = 15;
