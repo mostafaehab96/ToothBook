@@ -7,7 +7,7 @@ import { useParams } from "react-router";
 import { backendUrl } from "../../Services/api_client";
 import axios, { AxiosRequestConfig } from "axios";
 
-const iconButtonSize = { base: "40px", md: "60px", lg: "60px" };
+const ICON_BTN_SIZE = { base: "40px", md: "60px", lg: "60px" };
 function Actions() {
   const breakpoint = useBreakpointValue({
     base: "base",
@@ -26,90 +26,9 @@ function Actions() {
     activeCase = user?.activePatients.includes(id) || false;
   }
 
-  async function contact() {
+  async function caseAction(caseAction: string) {
     if (user === null) return;
-    const URL = `${backendUrl}/api/` + `users/${user._id}/contact`;
-    const requestData = {
-      patientId: id,
-    };
-
-    const axiosConfig: AxiosRequestConfig = {
-      method: "post",
-      url: URL,
-      data: requestData,
-      headers: {
-        Authorization: `Bearer ${user.token}`,
-        "Content-Type": "application/json",
-      },
-    };
-    axios(axiosConfig)
-      .then((response) => {
-        console.log("Response:", response.data);
-      })
-      .then(() => {
-        if (updateUser) updateUser();
-      })
-      .catch((error) => {
-        console.error("Error:", error);
-      });
-  }
-  async function treat() {
-    if (user === null) return;
-    const URL = `${backendUrl}/api/` + `users/${user._id}/treat`;
-    const requestData = {
-      patientId: id,
-    };
-
-    const axiosConfig: AxiosRequestConfig = {
-      method: "post",
-      url: URL,
-      data: requestData,
-      headers: {
-        Authorization: `Bearer ${user.token}`,
-        "Content-Type": "application/json",
-      },
-    };
-    axios(axiosConfig)
-      .then((response) => {
-        console.log("Response:", response.data);
-      })
-      .then(() => {
-        if (updateUser) updateUser();
-      })
-      .catch((error) => {
-        console.error("Error:", error);
-      });
-  }
-  async function returnCase() {
-    if (user === null) return;
-    const URL = `${backendUrl}/api/` + `users/${user._id}/return`;
-    const requestData = {
-      patientId: id,
-    };
-
-    const axiosConfig: AxiosRequestConfig = {
-      method: "post",
-      url: URL,
-      data: requestData,
-      headers: {
-        Authorization: `Bearer ${user.token}`,
-        "Content-Type": "application/json",
-      },
-    };
-    axios(axiosConfig)
-      .then((response) => {
-        console.log("Response:", response.data);
-      })
-      .then(() => {
-        if (updateUser) updateUser();
-      })
-      .catch((error) => {
-        console.error("Error:", error);
-      });
-  }
-  async function reject() {
-    if (user === null) return;
-    const URL = `${backendUrl}/api/` + `users/${user._id}/reject`;
+    const URL = `${backendUrl}/api/` + `users/${user._id}/${caseAction}`;
     const requestData = {
       patientId: id,
     };
@@ -138,32 +57,32 @@ function Actions() {
   return (
     <HStack justify="center" spacing={14}>
       <IconButton
-        width={iconButtonSize}
-        height={iconButtonSize}
+        width={ICON_BTN_SIZE}
+        height={ICON_BTN_SIZE}
         colorScheme="blue"
         aria-label="Profile picture"
         overflow="hidden"
         isDisabled={!activeCase || treatedCase}
-        onClick={() => treat()}
+        onClick={() => caseAction("treat")}
         icon={<FaCheck size={breakpoint === "base" ? "20px" : "30px"} />}
       >
         Complete
       </IconButton>
       <IconButton
-        width={iconButtonSize}
-        height={iconButtonSize}
+        width={ICON_BTN_SIZE}
+        height={ICON_BTN_SIZE}
         colorScheme="green"
         aria-label="contact"
         isDisabled={activeCase || treatedCase || user === null}
         overflow="hidden"
         icon={<FaPhone size={breakpoint === "base" ? "20px" : "30px"} />}
-        onClick={() => contact()}
+        onClick={() => caseAction("contact")}
       >
         Contact
       </IconButton>
       <IconButton
-        width={iconButtonSize}
-        height={iconButtonSize}
+        width={ICON_BTN_SIZE}
+        height={ICON_BTN_SIZE}
         colorScheme="red"
         aria-label="reject"
         overflow="hidden"
@@ -171,7 +90,7 @@ function Actions() {
         icon={
           <MdDoNotDisturbAlt size={breakpoint === "base" ? "20px" : "30px"} />
         }
-        onClick={() => reject()}
+        onClick={() => caseAction("reject")}
       >
         Reject
       </IconButton>
