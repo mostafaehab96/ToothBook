@@ -105,7 +105,6 @@ function AuthenticationProvider({ children }: AuthProviderProps) {
           });
         } else {
           localStorage.removeItem("token");
-          navigate("/login");
         }
       }
       handleTokenLogin();
