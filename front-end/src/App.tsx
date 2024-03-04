@@ -24,6 +24,7 @@ function App() {
             <Route path="register" element={<SignupPage />} />
             <Route path="cases" element={<CasesPage />} />
             <Route path="case/:id" element={<CasePage />} />
+            <Route path="profile/" element={<ProfilePage />} />
             <Route
               path="profile"
               element={

@@ -1,11 +1,13 @@
 import { IconButton, Image } from "@chakra-ui/react";
 import profilePicPlaceHolder from "../../../public/profilePicPlaceHolder.webp";
+import { useNavigate } from "react-router";
 
 interface Props {
   pic: string | undefined;
 }
 
 function ProfilePic({ pic }: Props) {
+  const navigate = useNavigate();
   return (
     <IconButton
       aria-label="Profile picture"
@@ -18,6 +20,7 @@ function ProfilePic({ pic }: Props) {
           src={pic}
           fallbackSrc={profilePicPlaceHolder}
           alt="Profile Picture"
+          onClick={() => navigate("/profile")}
         />
       }
     />

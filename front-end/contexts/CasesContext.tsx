@@ -9,17 +9,20 @@ import IsMedicalCompromised from "../src/interfaces/IsMedicalCompromised";
 import createFilterParams from "../src/utils/createFilterParams";
 import Sex from "../src/interfaces/Sex";
 import { backendUrl } from "../src/Services/api_client";
+import User from "../src/interfaces/User";
+import { useAuth } from "./AuthenticationContext";
 
 const CASES_LIMIT_PER_PAGE = 15;
 
 interface ContextType {
   totalPages: number;
   currentPage: number;
-  setPage: (n: number) => void;
   cases: Array<Case>;
   isLoading: boolean;
   error: string;
   filters: Filters;
+  userCases: Array<Case>;
+  setPage: (n: number) => void;
   filterItemChecked: null | ((filter: string, filterItem: string) => void);
   createCase: null | ((newCase: Case) => void);
   deleteCase: null | ((id: number) => void);
@@ -40,6 +43,7 @@ const initialState: ContextType = {
   currentPage: 1,
   cases: [],
   isLoading: false,
+  userCases: [],
   error: "",
   createCase: null,
   filterItemChecked: null,
@@ -80,6 +84,8 @@ function reducer(state: ContextType, action: ReducerAction) {
       } else {
         return state;
       }
+    case "USER_CASES_LOADED":
+      return { ...state, userCases: action.payload };
     case "set_page":
       return { ...state, currentPage: action.payload };
     case "rejected":
@@ -110,9 +116,11 @@ function reducer(state: ContextType, action: ReducerAction) {
 
 function CasesProvider({ children }: Props) {
   const [
-    { cases, isLoading, error, currentPage, totalPages, filters },
+    { cases, isLoading, error, currentPage, totalPages, filters, userCases },
     dispatch,
   ] = useReducer(reducer, initialState);
+  const { user } = useAuth();
+  console.log(user?.activePatients);
 
   useEffect(
     function () {
@@ -147,9 +155,25 @@ function CasesProvider({ children }: Props) {
           });
         }
       }
+
       fetchCases();
     },
     [currentPage, filters]
+  );
+  useEffect(
+    function () {
+      async function fetchUserCases() {
+        if (!user || !user?.activePatients.length) return;
+        const activeCases: Array<Case> = [];
+        for (const cas of user.activePatients) {
+          const res = await api_client.get(`patients/${cas}`);
+          activeCases.push(res.data.data.patient);
+        }
+        dispatch({ type: "USER_CASES_LOADED", payload: activeCases });
+      }
+      fetchUserCases();
+    },
+    [user]
   );
 
   async function createCase(newCase: Case) {
@@ -206,6 +230,7 @@ function CasesProvider({ children }: Props) {
         isLoading,
         error,
         filters,
+        userCases,
         filterItemChecked,
         createCase,
         deleteCase,
