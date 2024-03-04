@@ -1,9 +1,11 @@
+import { backendUrl } from "../Services/api_client";
+
 function getLocalImage(imageUrl: string) {
   if (!(imageUrl.startsWith("http://") || imageUrl.startsWith("https://"))) {
     if (imageUrl.startsWith("user")) {
-      return `https://toothbook.onrender.com/uploads/users/${imageUrl}`;
+      return `${backendUrl}/uploads/users/${imageUrl}`;
     }
-    return `https://toothbook.onrender.com/uploads/${imageUrl}`;
+    return `${backendUrl}/uploads/${imageUrl}`;
   }
   return imageUrl;
 }
