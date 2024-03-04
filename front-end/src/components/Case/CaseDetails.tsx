@@ -2,32 +2,46 @@ import {
   Box,
   GridItem,
   SimpleGrid,
-  Spinner,
-  Stack,
   Text,
-  VStack,
   useColorModeValue,
 } from "@chakra-ui/react";
 import Case from "../../interfaces/Case";
 import toTitleCase from "../../utils/toTitleCase";
+import { useAuth } from "../../../contexts/AuthenticationContext";
+import { useParams } from "react-router-dom";
+import { useState } from "react";
 
 interface Props {
   casee: Case | null;
 }
 
-const displayedProperties = [
-  "name",
-  "age",
-  "address",
-  "sex",
-  "diagnosis",
-  "medicalCompromised",
-];
-
 const largeInfoBoxes = ["diagnosis", "medicalCompromised"];
-
 function CaseDetails({ casee }: Props) {
+  const [displayedProperties, setDisplayedProperties] = useState([
+    "name",
+    "age",
+    "address",
+    "sex",
+    "diagnosis",
+    "medicalCompromised",
+  ]);
+  const { user } = useAuth();
   const dynamicGreyTextColor = useColorModeValue("#444444", "#aaaaaa");
+  const { id } = useParams();
+
+  let activeCase: boolean = false;
+  let treatedCase: boolean = false;
+  if (id) {
+    treatedCase = user?.treatedPatients.includes(id) || false;
+    activeCase = user?.activePatients.includes(id) || false;
+  }
+
+  if (
+    !displayedProperties.includes("phoneNumber") &&
+    (treatedCase || activeCase)
+  ) {
+    setDisplayedProperties([...displayedProperties, "phoneNumber"]);
+  }
 
   return (
     <SimpleGrid

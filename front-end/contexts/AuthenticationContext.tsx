@@ -1,8 +1,10 @@
-import React, { createContext, useContext, useReducer } from "react";
+import React, { createContext, useContext, useEffect, useReducer } from "react";
 import api_client from "../src/Services/api_client";
 import User from "../src/interfaces/User";
 import RegisterFormValues from "../src/interfaces/RegisterFormValues";
 import { useNavigate } from "react-router";
+import isTokenExpired from "../src/utils/isTokenExpired";
+import { jwtDecode } from "jwt-decode";
 
 interface AuthProviderProps {
   children: React.JSX.Element;
@@ -17,6 +19,7 @@ interface Auth {
     | undefined
     | ((body: RegisterFormValues, profilePicture: File | undefined) => void);
   logout: undefined | (() => void);
+  updateUser: undefined | (() => void);
 }
 
 interface Action {
@@ -31,6 +34,7 @@ const initialState: Auth = {
   login: undefined,
   logout: undefined,
   register: undefined,
+  updateUser: undefined,
 };
 const AuthContext = createContext<Auth | null>(null);
 
@@ -40,6 +44,18 @@ function reducer(state: Auth, action: Action): Auth {
       return {
         ...state,
         error: action.payload as string,
+      };
+    case "LOAD_USER":
+      if (action.payload.token) {
+        return {
+          ...state,
+          isAuthenticated: true,
+          user: { ...action.payload.user, token: action.payload.token },
+        };
+      }
+      return {
+        ...state,
+        user: { ...state.user, ...action.payload.user },
       };
     case "REGISTER":
       return {
@@ -70,6 +86,33 @@ function AuthenticationProvider({ children }: AuthProviderProps) {
   );
   const navigate = useNavigate();
 
+  useEffect(
+    function () {
+      async function handleTokenLogin() {
+        const token =
+          localStorage.getItem("token") ||
+          document.cookie
+            .split("; ")
+            .find((row) => row.startsWith("token="))
+            ?.split("=")[1];
+        if (token && !isTokenExpired(token)) {
+          const { id } = jwtDecode(token);
+          const fetchedUser: User = await fetchUser(id);
+          console.log("fetching user", fetchedUser);
+          dispatch({
+            type: "LOAD_USER",
+            payload: { user: fetchedUser, token },
+          });
+        } else {
+          localStorage.removeItem("token");
+          navigate("/login");
+        }
+      }
+      handleTokenLogin();
+    },
+    [navigate]
+  );
+
   async function login(email: string, password: string) {
     const body = {
       email,
@@ -88,6 +131,7 @@ function AuthenticationProvider({ children }: AuthProviderProps) {
           user: response.data.data.user,
         },
       });
+      localStorage.setItem("token", response.data.data.token);
       navigate("cases");
     } catch (error) {
       console.error("Error during POST request:", error);
@@ -99,9 +143,6 @@ function AuthenticationProvider({ children }: AuthProviderProps) {
   ) {
     try {
       const cehckRequestBody = { email: body.email };
-      // const params = new URLSearchParams(cehckRequestBody).toString();
-      // const fullUrl = `${"http://localhost:4000/api/users/exists"}?${params}`;
-
       const checkUserExistsResponse = await api_client.post(
         "/users/exists",
         cehckRequestBody
@@ -141,6 +182,8 @@ function AuthenticationProvider({ children }: AuthProviderProps) {
         type: "REGISTER",
         payload: { user: data.user, token: data.token },
       });
+      localStorage.setItem("token", data.token);
+
       navigate("/cases");
     } catch (err) {
       console.error("Error during POST request:", error);
@@ -154,12 +197,39 @@ function AuthenticationProvider({ children }: AuthProviderProps) {
   }
   function logout() {
     dispatch({ type: "LOGOUT", payload: {} });
+    localStorage.removeItem("token");
     navigate("/login");
+  }
+
+  async function fetchUser(id: string) {
+    const response = await api_client.get(`users/${id}`);
+    if (response.data.status !== "success") {
+      throw new Error(`HTTP error! Status: ${response.status}`);
+    }
+    return response.data.data.user;
+  }
+  async function updateUser() {
+    if (!user) return;
+    const fetchedUser = await fetchUser(user?._id);
+    dispatch({
+      type: "LOAD_USER",
+      payload: {
+        user: fetchedUser,
+      },
+    });
   }
 
   return (
     <AuthContext.Provider
-      value={{ user, isAuthenticated, error, register, login, logout }}
+      value={{
+        user,
+        isAuthenticated,
+        error,
+        register,
+        login,
+        logout,
+        updateUser,
+      }}
     >
       {children}
     </AuthContext.Provider>

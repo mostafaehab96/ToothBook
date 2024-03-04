@@ -18,7 +18,7 @@ function Actions() {
     xl: "xl",
     "2xl": "2xl",
   });
-  const { user } = useAuth();
+  const { user, updateUser } = useAuth();
   const { id } = useParams();
   let activeCase: boolean = false;
   let treatedCase: boolean = false;
@@ -49,6 +49,9 @@ function Actions() {
     axios(axiosConfig)
       .then((response) => {
         console.log("Response:", response.data);
+      })
+      .then(() => {
+        if (updateUser) updateUser();
       })
       .catch((error) => {
         console.error("Error:", error);
