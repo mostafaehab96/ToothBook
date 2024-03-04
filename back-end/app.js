@@ -15,6 +15,9 @@ const app = express();
 
 app.use(express.json());
 app.use(cors());
+app.get('/', (req, res) => {
+  res.json({status: 'success', msg: 'Welcome! use /api/...'});
+});
 app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
 app.use('/api/users', usersRouter);
 app.use('/api/patients', patientRouter);
