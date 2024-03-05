@@ -7,6 +7,7 @@ const createError = require('http-errors');
 const cors = require('cors');
 require('dotenv').config();
 const path = require('path');
+const createUploadsFolderIfNotExists = require('./middlewares/create-folder');
 
 const url = process.env.MONGO_URL;
 const port = process.env.PORT;
@@ -18,7 +19,7 @@ app.use(cors());
 app.get('/', (req, res) => {
   res.json({status: 'success', msg: 'Welcome! use /api/...'});
 });
-app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
+app.use('/uploads', createUploadsFolderIfNotExists,  express.static(path.join(__dirname, 'uploads')));
 app.use('/api/users', usersRouter);
 app.use('/api/patients', patientRouter);
 
