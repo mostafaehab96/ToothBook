@@ -7,8 +7,7 @@ import Actions from "../../components/Case/Actions";
 import { useEffect, useState } from "react";
 import Case from "../../interfaces/Case";
 import ErrorAlert from "../../components/Alerts/ErrorAlert";
-
-const BASE_URL = "http://localhost:4000/api/";
+import { backendUrl } from "../../Services/api_client";
 
 function CasePage() {
   const { id } = useParams();
@@ -22,7 +21,7 @@ function CasePage() {
       async function getCase(id: string) {
         setIsLoading(true);
         try {
-          const res = await fetch(`${BASE_URL}patients/${id}`);
+          const res = await fetch(`${backendUrl}/api/patients/${id}`);
           const jsRes = await res.json();
           if (jsRes.status === "success") {
             setCurrentCase(jsRes.data.patient);
