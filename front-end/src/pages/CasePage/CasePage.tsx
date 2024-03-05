@@ -21,7 +21,7 @@ function CasePage() {
       async function getCase(id: string) {
         setIsLoading(true);
         try {
-          const res = await fetch(`${backendUrl}patients/${id}`);
+          const res = await fetch(`${backendUrl}/api/patients/${id}`);
           const jsRes = await res.json();
           if (jsRes.status === "success") {
             setCurrentCase(jsRes.data.patient);
