@@ -30,7 +30,7 @@ const generateFakePatients = async (numPatients, clearFirst) => {
         phoneNumber: faker.phone.number(),
         address: faker.location.city(),
         diagnosis: faker.lorem.sentence(),
-        status: faker.helpers.arrayElement(patientStatus),
+        status: 'pending',
         lastInteractionDate: faker.date.past(),
         lastInteractionStatus: faker.helpers.arrayElement(patientStatus),
         isEmergency: faker.helpers.arrayElement([true, false]),

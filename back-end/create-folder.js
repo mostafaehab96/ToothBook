@@ -1,7 +1,7 @@
 const fs = require('fs');
 const path = require('path');
 
-const createUploadsFolderIfNotExists = (req, res, next) => {
+const createUploadsFolderIfNotExists = () => {
   const uploadsFolderPath = path.join(__dirname, 'uploads');
   const patientsFolderPath = path.join(uploadsFolderPath, 'patients');
   const usersFolderPath = path.join(uploadsFolderPath, 'users');
@@ -15,7 +15,6 @@ const createUploadsFolderIfNotExists = (req, res, next) => {
   if (!fs.existsSync(usersFolderPath)) {
     fs.mkdirSync(usersFolderPath);
   }
-  next();
 };
 
 module.exports = createUploadsFolderIfNotExists;
