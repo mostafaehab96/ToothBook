@@ -1,6 +1,6 @@
 import { IconButton, Image } from "@chakra-ui/react";
 import profilePicPlaceHolder from "../../../public/profilePicPlaceHolder.webp";
-import { useNavigate } from "react-router";
+import { useNavigate } from "react-router-dom";
 
 interface Props {
   pic: string | undefined;

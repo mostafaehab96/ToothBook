@@ -24,7 +24,7 @@ function CaseCard({ casee }: Props) {
 
   return (
     <Card
-      height={{ base: "100%", md: "500px", lg: "400px" }}
+      height={{ base: "100%", md: "500px", lg: "420px" }}
       onClick={() => navigate(`/case/${casee._id}`)}
     >
       <Image
@@ -41,7 +41,8 @@ function CaseCard({ casee }: Props) {
             fontSize={22}
             color={dynamicDepartmentTextValue}
           >
-            {casee.departments.map((dep) => `#${dep} `)}
+            {casee.departments.slice(0, 2).map((dep) => `#${dep} `)}
+            {casee.departments.length > 2 ? "..." : ""}
           </Heading>
           <CardIconsList
             sex={casee.sex}

@@ -4,8 +4,12 @@ import CaseCard from "../Case/CaseCard";
 import { useCases } from "../../../contexts/CasesContext";
 import CaseCardSkeleton from "../Case/CaseCardSkeleton";
 
-function UserCasesGrid() {
-  const { userCases, isLoading } = useCases();
+interface Props {
+  activeCases: boolean;
+}
+
+function UserCasesGrid({ activeCases }: Props) {
+  const { userCases, isLoadingUserCases } = useCases();
 
   return (
     <SimpleGrid
@@ -14,17 +18,19 @@ function UserCasesGrid() {
       justifyContent="center"
       paddingY={8}
     >
-      {isLoading
+      {isLoadingUserCases
         ? Array.from({ length: 10 }, (_, index) => index + 1).map((s) => (
             <CaseCardContainer key={s}>
               <CaseCardSkeleton key={s} />
             </CaseCardContainer>
           ))
-        : userCases.map((casee) => (
-            <CaseCardContainer key={casee._id}>
-              <CaseCard key={casee._id} casee={casee} />
-            </CaseCardContainer>
-          ))}
+        : userCases
+            .filter((casee) => (casee.status === "contacted") === activeCases)
+            .map((casee) => (
+              <CaseCardContainer key={casee._id}>
+                <CaseCard key={casee._id} casee={casee} />
+              </CaseCardContainer>
+            ))}
     </SimpleGrid>
   );
 }
