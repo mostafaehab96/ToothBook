@@ -86,31 +86,27 @@ function AuthenticationProvider({ children }: AuthProviderProps) {
   );
   const navigate = useNavigate();
 
-  useEffect(
-    function () {
-      async function handleTokenLogin() {
-        const token =
-          localStorage.getItem("token") ||
-          document.cookie
-            .split("; ")
-            .find((row) => row.startsWith("token="))
-            ?.split("=")[1];
-        if (token && !isTokenExpired(token)) {
-          const { id } = jwtDecode(token);
-          const fetchedUser: User = await fetchUser(id);
-          console.log("fetching user", fetchedUser);
-          dispatch({
-            type: "LOAD_USER",
-            payload: { user: fetchedUser, token },
-          });
-        } else {
-          localStorage.removeItem("token");
-        }
+  useEffect(function () {
+    async function handleTokenLogin() {
+      const token =
+        localStorage.getItem("token") ||
+        document.cookie
+          .split("; ")
+          .find((row) => row.startsWith("token="))
+          ?.split("=")[1];
+      if (token && !isTokenExpired(token)) {
+        const { id } = jwtDecode(token);
+        const fetchedUser: User = await fetchUser(id);
+        dispatch({
+          type: "LOAD_USER",
+          payload: { user: fetchedUser, token },
+        });
+      } else {
+        localStorage.removeItem("token");
       }
-      handleTokenLogin();
-    },
-    [navigate]
-  );
+    }
+    handleTokenLogin();
+  }, []);
 
   async function login(email: string, password: string) {
     const body = {

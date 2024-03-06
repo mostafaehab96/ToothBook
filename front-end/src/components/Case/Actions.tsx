@@ -6,6 +6,7 @@ import { useAuth } from "../../../contexts/AuthenticationContext";
 import { useParams } from "react-router";
 import { backendUrl } from "../../Services/api_client";
 import axios, { AxiosRequestConfig } from "axios";
+import { useCases } from "../../../contexts/CasesContext";
 
 const ICON_BTN_SIZE = { base: "40px", md: "60px", lg: "60px" };
 function Actions() {
@@ -18,6 +19,7 @@ function Actions() {
     "2xl": "2xl",
   });
   const { user, updateUser } = useAuth();
+  const { setActionSignal } = useCases();
   const { id } = useParams();
   let activeCase: boolean = false;
   let treatedCase: boolean = false;
@@ -48,6 +50,9 @@ function Actions() {
       })
       .then(() => {
         if (updateUser) updateUser();
+      })
+      .then(() => {
+        if (setActionSignal) setActionSignal();
       })
       .catch((error) => {
         console.error("Error:", error);

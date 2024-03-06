@@ -5,7 +5,7 @@ import { useCases } from "../../../contexts/CasesContext";
 import CaseCardSkeleton from "../Case/CaseCardSkeleton";
 
 function CasesGrid() {
-  const { cases, isLoading } = useCases();
+  const { cases, isLoadingCases } = useCases();
 
   return (
     <SimpleGrid
@@ -14,7 +14,7 @@ function CasesGrid() {
       justifyContent="center"
       paddingY={8}
     >
-      {isLoading
+      {isLoadingCases
         ? Array.from({ length: 10 }, (_, index) => index + 1).map((s) => (
             <CaseCardContainer key={s}>
               <CaseCardSkeleton key={s} />
