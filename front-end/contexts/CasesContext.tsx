@@ -20,6 +20,7 @@ interface ContextType {
   isLoadingCases: boolean;
   isLoadingUserCases: boolean;
   error: string;
+  errorUserCases: string;
   actionSignal: number;
   filters: Filters;
   userCases: Array<Case>;
@@ -49,6 +50,7 @@ const initialState: ContextType = {
   isLoadingUserCases: false,
   userCases: [],
   error: "",
+  errorUserCases: "",
   setActionSignal: null,
   createCase: null,
   filterItemChecked: null,
@@ -92,15 +94,19 @@ function reducer(state: ContextType, action: ReducerAction) {
         return state;
       }
     case "USER_CASES_LOADED":
-      return { ...state, userCases: action.payload, isLoadingUserCases: false };
+      return { ...state, userCases: action.payload };
+    case "isLoadingUserCases/false":
+      return { ...state, isLoadingUserCases: false };
     case "set_page":
       return { ...state, currentPage: action.payload };
     case "rejected":
       return { ...state, error: action.payload, isLoadingCases: false };
+    case "rejected/UserCases":
+      return { ...state, errorUserCases: action.payload };
     case "loading/cases":
       return { ...state, isLoadingCases: true, error: "" };
     case "loading/userCases":
-      return { ...state, isLoadingUserCases: true, error: "" };
+      return { ...state, isLoadingUserCases: true, errorUserCases: "" };
     case "case/loaded":
       console.log(action.payload);
       return { ...state, isLoadingCases: false, currentCase: action.payload };
@@ -130,6 +136,7 @@ function CasesProvider({ children }: Props) {
       isLoadingCases,
       isLoadingUserCases,
       error,
+      errorUserCases,
       currentPage,
       totalPages,
       filters,
@@ -139,23 +146,40 @@ function CasesProvider({ children }: Props) {
     dispatch,
   ] = useReducer(reducer, initialState);
   const { user } = useAuth();
-  // console.log("isLoadingUserCases:", isLoadingUserCases);
+  console.log("isLoadingUserCases:", isLoadingUserCases);
 
   useEffect(
     function () {
       async function fetchUserCases() {
         dispatch({ type: "loading/userCases", payload: "" });
-        if (!user || !user?.activePatients.length) return;
-        const userCases: Array<Case> = [];
-        for (const cas of user.activePatients) {
-          const res = await api_client.get(`patients/${cas}`);
-          userCases.push(res.data.data.patient);
+        if (!user || !user?.activePatients) {
+          dispatch({
+            type: "rejected/UserCases",
+            payload: "error happened during fetching cases",
+          });
+          return;
         }
-        for (const cas of user.treatedPatients) {
-          const res = await api_client.get(`patients/${cas}`);
-          userCases.push(res.data.data.patient);
+        try {
+          const userCases: Array<Case> = [];
+          for (const cas of user.activePatients) {
+            const res = await api_client.get(`patients/${cas}`);
+            userCases.push(res.data.data.patient);
+          }
+          for (const cas of user.treatedPatients) {
+            const res = await api_client.get(`patients/${cas}`);
+            userCases.push(res.data.data.patient);
+          }
+          dispatch({ type: "USER_CASES_LOADED", payload: userCases });
+        } catch (e) {
+          console.log("error happened");
+          dispatch({
+            type: "rejected/UserCases",
+            payload: "error happened during fetching cases",
+          });
+        } finally {
+          console.log("finally block executed");
+          dispatch({ type: "isLoadingUserCases/false", payload: undefined });
         }
-        dispatch({ type: "USER_CASES_LOADED", payload: userCases });
       }
       fetchUserCases();
     },
@@ -258,6 +282,7 @@ function CasesProvider({ children }: Props) {
         isLoadingCases,
         isLoadingUserCases,
         error,
+        errorUserCases,
         filters,
         userCases,
         actionSignal,

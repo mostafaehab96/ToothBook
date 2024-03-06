@@ -10,23 +10,25 @@ import toTitleCase from "../../utils/toTitleCase";
 import { useAuth } from "../../../contexts/AuthenticationContext";
 import { useParams } from "react-router-dom";
 import { useState } from "react";
+import displayPropertyValues from "../../utils/displayPropertyValues";
 
 interface Props {
   casee: Case | null;
 }
 
-const largeInfoBoxes = ["diagnosis", "medicalCompromised"];
+const largeInfoBoxes = ["diagnosis"];
 function CaseDetails({ casee }: Props) {
   const [displayedProperties, setDisplayedProperties] = useState([
     "name",
+    "departments",
+    "medicalCompromised",
     "age",
     "address",
     "sex",
     "diagnosis",
-    "medicalCompromised",
   ]);
   const { user } = useAuth();
-  const dynamicGreyTextColor = useColorModeValue("#444444", "#aaaaaa");
+  const dynamicGreyTextColor = useColorModeValue("#444444", "#bbbbbb");
   const { id } = useParams();
 
   let activeCase: boolean = false;
@@ -43,6 +45,17 @@ function CaseDetails({ casee }: Props) {
     setDisplayedProperties([...displayedProperties, "phoneNumber"]);
   }
 
+  if (
+    displayedProperties.includes("medicalCompromised") &&
+    !casee?.medicalCompromised.length
+  ) {
+    setDisplayedProperties(
+      displayedProperties.filter(
+        (property) => property !== "medicalCompromised"
+      )
+    );
+  }
+
   return (
     <SimpleGrid
       columns={{ base: 1, md: 2 }}
@@ -51,30 +64,33 @@ function CaseDetails({ casee }: Props) {
       paddingX={5}
     >
       {casee !== null &&
-        Object.keys(casee)
-          .filter((key) => displayedProperties.includes(key))
-          .map((key) => (
-            <GridItem key={key} colSpan={largeInfoBoxes.includes(key) ? 2 : 1}>
-              <Box paddingY={2}>
-                <Text
-                  fontSize={{ sm: "1rem", md: "2rem", lg: "2rem" }}
-                  fontWeight={700}
-                >
-                  {toTitleCase(key)}:{" "}
-                </Text>
-                <Text
-                  fontSize={{ sm: "0.7rem", md: "1.5rem", lg: "1.5rem" }}
-                  fontWeight={700}
-                  color={dynamicGreyTextColor}
-                >
-                  {key === "medicalCompromised" &&
-                    casee.medicalCompromised.length === 0 &&
-                    "N/A"}
-                  {casee[key as keyof Case] || "-"}
-                </Text>
-              </Box>
-            </GridItem>
-          ))}
+        displayedProperties.map((property) => (
+          <GridItem
+            key={property}
+            colSpan={largeInfoBoxes.includes(property) ? 2 : 1}
+          >
+            <Box paddingY={2}>
+              <Text
+                fontSize={{ sm: "1rem", md: "2rem", lg: "1.8rem" }}
+                fontWeight={700}
+                fontFamily="Rubik"
+              >
+                {toTitleCase(property)}:{" "}
+              </Text>
+              <Text
+                fontFamily="Rubik"
+                fontSize={{ sm: "0.7rem", md: "1.5rem", lg: "1.5rem" }}
+                fontWeight={700}
+                color={dynamicGreyTextColor}
+              >
+                {property === "medicalCompromised" &&
+                casee.medicalCompromised.length === 0
+                  ? "N/A"
+                  : displayPropertyValues(casee[property as keyof Case]) || "-"}
+              </Text>
+            </Box>
+          </GridItem>
+        ))}
     </SimpleGrid>
   );
 }

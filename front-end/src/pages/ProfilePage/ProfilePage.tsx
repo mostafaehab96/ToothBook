@@ -6,7 +6,7 @@ import UserCasesGrid from "../../components/Cases/UserCasesGrid";
 import { useState } from "react";
 
 function ProfilePage() {
-  const { error } = useCases();
+  const { errorUserCases } = useCases();
   const [showingActiveCases, setShowingActiveCases] = useState<boolean>(true);
   const { colorMode } = useColorMode();
   const dynamicTextColorValue =
@@ -22,16 +22,13 @@ function ProfilePage() {
     >
       <GridItem area={"nav"} paddingBottom={8}>
         <NavBar />
+        {errorUserCases && (
+          <ErrorAlert title="Error" message={errorUserCases} />
+        )}
       </GridItem>
 
       <GridItem area={"main"} marginX={7}>
-        {error ? (
-          <ErrorAlert
-            title="Connect to network"
-            message="An error occurred while fetching the data. Please check your
-        internet connection and try again later."
-          />
-        ) : (
+        {!errorUserCases && (
           <HStack justify="space-around" paddingX={1}>
             <Text
               cursor="pointer"
@@ -63,7 +60,7 @@ function ProfilePage() {
             </Text>
           </HStack>
         )}
-        {!error && <UserCasesGrid activeCases={showingActiveCases} />}
+        {!errorUserCases && <UserCasesGrid activeCases={showingActiveCases} />}
       </GridItem>
     </Grid>
   );

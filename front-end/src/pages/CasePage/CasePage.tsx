@@ -85,7 +85,7 @@ function CasePage() {
                 <Spinner />
               </VStack>
             ) : (
-              <Stack w="100%" paddingBottom={4} paddingLeft={4} spacing={4}>
+              <Stack w="100%" paddingBottom={4} paddingX={4} spacing={4}>
                 <CaseDetails casee={currentCase} />
                 <Show below="lg">
                   <Actions />
