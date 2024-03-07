@@ -4,19 +4,25 @@
   "description": "The portfolio project for the 12 months ALX SE program",
   "main": "index.js",
   "scripts": {
-    "test": "nodemon app.js",
+    "test": "cross-env NODE_ENV=development nodemon app.js",
     "lint": "node_modules/eslint/bin/eslint.js --fix",
     "check-lint": "lint *.js",
     "fake-data": "node utils/generate-fakes.js",
-    "fake-data-clear": "node utils/generate-fakes.js clear"
+    "fake-data-clear": "node utils/generate-fakes.js clear",
+    "unittest": "cross-env NODE_ENV=test mocha --recursive --timeout 10000 --exit"
   },
   "keywords": [],
   "author": "",
   "license": "ISC",
   "devDependencies": {
     "@faker-js/faker": "^8.4.1",
+    "chai": "^4.4.1",
+    "chai-http": "^4.4.0",
+    "cross-env": "^7.0.3",
     "dotenv": "^16.4.5",
+    "dotenv-flow": "^4.1.0",
     "eslint": "^8.56.0",
+    "mocha": "^10.3.0",
     "nodemon": "^3.0.3"
   },
   "dependencies": {
