@@ -137,6 +137,7 @@ function AddCaseForm({ setError }: Props) {
 
   function resetForm() {
     formik.resetForm();
+    setSelectedImages([]);
     resetImageInput();
   }
 

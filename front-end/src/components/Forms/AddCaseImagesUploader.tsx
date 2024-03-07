@@ -62,12 +62,7 @@ function AddCaseImagesUploader({
           key={imageInputKey}
         />
         {selectedImages.length && (
-          <HStack
-            justifyContent="center"
-            // paddingX={{ base: "0px", lg: "10%" }}
-            paddingBottom={4}
-            width="100%"
-          >
+          <HStack justifyContent="center" paddingBottom={4} width="100%">
             <PicsViewer
               isLoading={false}
               images={selectedImages}
