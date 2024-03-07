@@ -4,7 +4,7 @@
   "description": "The portfolio project for the 12 months ALX SE program",
   "main": "index.js",
   "scripts": {
-    "test": "cross-env NODE_ENV=development nodemon app.js",
+    "test": "nodemon app.js",
     "lint": "node_modules/eslint/bin/eslint.js --fix",
     "check-lint": "lint *.js",
     "fake-data": "node utils/generate-fakes.js",
