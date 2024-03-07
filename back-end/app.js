@@ -5,7 +5,7 @@ const patientRouter = require('./routes/patient-routes');
 const jSend = require('jsend');
 const createError = require('http-errors');
 const cors = require('cors');
-require('dotenv').config();
+require('dotenv-flow').config();
 const path = require('path');
 
 const url = process.env.MONGO_URL;
@@ -38,3 +38,5 @@ mongoose.connect(url).then(() => {
 app.listen(port, () => {
   console.log(`Connected to port ${port}`);
 });
+
+module.exports = app;
