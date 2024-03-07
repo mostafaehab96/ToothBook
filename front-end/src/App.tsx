@@ -1,4 +1,4 @@
-import { Route, Routes, BrowserRouter } from "react-router-dom";
+import { Route, Routes, HashRouter } from "react-router-dom";
 
 import LoginPage from "./pages/LoginPage/LoginPage";
 import LandingPage from "./pages/LandingPage/LandingPage";
@@ -14,7 +14,7 @@ import ProtectedRoute from "./components/ProtectedRoute/ProtectedRoute";
 
 function App() {
   return (
-    <BrowserRouter>
+    <HashRouter>
       <AuthenticationProvider>
         <CasesProvider>
           <Routes>
@@ -44,7 +44,7 @@ function App() {
           </Routes>
         </CasesProvider>
       </AuthenticationProvider>
-    </BrowserRouter>
+    </HashRouter>
   );
 }
 

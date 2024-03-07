@@ -1,14 +1,20 @@
 import { Button, HStack, Input, Text, VStack } from "@chakra-ui/react";
-import { ChangeEvent, useRef, useState } from "react";
+import { ChangeEvent, useRef } from "react";
 import PicsViewer from "../Case/PicsViewer";
 
 interface Props {
   selectedImages: File[];
   setSelectedImages: React.Dispatch<React.SetStateAction<File[]>>;
+  imageInputKey: string;
+  resetImageInput: () => void;
 }
 
-function AddCaseImagesUploader({ selectedImages, setSelectedImages }: Props) {
-  const [inputKey, setInputKey] = useState<string>(Math.random().toString(36));
+function AddCaseImagesUploader({
+  selectedImages,
+  setSelectedImages,
+  imageInputKey,
+  resetImageInput,
+}: Props) {
   const inputRef = useRef<HTMLInputElement | null>(null);
 
   function handleImageChange(e: ChangeEvent<HTMLInputElement>) {
@@ -33,13 +39,8 @@ function AddCaseImagesUploader({ selectedImages, setSelectedImages }: Props) {
       return updatedImages;
     });
     if (selectedImages.length === 1) {
-      resetInput();
+      resetImageInput();
     }
-  }
-
-  function resetInput() {
-    const randomString = Math.random().toString(36);
-    setInputKey(randomString);
   }
 
   return (
@@ -58,7 +59,7 @@ function AddCaseImagesUploader({ selectedImages, setSelectedImages }: Props) {
           multiple
           ref={inputRef}
           hidden={true}
-          key={inputKey}
+          key={imageInputKey}
         />
         {selectedImages.length && (
           <HStack
