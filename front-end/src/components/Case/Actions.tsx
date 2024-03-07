@@ -1,9 +1,4 @@
-import {
-  Button,
-  HStack,
-  useBreakpointValue,
-  useColorMode,
-} from "@chakra-ui/react";
+import { Button, HStack, useColorMode } from "@chakra-ui/react";
 import { useAuth } from "../../../contexts/AuthenticationContext";
 import { useNavigate, useParams } from "react-router-dom";
 import { backendUrl } from "../../Services/api_client";
@@ -11,14 +6,6 @@ import axios, { AxiosRequestConfig } from "axios";
 import { useCases } from "../../../contexts/CasesContext";
 
 function Actions() {
-  const breakpoint = useBreakpointValue({
-    base: "base",
-    sm: "sm",
-    md: "md",
-    lg: "lg",
-    xl: "xl",
-    "2xl": "2xl",
-  });
   const { colorMode } = useColorMode();
   const navigate = useNavigate();
   const { user, updateUser } = useAuth();
@@ -69,7 +56,7 @@ function Actions() {
   return (
     <HStack justify="center" spacing={{ base: 8, md: 10 }}>
       <Button
-        fontSize={{ base: 14, md: 20 }}
+        fontSize={{ base: "1.1rem", md: 20 }}
         fontFamily="Rubik"
         paddingY={8}
         fontWeight={700}
@@ -84,7 +71,7 @@ function Actions() {
       <Button
         fontFamily="Rubik"
         paddingY={8}
-        fontSize={{ base: 14, md: 20 }}
+        fontSize={{ base: "1.1rem", md: 20 }}
         fontWeight={700}
         colorScheme="green"
         aria-label="contact"
@@ -97,7 +84,7 @@ function Actions() {
       <Button
         fontFamily="Rubik"
         paddingY={8}
-        fontSize={{ base: 14, md: 20 }}
+        fontSize={{ base: "1.1rem", md: 20 }}
         fontWeight={700}
         colorScheme="red"
         aria-label="reject"
@@ -110,7 +97,7 @@ function Actions() {
       <Button
         fontFamily="Rubik"
         paddingY={8}
-        fontSize={{ base: 14, md: 20 }}
+        fontSize={{ base: "1.1rem", md: 20 }}
         fontWeight={700}
         colorScheme="yellow"
         color={returnButtonColor}

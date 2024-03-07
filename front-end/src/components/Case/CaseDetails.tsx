@@ -60,8 +60,8 @@ function CaseDetails({ casee }: Props) {
     <SimpleGrid
       columns={{ base: 1, md: 2 }}
       spacingY={{ lg: "40px" }}
-      spacingX={{ lg: "40px" }}
-      paddingX={5}
+      spacingX={{ base: "20px", lg: "40px" }}
+      paddingX={4}
     >
       {casee !== null &&
         displayedProperties.map((property) => (
@@ -71,7 +71,7 @@ function CaseDetails({ casee }: Props) {
           >
             <Box paddingY={2}>
               <Text
-                fontSize={{ sm: "1rem", md: "2rem", lg: "1.8rem" }}
+                fontSize={{ sm: "1rem", md: "1.6rem", lg: "1.6rem" }}
                 fontWeight={700}
                 fontFamily="Rubik"
               >
@@ -79,7 +79,7 @@ function CaseDetails({ casee }: Props) {
               </Text>
               <Text
                 fontFamily="Rubik"
-                fontSize={{ sm: "0.7rem", md: "1.5rem", lg: "1.5rem" }}
+                fontSize={{ sm: "0.7rem", md: "1.5rem", lg: "1.4rem" }}
                 fontWeight={700}
                 color={dynamicGreyTextColor}
               >

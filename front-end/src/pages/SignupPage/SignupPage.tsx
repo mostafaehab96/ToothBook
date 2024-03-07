@@ -4,16 +4,25 @@ import SignupForm from "../../components/Forms/SignupForm";
 import RegisterImageUploader from "../../components/Forms/RegisterImagesUploader";
 import { useAuth } from "../../../contexts/AuthenticationContext";
 import RegisterFormValues from "../../interfaces/RegisterFormValues";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import ErrorAlert from "../../components/Alerts/ErrorAlert";
 import { useNavigate } from "react-router-dom";
 
 function SignupPage() {
-  const { register, error } = useAuth();
-  const [selectedImage, setSelectedImage] = useState<File>();
+  const { register, error, user, fetchingToken } = useAuth();
   const navigate = useNavigate();
-  const { user } = useAuth();
-  if (user) navigate("/cases");
+  const [selectedImage, setSelectedImage] = useState<File>();
+
+  useEffect(
+    function () {
+      if (user) {
+        navigate("/cases");
+      }
+    },
+    [user]
+  );
+
+  if (fetchingToken || user) return null; // LOADING
 
   function handleRegisterSubmit(values: RegisterFormValues) {
     if (register) register(values, selectedImage);

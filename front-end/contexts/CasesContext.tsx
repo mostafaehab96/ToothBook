@@ -146,7 +146,6 @@ function CasesProvider({ children }: Props) {
     dispatch,
   ] = useReducer(reducer, initialState);
   const { user } = useAuth();
-  console.log("isLoadingUserCases:", isLoadingUserCases);
 
   useEffect(
     function () {
@@ -171,13 +170,11 @@ function CasesProvider({ children }: Props) {
           }
           dispatch({ type: "USER_CASES_LOADED", payload: userCases });
         } catch (e) {
-          console.log("error happened");
           dispatch({
             type: "rejected/UserCases",
             payload: "error happened during fetching cases",
           });
         } finally {
-          console.log("finally block executed");
           dispatch({ type: "isLoadingUserCases/false", payload: undefined });
         }
       }

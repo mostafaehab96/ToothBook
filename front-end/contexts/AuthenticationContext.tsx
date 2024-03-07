@@ -14,6 +14,7 @@ interface Auth {
   user: User | null;
   isAuthenticated: boolean;
   error: string;
+  fetchingToken: boolean;
   login: undefined | ((email: string, password: string) => void);
   register:
     | undefined
@@ -31,6 +32,7 @@ const initialState: Auth = {
   user: null,
   isAuthenticated: false,
   error: "",
+  fetchingToken: true,
   login: undefined,
   logout: undefined,
   register: undefined,
@@ -72,7 +74,11 @@ function reducer(state: Auth, action: Action): Auth {
         error: "",
       };
     case "LOGOUT":
-      return initialState;
+      return { ...initialState, fetchingToken: false };
+    case "START_FETCHING_TOKEN":
+      return { ...state, fetchingToken: true };
+    case "DONE_FETCHING_TOKEN":
+      return { ...state, fetchingToken: false };
     default:
       break;
   }
@@ -80,20 +86,20 @@ function reducer(state: Auth, action: Action): Auth {
 }
 
 function AuthenticationProvider({ children }: AuthProviderProps) {
-  const [{ user, isAuthenticated, error }, dispatch] = useReducer(
-    reducer,
-    initialState
-  );
+  const [{ user, isAuthenticated, error, fetchingToken }, dispatch] =
+    useReducer(reducer, initialState);
   const navigate = useNavigate();
 
   useEffect(function () {
     async function handleTokenLogin() {
+      dispatch({ type: "START_FETCHING_TOKEN", payload: undefined });
       const token =
         localStorage.getItem("token") ||
         document.cookie
           .split("; ")
           .find((row) => row.startsWith("token="))
           ?.split("=")[1];
+
       if (token && !isTokenExpired(token)) {
         const { id } = jwtDecode(token);
         const fetchedUser: User = await fetchUser(id);
@@ -104,6 +110,8 @@ function AuthenticationProvider({ children }: AuthProviderProps) {
       } else {
         localStorage.removeItem("token");
       }
+
+      dispatch({ type: "DONE_FETCHING_TOKEN", payload: undefined });
     }
     handleTokenLogin();
   }, []);
@@ -220,6 +228,7 @@ function AuthenticationProvider({ children }: AuthProviderProps) {
         user,
         isAuthenticated,
         error,
+        fetchingToken,
         register,
         login,
         logout,

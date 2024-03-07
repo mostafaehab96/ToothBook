@@ -4,11 +4,22 @@ import Logo from "../../../public/logo.png";
 import NavBar from "../../components/NavBar/NavBar";
 import { useAuth } from "../../../contexts/AuthenticationContext";
 import { useNavigate } from "react-router-dom";
+import { useEffect } from "react";
 
 function LoginPage() {
   const navigate = useNavigate();
-  const { user } = useAuth();
-  if (user) navigate("/cases");
+  const { user, fetchingToken } = useAuth();
+
+  useEffect(
+    function () {
+      if (user) {
+        navigate("/cases");
+      }
+    },
+    [user]
+  );
+
+  if (fetchingToken || user) return null; // LOADING
 
   return (
     <Grid
