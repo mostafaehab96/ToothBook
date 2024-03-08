@@ -33,10 +33,6 @@ const filterTypes = {
 function FilterSelectors() {
   const { filters, filterItemChecked } = useCases();
 
-  // const params = new URLSearchParams(JSON.stringify(state)).toString();
-  // const fullUrl = `${"http://localhost:4000/api/patients"}?${params}`;
-  // console.log(fullUrl);
-
   return (
     <HStack>
       {Object.keys(filterTypes).map((type) => (

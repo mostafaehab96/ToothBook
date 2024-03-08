@@ -190,8 +190,6 @@ function AuthenticationProvider({ children }: AuthProviderProps) {
         },
       });
 
-      console.log(response);
-
       if (response.data.status !== "success") {
         throw new Error(`HTTP error! Status: ${response.status}`);
       }

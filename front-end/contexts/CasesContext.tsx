@@ -108,7 +108,6 @@ function reducer(state: ContextType, action: ReducerAction) {
     case "loading/userCases":
       return { ...state, isLoadingUserCases: true, errorUserCases: "" };
     case "case/loaded":
-      console.log(action.payload);
       return { ...state, isLoadingCases: false, currentCase: action.payload };
     case "cases/loaded":
       return {

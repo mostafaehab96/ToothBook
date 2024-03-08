@@ -27,7 +27,6 @@ function CasePage() {
             setCurrentCase(jsRes.data.patient);
           }
         } catch (e) {
-          console.log(e);
           setError("error happened during fetching case");
         } finally {
           setIsLoading(false);

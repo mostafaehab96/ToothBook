@@ -68,7 +68,6 @@ const validationSchema = Yup.object().shape({
 });
 
 interface Props {
-  // setFormValues: React.Dispatch<React.SetStateAction<RegisterFormValues>>;
   registerSubmit: (values: RegisterFormValues) => void;
 }
 
