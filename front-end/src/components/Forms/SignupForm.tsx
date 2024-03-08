@@ -273,7 +273,7 @@ function SignupForm({ registerSubmit }: Props) {
           mt={4}
           isDisabled={!formik.isValid}
         >
-          {isLoading ? <Spinner /> : "Sign Up"}
+          {isLoading ? <Spinner /> : "Register"}
         </Button>
       </HStack>
     </form>
