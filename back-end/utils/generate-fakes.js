@@ -1,7 +1,7 @@
 const { faker } = require('@faker-js/faker');
 const Patient  = require('../models/patient-model');
 const mongoose = require('mongoose');
-require('dotenv').config();
+require('dotenv-flow').config();
 const url = process.env.MONGO_URL;
 const { allDepartments } = require('./departments-medical');
 const patientsImages = require('./temporary-images');
@@ -52,3 +52,5 @@ const generateFakePatients = async (numPatients, clearFirst) => {
 };
 
 generateFakePatients(20, clearFirst);
+
+module.exports = generateFakePatients;
