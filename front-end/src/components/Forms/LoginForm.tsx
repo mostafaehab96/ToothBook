@@ -4,6 +4,7 @@ import {
   FormErrorMessage,
   FormLabel,
   Input,
+  Spinner,
   Stack,
   Text,
 } from "@chakra-ui/react";
@@ -30,7 +31,7 @@ interface FormValues {
 }
 
 function LoginForm() {
-  const { login } = useAuth();
+  const { login, isLoading } = useAuth();
   const formik = useFormik<FormValues>({
     initialValues,
     onSubmit: (values) => {
@@ -85,7 +86,7 @@ function LoginForm() {
           )}
         </FormControl>
         <Button type="submit" width="fit-content" isDisabled={!formik.isValid}>
-          Login
+          {isLoading ? <Spinner /> : "Login"}
         </Button>
         <Link to="/register">
           <Text textDecoration="underline" fontStyle="italic">

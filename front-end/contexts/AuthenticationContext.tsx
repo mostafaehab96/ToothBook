@@ -21,6 +21,7 @@ interface Auth {
     | ((body: RegisterFormValues, profilePicture: File | undefined) => void);
   logout: undefined | (() => void);
   updateUser: undefined | (() => void);
+  isLoading: boolean;
 }
 
 interface Action {
@@ -33,6 +34,7 @@ const initialState: Auth = {
   isAuthenticated: false,
   error: "",
   fetchingToken: true,
+  isLoading: false,
   login: undefined,
   logout: undefined,
   register: undefined,
@@ -45,6 +47,7 @@ function reducer(state: Auth, action: Action): Auth {
     case "error":
       return {
         ...state,
+        isLoading: false,
         error: action.payload as string,
       };
     case "LOAD_USER":
@@ -65,12 +68,14 @@ function reducer(state: Auth, action: Action): Auth {
         isAuthenticated: true,
         user: { ...action.payload.user, token: action.payload.token },
         error: "",
+        isLoading: false,
       };
     case "LOGIN":
       return {
         ...state,
         isAuthenticated: true,
         user: { ...action.payload.user, token: action.payload.token },
+        isLoading: false,
         error: "",
       };
     case "LOGOUT":
@@ -79,6 +84,8 @@ function reducer(state: Auth, action: Action): Auth {
       return { ...state, fetchingToken: true };
     case "DONE_FETCHING_TOKEN":
       return { ...state, fetchingToken: false };
+    case "LOADING":
+      return { ...state, isLoading: action.payload };
     default:
       break;
   }
@@ -86,7 +93,7 @@ function reducer(state: Auth, action: Action): Auth {
 }
 
 function AuthenticationProvider({ children }: AuthProviderProps) {
-  const [{ user, isAuthenticated, error, fetchingToken }, dispatch] =
+  const [{ user, isAuthenticated, error, fetchingToken, isLoading }, dispatch] =
     useReducer(reducer, initialState);
   const navigate = useNavigate();
 
@@ -122,6 +129,7 @@ function AuthenticationProvider({ children }: AuthProviderProps) {
       password,
     };
     try {
+      dispatch({ type: "LOADING", payload: true });
       const response = await api_client.post("/users/login", body);
       if (response.data.status !== "success") {
         throw new Error(`HTTP error! Status: ${response.status}`);
@@ -134,10 +142,18 @@ function AuthenticationProvider({ children }: AuthProviderProps) {
           user: response.data.data.user,
         },
       });
+
       localStorage.setItem("token", response.data.data.token);
       navigate("cases");
-    } catch (error) {
+    } catch (err) {
       console.error("Error during POST request:", error);
+      let errorMessage: string = "";
+      if (err instanceof Error) errorMessage = err.message;
+      dispatch({
+        type: "error",
+        payload: errorMessage,
+      });
+      if (isLoading) dispatch({ type: "LOADING", payload: false });
     }
   }
   async function register(
@@ -145,12 +161,12 @@ function AuthenticationProvider({ children }: AuthProviderProps) {
     profilePicture: File | undefined
   ) {
     try {
+      dispatch({ type: "LOADING", payload: true });
       const cehckRequestBody = { email: body.email };
       const checkUserExistsResponse = await api_client.post(
         "/users/exists",
         cehckRequestBody
       );
-      console.log(checkUserExistsResponse.data);
       if (checkUserExistsResponse.data.status !== "success") {
         throw new Error(
           `HTTP errorrrrr! Status: ${checkUserExistsResponse.status}`
@@ -229,6 +245,7 @@ function AuthenticationProvider({ children }: AuthProviderProps) {
         isAuthenticated,
         error,
         fetchingToken,
+        isLoading,
         register,
         login,
         logout,

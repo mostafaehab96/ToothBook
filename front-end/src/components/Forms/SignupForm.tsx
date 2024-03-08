@@ -11,11 +11,13 @@ import {
   MenuButton,
   MenuList,
   MenuItem,
+  Spinner,
 } from "@chakra-ui/react";
 import { BsChevronDown } from "react-icons/bs";
 import * as Yup from "yup";
 import { useState } from "react";
 import RegisterFormValues from "../../interfaces/RegisterFormValues";
+import { useAuth } from "../../../contexts/AuthenticationContext";
 
 const universities = [
   "Zakazik University",
@@ -71,6 +73,7 @@ interface Props {
 }
 
 function SignupForm({ registerSubmit }: Props) {
+  const { isLoading } = useAuth();
   const formik = useFormik<RegisterFormValues>({
     initialValues,
     onSubmit: (values) => {
@@ -270,7 +273,7 @@ function SignupForm({ registerSubmit }: Props) {
           mt={4}
           isDisabled={!formik.isValid}
         >
-          Sign Up
+          {isLoading ? <Spinner /> : "Sign Up"}
         </Button>
       </HStack>
     </form>
