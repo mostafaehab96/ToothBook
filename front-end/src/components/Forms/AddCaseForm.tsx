@@ -23,6 +23,7 @@ import {
   AlertDialogHeader,
   AlertDialogBody,
   AlertDialogFooter,
+  Spinner,
 } from "@chakra-ui/react";
 import { BsChevronDown } from "react-icons/bs";
 import AddCaseImagesUploader from "./AddCaseImagesUploader";
@@ -72,6 +73,8 @@ function AddCaseForm({ setError }: Props) {
 
   const { isOpen, onOpen, onClose } = useDisclosure();
   const cancelRef = useRef(null);
+
+  const [isLoading, setIsLoading] = useState(false);
   const [imageInputKey, setImageInputKey] = useState<string>(
     Math.random().toString(36)
   );
@@ -94,6 +97,7 @@ function AddCaseForm({ setError }: Props) {
     if (!user) return;
     const formData = new FormData();
     try {
+      setIsLoading(true);
       // #region adding formdata
       formData.append("name", body.name);
       formData.append("age", body.age);
@@ -132,6 +136,8 @@ function AddCaseForm({ setError }: Props) {
     } catch (error) {
       setError("Error adding a new case, check your internet connection");
       console.error("Error during POST request:", error);
+    } finally {
+      setIsLoading(false);
     }
   }
 
@@ -423,7 +429,7 @@ function AddCaseForm({ setError }: Props) {
             colorScheme="blue"
             mt={4}
           >
-            Add Case
+            {isLoading ? <Spinner /> : "Add Case"}
           </Button>
         </HStack>
       </form>
