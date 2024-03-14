@@ -1,15 +1,15 @@
 import { SimpleGrid } from "@chakra-ui/react";
 import CaseCardContainer from "../Case/CaseCardContainer";
 import CaseCard from "../Case/CaseCard";
-import { useCases } from "../../../contexts/CasesContext";
 import CaseCardSkeleton from "../Case/CaseCardSkeleton";
+import { useUserCases } from "../../../contexts/UserCasesContext";
 
 interface Props {
   activeCases: boolean;
 }
 
 function UserCasesGrid({ activeCases }: Props) {
-  const { userCases, isLoadingUserCases } = useCases();
+  const { userCases, isLoadingUserCases } = useUserCases();
 
   return (
     <SimpleGrid

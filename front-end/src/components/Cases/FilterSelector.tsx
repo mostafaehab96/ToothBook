@@ -9,19 +9,13 @@ import {
   Text,
 } from "@chakra-ui/react";
 import { BsChevronDown } from "react-icons/bs";
-import Department from "../../interfaces/Department";
 import toTitleCase from "../../utils/toTitleCase";
-import Emergency from "../../interfaces/Emergency";
 import { useCases } from "../../../contexts/CasesContext";
+import Emergency from "../../interfaces/Emergency";
 import IsMedicalCompromised from "../../interfaces/IsMedicalCompromised";
+import Department from "../../interfaces/Department";
 import Sex from "../../interfaces/Sex";
-
-interface Filters {
-  department: Record<string, boolean>;
-  medicalCompromised: Record<string, boolean>;
-  emergency: Record<string, boolean>;
-  sex: Record<string, boolean>;
-}
+import { Filters } from "../../interfaces/Filters";
 
 const filterTypes = {
   department: Department,
@@ -86,5 +80,4 @@ function FilterSelector({
   );
 }
 
-export { FilterSelectors };
-export type { Filters };
+export default FilterSelectors;

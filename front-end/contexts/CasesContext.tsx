@@ -1,43 +1,30 @@
 import { createContext, useContext, useEffect, useReducer } from "react";
 import Case from "../src/interfaces/Case";
 import React from "react";
-import { createObjectWithFalseValues } from "../src/utils/createObjectOfFalse";
-import Department from "../src/interfaces/Department";
-import { Filters } from "../src/components/Cases/FilterSelector";
+import { Filters } from "../src/interfaces/Filters";
 import api_client from "../src/Services/api_client";
-import IsMedicalCompromised from "../src/interfaces/IsMedicalCompromised";
 import createFilterParams from "../src/utils/createFilterParams";
-import Sex from "../src/interfaces/Sex";
 import { backendUrl } from "../src/Services/api_client";
-import { useAuth } from "./AuthenticationContext";
+import { filtersInitialState } from "../src/interfaces/Filters";
 
 const CASES_LIMIT_PER_PAGE = 15;
+
+interface Props {
+  children: React.JSX.Element;
+}
 
 interface ContextType {
   totalPages: number;
   currentPage: number;
   cases: Array<Case>;
   isLoadingCases: boolean;
-  isLoadingUserCases: boolean;
   error: string;
-  errorUserCases: string;
   actionSignal: number;
   filters: Filters;
-  userCases: Array<Case>;
   setActionSignal: null | (() => void);
   setPage: (n: number) => void;
   filterItemChecked: null | ((filter: string, filterItem: string) => void);
   createCase: null | ((newCase: Case) => void);
-  deleteCase: null | ((id: number) => void);
-}
-
-interface Props {
-  children: React.JSX.Element;
-}
-
-interface ReducerAction {
-  type: string;
-  payload: any;
 }
 
 const initialState: ContextType = {
@@ -47,31 +34,50 @@ const initialState: ContextType = {
   cases: [],
   actionSignal: 3423,
   isLoadingCases: false,
-  isLoadingUserCases: false,
-  userCases: [],
   error: "",
-  errorUserCases: "",
   setActionSignal: null,
   createCase: null,
   filterItemChecked: null,
-  deleteCase: null,
-  filters: {
-    department: createObjectWithFalseValues(Object.keys(Department)),
-    sex: createObjectWithFalseValues(Object.keys(Sex)),
-    medicalCompromised: createObjectWithFalseValues(
-      Object.keys(IsMedicalCompromised)
-    ),
-    emergency: createObjectWithFalseValues(["Emergency", "notEmergency"]),
-  },
+  filters: filtersInitialState,
 };
 
 const CasesContext = createContext(initialState);
 
+// #region reducer types
+
+type ACTION_SIGNAL = { type: "ACTION_SIGNAL"; payload: number };
+type SET_PAGE = { type: "SET_PAGE"; payload: number };
+type ERROR = { type: "ERROR"; payload: string };
+type LOADING_CASES = { type: "LOADING_CASES" };
+type CASE_CREATED = { type: "CASE_CREATED"; payload: Case };
+type CASES_LOADED = {
+  type: "CASES_LOADED";
+  payload: {
+    patients: Case[];
+    totalCount: number;
+  };
+};
+type FILTER_ITEM_CHECKED = {
+  type: "FILTER_ITEM_CHECKED";
+  payload: { filter: string; filterItem: string };
+};
+
+type ReducerAction =
+  | ACTION_SIGNAL
+  | SET_PAGE
+  | ERROR
+  | LOADING_CASES
+  | CASES_LOADED
+  | CASE_CREATED
+  | FILTER_ITEM_CHECKED;
+
+// #endregion action types
+
 function reducer(state: ContextType, action: ReducerAction) {
   switch (action.type) {
-    case "action_signal":
+    case "ACTION_SIGNAL":
       return { ...state, actionSignal: action.payload };
-    case "filterItemChecked":
+    case "FILTER_ITEM_CHECKED":
       if (
         state.filters[action.payload.filter as keyof Filters] &&
         state.filters[action.payload.filter as keyof Filters][
@@ -93,35 +99,24 @@ function reducer(state: ContextType, action: ReducerAction) {
       } else {
         return state;
       }
-    case "USER_CASES_LOADED":
-      return { ...state, userCases: action.payload };
-    case "isLoadingUserCases/false":
-      return { ...state, isLoadingUserCases: false };
-    case "set_page":
+    case "SET_PAGE":
       return { ...state, currentPage: action.payload };
-    case "rejected":
+    case "ERROR":
       return { ...state, error: action.payload, isLoadingCases: false };
-    case "rejected/UserCases":
-      return { ...state, errorUserCases: action.payload };
-    case "loading/cases":
+    case "LOADING_CASES":
       return { ...state, isLoadingCases: true, error: "" };
-    case "loading/userCases":
-      return { ...state, isLoadingUserCases: true, errorUserCases: "" };
-    case "case/loaded":
-      return { ...state, isLoadingCases: false, currentCase: action.payload };
-    case "cases/loaded":
+    case "CASES_LOADED":
       return {
         ...state,
         isLoadingCases: false,
         cases: action.payload.patients,
         totalPages: Math.ceil(action.payload.totalCount / CASES_LIMIT_PER_PAGE),
       };
-    case "case/created":
+    case "CASE_CREATED":
       return {
         ...state,
         isLoadingCases: false,
         cases: [...state.cases, action.payload],
-        currentCase: action.payload,
       };
     default:
       throw new Error("unknown action type");
@@ -133,59 +128,19 @@ function CasesProvider({ children }: Props) {
     {
       cases,
       isLoadingCases,
-      isLoadingUserCases,
       error,
-      errorUserCases,
       currentPage,
       totalPages,
       filters,
-      userCases,
       actionSignal,
     },
     dispatch,
   ] = useReducer(reducer, initialState);
-  const { user } = useAuth();
-
-  useEffect(
-    function () {
-      async function fetchUserCases() {
-        dispatch({ type: "loading/userCases", payload: "" });
-        if (!user || !user?.activePatients) {
-          dispatch({
-            type: "rejected/UserCases",
-            payload: "error happened during fetching cases",
-          });
-          return;
-        }
-        try {
-          const userCases: Array<Case> = [];
-          for (const cas of user.activePatients) {
-            const res = await api_client.get(`patients/${cas}`);
-            userCases.push(res.data.data.patient);
-          }
-          for (const cas of user.treatedPatients) {
-            const res = await api_client.get(`patients/${cas}`);
-            userCases.push(res.data.data.patient);
-          }
-          dispatch({ type: "USER_CASES_LOADED", payload: userCases });
-        } catch (e) {
-          dispatch({
-            type: "rejected/UserCases",
-            payload: "error happened during fetching cases",
-          });
-        } finally {
-          dispatch({ type: "isLoadingUserCases/false", payload: undefined });
-        }
-      }
-      fetchUserCases();
-    },
-    [user]
-  );
 
   useEffect(
     function () {
       async function fetchCases() {
-        dispatch({ type: "loading/cases", payload: undefined });
+        dispatch({ type: "LOADING_CASES" });
         try {
           const filterParams = createFilterParams(filters);
           const params = {
@@ -201,7 +156,7 @@ function CasesProvider({ children }: Props) {
 
           if (jsRes.status === "success") {
             dispatch({
-              type: "cases/loaded",
+              type: "CASES_LOADED",
               payload: {
                 patients: jsRes.data.patients,
                 totalCount: jsRes.data.totalCount,
@@ -210,7 +165,7 @@ function CasesProvider({ children }: Props) {
           }
         } catch (e) {
           dispatch({
-            type: "rejected",
+            type: "ERROR",
             payload: "error happened during fetching cases",
           });
         }
@@ -221,7 +176,7 @@ function CasesProvider({ children }: Props) {
   );
 
   async function createCase(newCase: Case) {
-    dispatch({ type: "loading/cases", payload: undefined });
+    dispatch({ type: "LOADING_CASES" });
     try {
       const res = await fetch(`${backendUrl}cases`, {
         method: "POST",
@@ -231,42 +186,27 @@ function CasesProvider({ children }: Props) {
         },
       });
       const data = await res.json();
-      dispatch({ type: "case/created", payload: data });
+      dispatch({ type: "CASE_CREATED", payload: data });
     } catch (e) {
       dispatch({
-        type: "rejected",
+        type: "ERROR",
         payload: "error happened during creating case",
-      });
-    }
-  }
-
-  async function deleteCase(caseId: number) {
-    dispatch({ type: "loading", payload: undefined });
-    try {
-      await fetch(`${backendUrl}cases/${caseId}`, {
-        method: "DELETE",
-      });
-      dispatch({ type: "case/deleted", payload: caseId });
-    } catch (e) {
-      dispatch({
-        type: "rejected",
-        payload: "error happened during deleting case",
       });
     }
   }
 
   function setPage(pageNumber: number) {
     if (pageNumber <= totalPages && pageNumber >= 1) {
-      dispatch({ type: "set_page", payload: pageNumber });
+      dispatch({ type: "SET_PAGE", payload: pageNumber });
     }
   }
 
   function filterItemChecked(filter: string, filterItem: string) {
-    dispatch({ type: "filterItemChecked", payload: { filter, filterItem } });
+    dispatch({ type: "FILTER_ITEM_CHECKED", payload: { filter, filterItem } });
   }
 
   function setActionSignal() {
-    dispatch({ type: "action_signal", payload: Math.random() });
+    dispatch({ type: "ACTION_SIGNAL", payload: Math.random() });
   }
 
   return (
@@ -276,16 +216,12 @@ function CasesProvider({ children }: Props) {
         currentPage,
         cases,
         isLoadingCases,
-        isLoadingUserCases,
         error,
-        errorUserCases,
         filters,
-        userCases,
         actionSignal,
         setActionSignal,
         filterItemChecked,
         createCase,
-        deleteCase,
         setPage,
       }}
     >

@@ -1,4 +1,4 @@
-import { Filters } from "../components/Cases/FilterSelector";
+import { Filters } from "../interfaces/Filters";
 
 function createFilterParams(filters: Filters) {
   const filterParams = {};
