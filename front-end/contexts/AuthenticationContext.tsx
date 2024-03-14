@@ -9,6 +9,35 @@ import { jwtDecode } from "jwt-decode";
 interface AuthProviderProps {
   children: React.JSX.Element;
 }
+interface JwtPayload {
+  id: string;
+}
+
+// #region reducer types
+type ERROR = { type: "ERROR"; payload: string };
+type UPDATE_USER = {
+  type: "UPDATE_USER";
+  payload: { user: User };
+};
+type LOAD_USER = { type: "LOAD_USER"; payload: { user: User; token: string } };
+type REGISTER = { type: "REGISTER"; payload: { user: User; token: string } };
+type LOGIN = { type: "LOGIN"; payload: { user: User; token: string } };
+type LOGOUT = { type: "LOGOUT" };
+type START_FETCHING_TOKEN = { type: "START_FETCHING_TOKEN" };
+type DONE_FETCHING_TOKEN = { type: "DONE_FETCHING_TOKEN" };
+type LOADING = { type: "LOADING"; payload: boolean };
+
+type ReducerAction =
+  | ERROR
+  | LOAD_USER
+  | UPDATE_USER
+  | REGISTER
+  | LOADING
+  | LOGIN
+  | LOGOUT
+  | START_FETCHING_TOKEN
+  | DONE_FETCHING_TOKEN;
+// #endregion reducer types
 
 interface Auth {
   user: User | null;
@@ -24,11 +53,6 @@ interface Auth {
   isLoading: boolean;
 }
 
-interface Action {
-  type: string;
-  payload: any;
-}
-
 const initialState: Auth = {
   user: null,
   isAuthenticated: false,
@@ -40,27 +64,24 @@ const initialState: Auth = {
   register: undefined,
   updateUser: undefined,
 };
+
 const AuthContext = createContext<Auth | null>(null);
 
-function reducer(state: Auth, action: Action): Auth {
+function reducer(state: Auth, action: ReducerAction): Auth {
   switch (action.type) {
-    case "error":
+    case "ERROR":
       return {
         ...state,
         isLoading: false,
         error: action.payload as string,
       };
+    case "UPDATE_USER":
+      return { ...state, user: { ...state.user, ...action.payload.user } };
     case "LOAD_USER":
-      if (action.payload.token) {
-        return {
-          ...state,
-          isAuthenticated: true,
-          user: { ...action.payload.user, token: action.payload.token },
-        };
-      }
       return {
         ...state,
-        user: { ...state.user, ...action.payload.user },
+        isAuthenticated: true,
+        user: { ...action.payload.user, token: action.payload.token },
       };
     case "REGISTER":
       return {
@@ -99,7 +120,7 @@ function AuthenticationProvider({ children }: AuthProviderProps) {
 
   useEffect(function () {
     async function handleTokenLogin() {
-      dispatch({ type: "START_FETCHING_TOKEN", payload: undefined });
+      dispatch({ type: "START_FETCHING_TOKEN" });
       const token =
         localStorage.getItem("token") ||
         document.cookie
@@ -108,7 +129,7 @@ function AuthenticationProvider({ children }: AuthProviderProps) {
           ?.split("=")[1];
 
       if (token && !isTokenExpired(token)) {
-        const { id } = jwtDecode(token);
+        const { id } = jwtDecode(token) as JwtPayload;
         const fetchedUser: User = await fetchUser(id);
         dispatch({
           type: "LOAD_USER",
@@ -118,7 +139,7 @@ function AuthenticationProvider({ children }: AuthProviderProps) {
         localStorage.removeItem("token");
       }
 
-      dispatch({ type: "DONE_FETCHING_TOKEN", payload: undefined });
+      dispatch({ type: "DONE_FETCHING_TOKEN" });
     }
     handleTokenLogin();
   }, []);
@@ -150,7 +171,7 @@ function AuthenticationProvider({ children }: AuthProviderProps) {
       let errorMessage: string = "";
       if (err instanceof Error) errorMessage = err.message;
       dispatch({
-        type: "error",
+        type: "ERROR",
         payload: errorMessage,
       });
       if (isLoading) dispatch({ type: "LOADING", payload: false });
@@ -207,13 +228,13 @@ function AuthenticationProvider({ children }: AuthProviderProps) {
       let errorMessage: string = "";
       if (err instanceof Error) errorMessage = err.message;
       dispatch({
-        type: "error",
+        type: "ERROR",
         payload: errorMessage,
       });
     }
   }
   function logout() {
-    dispatch({ type: "LOGOUT", payload: {} });
+    dispatch({ type: "LOGOUT" });
     localStorage.removeItem("token");
     navigate("/login");
   }
@@ -229,7 +250,7 @@ function AuthenticationProvider({ children }: AuthProviderProps) {
     if (!user) return;
     const fetchedUser = await fetchUser(user?._id);
     dispatch({
-      type: "LOAD_USER",
+      type: "UPDATE_USER",
       payload: {
         user: fetchedUser,
       },

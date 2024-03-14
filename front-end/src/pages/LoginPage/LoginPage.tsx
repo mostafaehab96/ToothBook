@@ -17,7 +17,7 @@ function LoginPage() {
         navigate("/cases");
       }
     },
-    [user]
+    [user, navigate]
   );
 
   if (fetchingToken || user) return null; // LOADING
