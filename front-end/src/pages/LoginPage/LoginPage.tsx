@@ -1,7 +1,7 @@
 import { Box, Flex, Grid, GridItem, Image, Stack } from "@chakra-ui/react";
 import LoginForm from "../../components/Forms/LoginForm";
 import Logo from "../../../public/logo.png";
-import NavBar from "../../components/NavBar/NavBar";
+import { NavBar } from "../../components/NavBar/NavBar";
 import { useAuth } from "../../../contexts/AuthenticationContext";
 import { useNavigate } from "react-router-dom";
 import { useEffect } from "react";

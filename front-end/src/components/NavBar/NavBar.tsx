@@ -9,8 +9,9 @@ import ProfilePic from "./ProfilePic";
 import { FaInfo } from "react-icons/fa";
 import { useAuth } from "../../../contexts/AuthenticationContext";
 import getLocalImage from "../../utils/getLocalImage";
+import React from "react";
 
-function NavBar() {
+const NavBar = React.memo(function NavBar() {
   const { isAuthenticated, user, logout } = useAuth();
   const { colorMode } = useColorMode();
   const dynamicTooltipColorValue =
@@ -65,6 +66,6 @@ function NavBar() {
       </HStack>
     </HStack>
   );
-}
+});
 
-export default NavBar;
+export { NavBar };

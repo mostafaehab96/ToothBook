@@ -1,5 +1,5 @@
 import { Box, Grid, GridItem, Text, VStack } from "@chakra-ui/react";
-import NavBar from "../../components/NavBar/NavBar";
+import { NavBar } from "../../components/NavBar/NavBar";
 import SignupForm from "../../components/Forms/SignupForm";
 import RegisterImageUploader from "../../components/Forms/RegisterImagesUploader";
 import { useAuth } from "../../../contexts/AuthenticationContext";

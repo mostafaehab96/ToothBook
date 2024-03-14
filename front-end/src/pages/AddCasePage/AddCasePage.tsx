@@ -1,5 +1,5 @@
 import { Grid, GridItem, VStack } from "@chakra-ui/react";
-import NavBar from "../../components/NavBar/NavBar";
+import { NavBar } from "../../components/NavBar/NavBar";
 import AddCaseForm from "../../components/Forms/AddCaseForm";
 import { useState } from "react";
 import ErrorAlert from "../../components/Alerts/ErrorAlert";

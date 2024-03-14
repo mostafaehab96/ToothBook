@@ -1,5 +1,5 @@
 import { Grid, GridItem, HStack } from "@chakra-ui/react";
-import NavBar from "../../components/NavBar/NavBar";
+import { NavBar } from "../../components/NavBar/NavBar";
 import CasesGrid from "../../components/Cases/CasesGrid";
 import FilterSelectors from "../../components/Cases/FilterSelector";
 import { useCases } from "../../../contexts/CasesContext";

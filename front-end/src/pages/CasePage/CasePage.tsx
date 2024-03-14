@@ -1,6 +1,6 @@
 import { Grid, GridItem, Show, Spinner, Stack, VStack } from "@chakra-ui/react";
 import { useParams } from "react-router-dom";
-import NavBar from "../../components/NavBar/NavBar";
+import { NavBar } from "../../components/NavBar/NavBar";
 import PicsViewer from "../../components/Case/PicsViewer";
 import CaseDetails from "../../components/Case/CaseDetails";
 import Actions from "../../components/Case/Actions";
