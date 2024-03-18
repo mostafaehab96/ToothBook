@@ -10,7 +10,7 @@ type FilterParams = {
 function createFilterParams(filters: Filters) {
   const filterParams: FilterParams = {};
 
-  filterParams["departments"] = Object.keys(filters.department).filter(
+  filterParams.departments = Object.keys(filters.department).filter(
     (key) => filters.department[key]
   );
   if (filters.sex.Male !== filters.sex.Female) {

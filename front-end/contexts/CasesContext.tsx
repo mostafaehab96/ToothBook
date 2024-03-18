@@ -1,4 +1,10 @@
-import { createContext, useContext, useEffect, useReducer } from "react";
+import {
+  createContext,
+  useCallback,
+  useContext,
+  useEffect,
+  useReducer,
+} from "react";
 import Case from "../src/interfaces/Case";
 import React from "react";
 import { Filters } from "../src/interfaces/Filters";
@@ -6,6 +12,7 @@ import api_client from "../src/Services/api_client";
 import createFilterParams from "../src/utils/createFilterParams";
 import { backendUrl } from "../src/Services/api_client";
 import { filtersInitialState } from "../src/interfaces/Filters";
+import { useAuth } from "./AuthenticationContext";
 
 const CASES_LIMIT_PER_PAGE = 15;
 
@@ -137,42 +144,46 @@ function CasesProvider({ children }: Props) {
     dispatch,
   ] = useReducer(reducer, initialState);
 
-  useEffect(
-    function () {
-      async function fetchCases() {
-        dispatch({ type: "LOADING_CASES" });
-        try {
-          const filterParams = createFilterParams(filters);
-          const params = {
-            page: currentPage,
-            limit: CASES_LIMIT_PER_PAGE,
-            ...filterParams,
-          };
+  const fetchCases = useCallback(
+    async function fetchCases() {
+      dispatch({ type: "LOADING_CASES" });
+      try {
+        const filterParams = createFilterParams(filters);
+        const params = {
+          page: currentPage,
+          limit: CASES_LIMIT_PER_PAGE,
+          ...filterParams,
+        };
 
-          const res = await api_client.get("patients", {
-            params,
-          });
-          const jsRes = await res.data;
+        const res = await api_client.get("patients", {
+          params,
+        });
+        const jsRes = await res.data;
 
-          if (jsRes.status === "success") {
-            dispatch({
-              type: "CASES_LOADED",
-              payload: {
-                patients: jsRes.data.patients,
-                totalCount: jsRes.data.totalCount,
-              },
-            });
-          }
-        } catch (e) {
+        if (jsRes.status === "success") {
           dispatch({
-            type: "ERROR",
-            payload: "error happened during fetching cases",
+            type: "CASES_LOADED",
+            payload: {
+              patients: jsRes.data.patients,
+              totalCount: jsRes.data.totalCount,
+            },
           });
         }
+      } catch (e) {
+        dispatch({
+          type: "ERROR",
+          payload: "error happened during fetching cases",
+        });
       }
+    },
+    [currentPage, filters]
+  );
+  const { user } = useAuth();
+  useEffect(
+    function () {
       fetchCases();
     },
-    [currentPage, filters, actionSignal]
+    [fetchCases, user]
   );
 
   async function createCase(newCase: Case) {
