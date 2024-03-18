@@ -131,6 +131,7 @@ function LandingPage() {
           >
             {whatYouCanDoData.map((item) => (
               <VStack
+                key={item.title}
                 boxShadow="md"
                 padding={4}
                 borderRadius={15}

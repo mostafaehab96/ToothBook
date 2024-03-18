@@ -20,15 +20,16 @@ function CasesPage() {
     >
       <GridItem area={"nav"} paddingBottom={8}>
         <NavBar />
-      </GridItem>
-      <GridItem area={"main"} marginX={7}>
-        {error ? (
+        {error && (
           <ErrorAlert
             title="Connect to network"
             message="An error occurred while fetching the data. Please check your
         internet connection and try again later."
           />
-        ) : (
+        )}
+      </GridItem>
+      <GridItem area={"main"} marginX={7}>
+        {!error && (
           <HStack justify="space-between" paddingX={1}>
             <FilterSelectors />
             {isAuthenticated && <AddCaseButton />}
