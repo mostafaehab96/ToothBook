@@ -174,7 +174,7 @@ function CasesProvider({ children }: Props) {
             });
           }
         } catch (e) {
-          if (e.name != "CanceledError") {
+          if (e instanceof Error && e.name != "CanceledError") {
             dispatch({
               type: "ERROR",
               payload: "error happened during fetching cases",

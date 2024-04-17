@@ -1,4 +1,5 @@
-import { Grid, GridItem, HStack } from "@chakra-ui/react";
+import { Box, HStack, Show, Stack } from "@chakra-ui/react";
+import { useBreakpointValue } from "@chakra-ui/react";
 import { NavBar } from "../../components/NavBar/NavBar";
 import CasesGrid from "../../components/Cases/CasesGrid";
 import FilterSelectors from "../../components/Cases/FilterSelector";
@@ -11,14 +12,11 @@ import { useAuth } from "../../../contexts/AuthenticationContext";
 function CasesPage() {
   const { error } = useCases();
   const { isAuthenticated } = useAuth();
+  const isMobile = useBreakpointValue({ base: true, md: false });
 
   return (
-    <Grid
-      templateAreas={{
-        base: `"nav" "main"`,
-      }}
-    >
-      <GridItem area={"nav"} paddingBottom={8}>
+    <Stack w="100%">
+      <Box paddingBottom={8} w="100%">
         <NavBar />
         {error && (
           <ErrorAlert
@@ -27,18 +25,33 @@ function CasesPage() {
         internet connection and try again later."
           />
         )}
-      </GridItem>
-      <GridItem area={"main"} marginX={7}>
+      </Box>
+      <Box maxW="100%">
         {!error && (
-          <HStack justify="space-between" paddingX={1}>
+          <HStack
+            justify="space-between"
+            overflow="scroll"
+            paddingX={4}
+            css={{
+              "&::-webkit-scrollbar": {
+                height: "0px",
+                display: "none",
+              },
+            }}
+          >
             <FilterSelectors />
-            {isAuthenticated && <AddCaseButton />}
+            <Show above="lg">{isAuthenticated && <AddCaseButton />}</Show>
           </HStack>
+        )}
+        {isMobile && (
+          <Box position="fixed" right="30px" bottom="20px" zIndex={1}>
+            {isAuthenticated && <AddCaseButton />}
+          </Box>
         )}
         {!error && <CasesGrid />}
         <PageSelector />
-      </GridItem>
-    </Grid>
+      </Box>
+    </Stack>
   );
 }
 

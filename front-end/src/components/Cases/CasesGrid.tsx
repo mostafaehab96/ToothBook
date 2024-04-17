@@ -13,6 +13,7 @@ function CasesGrid() {
       spacing={7}
       justifyContent="center"
       paddingY={8}
+      paddingX={4}
     >
       {isLoadingCases
         ? Array.from({ length: 10 }, (_, index) => index + 1).map((s) => (
