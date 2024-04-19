@@ -22,6 +22,10 @@ import { RiAlarmWarningFill } from "react-icons/ri";
 import { Dispatch, SetStateAction, useState } from "react";
 import { FaTransgender } from "react-icons/fa";
 import { TbCircleLetterD } from "react-icons/tb";
+import {
+  getFilterSelectorTransitionTime,
+  getFilterSelectorWidth,
+} from "../../utils/getFilterSelectorTransitionProps";
 
 type ComponentsMap = {
   [key: string]: React.JSX.Element;
@@ -87,24 +91,29 @@ function FilterSelector({
       <MenuButton
         as={Button}
         rightIcon={<BsChevronDown />}
-        maxWidth={{
-          base: filterName === openSelector ? "210px" : "110px",
-          md: "1000px",
-          lg: "1000px",
+        width={{
+          base:
+            filterName === openSelector
+              ? getFilterSelectorWidth(filterName)
+              : "70px",
+          md: "auto",
+          lg: "auto",
         }}
-        minWidth={{
-          base: filterName === openSelector ? "80px" : "70px",
-          md: "0px",
-          lg: "0px",
+        transform={{
+          base:
+            openSelector && openSelector !== filterName
+              ? "scale(0.9)"
+              : "scale(1)",
         }}
-        transition="
-        max-width 0.3s ease-in-out;
-        min-width 0.3s ease-in-out;
-        "
+        transition={`all ${getFilterSelectorTransitionTime(
+          filterName
+        )} ease-in-out;`}
       >
-        {breakpoint === "base" && filterName !== openSelector
-          ? filterIconsMap[filterName]
-          : toTitleCase(filterName)}
+        <span style={{ display: "block", overflow: "hidden" }}>
+          {breakpoint === "base" && filterName !== openSelector
+            ? filterIconsMap[filterName]
+            : toTitleCase(filterName)}
+        </span>
       </MenuButton>
 
       <MenuList>
