@@ -111,8 +111,8 @@ function FilterSelector({
         }}
         maxWidth={{
           base: filterName === openSelector ? "230px" : "70px",
-          md: "auto",
-          lg: "auto",
+          md: "100%",
+          lg: "100%",
         }}
         transform={{
           base:
