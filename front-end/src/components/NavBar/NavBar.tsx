@@ -12,7 +12,7 @@ import Logo from "./Logo";
 import ColorModeSwitch from "./ColorModeSwitch";
 import ProfilePic from "./ProfilePic";
 import { FaInfo } from "react-icons/fa";
-import { useAuth } from "../../../contexts/AuthenticationContext";
+import { useAuth } from "../../contexts/AuthenticationContext";
 import getLocalImage from "../../utils/getLocalImage";
 import React from "react";
 

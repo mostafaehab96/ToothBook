@@ -2,7 +2,7 @@ import { SimpleGrid } from "@chakra-ui/react";
 import CaseCardContainer from "../Case/CaseCardContainer";
 import CaseCard from "../Case/CaseCard";
 import CaseCardSkeleton from "../Case/CaseCardSkeleton";
-import { useUserCases } from "../../../contexts/UserCasesContext";
+import { useUserCases } from "../../contexts/UserCasesContext";
 
 interface Props {
   activeCases: boolean;

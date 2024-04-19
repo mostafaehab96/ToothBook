@@ -1,9 +1,9 @@
 import React, { createContext, useContext, useEffect, useReducer } from "react";
-import api_client from "../src/Services/api_client";
-import User from "../src/interfaces/User";
-import RegisterFormValues from "../src/interfaces/RegisterFormValues";
+import api_client from "../Services/api_client";
+import User from "../interfaces/User";
+import RegisterFormValues from "../interfaces/RegisterFormValues";
 import { useNavigate } from "react-router";
-import isTokenExpired from "../src/utils/isTokenExpired";
+import isTokenExpired from "../utils/isTokenExpired";
 import { jwtDecode } from "jwt-decode";
 
 interface AuthProviderProps {

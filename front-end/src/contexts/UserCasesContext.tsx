@@ -1,7 +1,7 @@
 import { createContext, useContext, useEffect, useReducer } from "react";
-import Case from "../src/interfaces/Case";
+import Case from "../interfaces/Case";
 import React from "react";
-import api_client from "../src/Services/api_client";
+import api_client from "../Services/api_client";
 import { useAuth } from "./AuthenticationContext";
 
 type USER_CASES_LOADED = { type: "USER_CASES_LOADED"; payload: Array<Case> };

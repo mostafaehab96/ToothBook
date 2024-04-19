@@ -31,7 +31,7 @@ import Department from "../../interfaces/Department";
 import MedicalCompromises from "../../interfaces/MedicalCompromises";
 import api_client from "../../Services/api_client";
 import { useState } from "react";
-import { useAuth } from "../../../contexts/AuthenticationContext";
+import { useAuth } from "../../contexts/AuthenticationContext";
 import { useNavigate } from "react-router-dom";
 
 interface FormValues {

@@ -1,8 +1,8 @@
 import { Route, Routes, HashRouter } from "react-router-dom";
-import { CasesProvider } from "../contexts/CasesContext";
-import { AuthenticationProvider } from "../contexts/AuthenticationContext";
+import { CasesProvider } from "./contexts/CasesContext";
+import { AuthenticationProvider } from "./contexts/AuthenticationContext";
 import ProtectedRoute from "./components/ProtectedRoute/ProtectedRoute";
-import { UserCasesProvider } from "../contexts/UserCasesContext";
+import { UserCasesProvider } from "./contexts/UserCasesContext";
 import { Suspense, lazy } from "react";
 import FullPageSpinner from "./components/Alerts/FullPageSpinner";
 

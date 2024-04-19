@@ -1,9 +1,9 @@
 import { Button, HStack, useColorMode } from "@chakra-ui/react";
-import { useAuth } from "../../../contexts/AuthenticationContext";
+import { useAuth } from "../../contexts/AuthenticationContext";
 import { useNavigate, useParams } from "react-router-dom";
 import { backendUrl } from "../../Services/api_client";
 import axios, { AxiosRequestConfig } from "axios";
-import { useCases } from "../../../contexts/CasesContext";
+import { useCases } from "../../contexts/CasesContext";
 
 function Actions() {
   const { colorMode } = useColorMode();

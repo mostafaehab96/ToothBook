@@ -11,7 +11,7 @@ import {
 } from "@chakra-ui/react";
 import { BsChevronDown } from "react-icons/bs";
 import toTitleCase from "../../utils/toTitleCase";
-import { useCases } from "../../../contexts/CasesContext";
+import { useCases } from "../../contexts/CasesContext";
 import Emergency from "../../interfaces/Emergency";
 import IsMedicalCompromised from "../../interfaces/IsMedicalCompromised";
 import Department from "../../interfaces/Department";
@@ -20,16 +20,18 @@ import { Filters } from "../../interfaces/Filters";
 import { IoIosWarning } from "react-icons/io";
 import { RiAlarmWarningFill } from "react-icons/ri";
 import { Dispatch, SetStateAction, useState } from "react";
+import { FaTransgender } from "react-icons/fa";
+import { TbCircleLetterD } from "react-icons/tb";
 
 type ComponentsMap = {
   [key: string]: React.JSX.Element;
 };
 
 const filterIconsMap: ComponentsMap = {
-  department: <IoIosWarning />,
+  department: <TbCircleLetterD />,
   medicalCompromised: <IoIosWarning />,
   emergency: <RiAlarmWarningFill />,
-  sex: <IoIosWarning />,
+  sex: <FaTransgender />,
 };
 
 const filterTypes = {

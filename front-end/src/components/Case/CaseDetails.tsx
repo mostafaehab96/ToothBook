@@ -7,7 +7,7 @@ import {
 } from "@chakra-ui/react";
 import Case from "../../interfaces/Case";
 import toTitleCase from "../../utils/toTitleCase";
-import { useAuth } from "../../../contexts/AuthenticationContext";
+import { useAuth } from "../../contexts/AuthenticationContext";
 import { useParams } from "react-router-dom";
 import { useState } from "react";
 import displayPropertyValues from "../../utils/displayPropertyValues";

@@ -2,7 +2,7 @@ import { Grid, GridItem, HStack, Text, useColorMode } from "@chakra-ui/react";
 import { NavBar } from "../../components/NavBar/NavBar";
 import ErrorAlert from "../../components/Alerts/ErrorAlert";
 import UserCasesGrid from "../../components/Cases/UserCasesGrid";
-import { useUserCases } from "../../../contexts/UserCasesContext";
+import { useUserCases } from "../../contexts/UserCasesContext";
 import { useState } from "react";
 
 function ProfilePage() {

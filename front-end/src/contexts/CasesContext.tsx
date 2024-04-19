@@ -1,11 +1,11 @@
 import { createContext, useContext, useEffect, useReducer } from "react";
-import Case from "../src/interfaces/Case";
+import Case from "../interfaces/Case";
 import React from "react";
-import { Filters } from "../src/interfaces/Filters";
-import api_client from "../src/Services/api_client";
-import createFilterParams from "../src/utils/createFilterParams";
-import { backendUrl } from "../src/Services/api_client";
-import { filtersInitialState } from "../src/interfaces/Filters";
+import { Filters } from "../interfaces/Filters";
+import api_client from "../Services/api_client";
+import createFilterParams from "../utils/createFilterParams";
+import { backendUrl } from "../Services/api_client";
+import { filtersInitialState } from "../interfaces/Filters";
 import { useAuth } from "./AuthenticationContext";
 
 const CASES_LIMIT_PER_PAGE = 15;

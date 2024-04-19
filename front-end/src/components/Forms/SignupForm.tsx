@@ -17,7 +17,7 @@ import { BsChevronDown } from "react-icons/bs";
 import * as Yup from "yup";
 import { useState } from "react";
 import RegisterFormValues from "../../interfaces/RegisterFormValues";
-import { useAuth } from "../../../contexts/AuthenticationContext";
+import { useAuth } from "../../contexts/AuthenticationContext";
 
 const universities = [
   "Zakazik University",

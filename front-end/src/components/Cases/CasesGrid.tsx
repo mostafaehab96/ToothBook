@@ -1,7 +1,7 @@
 import { SimpleGrid } from "@chakra-ui/react";
 import CaseCardContainer from "../Case/CaseCardContainer";
 import CaseCard from "../Case/CaseCard";
-import { useCases } from "../../../contexts/CasesContext";
+import { useCases } from "../../contexts/CasesContext";
 import CaseCardSkeleton from "../Case/CaseCardSkeleton";
 
 function CasesGrid() {

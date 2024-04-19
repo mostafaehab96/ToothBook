@@ -2,7 +2,7 @@ import { Button, HStack, IconButton } from "@chakra-ui/react";
 import { useColorMode } from "@chakra-ui/react";
 import { GrNext, GrPrevious } from "react-icons/gr";
 import createSublistAroundIndex from "../../utils/subListAroundIndex";
-import { useCases } from "../../../contexts/CasesContext";
+import { useCases } from "../../contexts/CasesContext";
 
 function PageSelector() {
   const { currentPage, totalPages, isLoadingCases, setPage } = useCases();
