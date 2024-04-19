@@ -1,9 +1,14 @@
-import { HStack, IconButton, Tooltip, useColorMode } from "@chakra-ui/react";
+import {
+  HStack,
+  IconButton,
+  Text,
+  Tooltip,
+  useColorMode,
+} from "@chakra-ui/react";
 import { Link } from "react-router-dom";
 import { RiLoginBoxFill } from "react-icons/ri";
 import { RiLogoutBoxFill } from "react-icons/ri";
 import Logo from "./Logo";
-import SearchInput from "./SearchInput";
 import ColorModeSwitch from "./ColorModeSwitch";
 import ProfilePic from "./ProfilePic";
 import { FaInfo } from "react-icons/fa";
@@ -18,23 +23,47 @@ const NavBar = React.memo(function NavBar() {
     colorMode === "light" ? "#3182ce" : "#90cdf4";
 
   return (
-    <HStack paddingY={2} paddingX={3} spacing={2}>
-      <Logo />
+    <HStack
+      paddingBottom={2}
+      paddingX={3}
+      spacing={2}
+      paddingTop={{ base: 3, md: 0 }}
+      justifyContent={"space-between"}
+    >
+      <HStack spacing={2}>
+        {isAuthenticated ? (
+          <ProfilePic pic={user?.photo ? getLocalImage(user.photo) : ""} />
+        ) : (
+          <Tooltip label="Info" bgColor={dynamicTooltipColorValue}>
+            <Link to="/" className="nav-item">
+              <IconButton
+                colorScheme="blue"
+                aria-label="Profile picture"
+                borderRadius="50%"
+                overflow="hidden"
+                icon={<FaInfo size={20} />}
+              />
+            </Link>
+          </Tooltip>
+        )}
 
-      <Tooltip label="Info" bgColor={dynamicTooltipColorValue}>
-        <Link to="/" className="nav-item">
-          <IconButton
-            colorScheme="blue"
-            aria-label="Profile picture"
-            borderRadius="50%"
-            overflow="hidden"
-            icon={<FaInfo size={20} />}
-          />
-        </Link>
-      </Tooltip>
-
-      <SearchInput />
-      <HStack>
+        <ColorModeSwitch />
+      </HStack>
+      <Link to="/">
+        <Text
+          color={dynamicTooltipColorValue}
+          fontSize={{ base: "2rem", md: "3rem" }}
+          fontFamily={"Rubik"}
+          fontStyle="italic"
+          fontWeight="700"
+          cursor="pointer"
+          transitionDuration="0.3s"
+          _hover={{ filter: "brightness(110%)", transform: "1.2" }}
+        >
+          toothbook
+        </Text>
+      </Link>
+      <HStack spacing={2}>
         {isAuthenticated ? (
           <Tooltip label="logout" bgColor={dynamicTooltipColorValue}>
             <IconButton
@@ -59,10 +88,7 @@ const NavBar = React.memo(function NavBar() {
             </Tooltip>
           </Link>
         )}
-        <ColorModeSwitch />
-        {isAuthenticated && (
-          <ProfilePic pic={user?.photo ? getLocalImage(user.photo) : ""} />
-        )}
+        <Logo />
       </HStack>
     </HStack>
   );

@@ -5,7 +5,7 @@ import createSublistAroundIndex from "../../utils/subListAroundIndex";
 import { useCases } from "../../../contexts/CasesContext";
 
 function PageSelector() {
-  const { currentPage, totalPages, setPage } = useCases();
+  const { currentPage, totalPages, isLoadingCases, setPage } = useCases();
   const { colorMode } = useColorMode();
   const dynamicPageButtonBorderColor =
     colorMode === "light" ? "#3182ce" : "#90cdf4";
@@ -14,6 +14,18 @@ function PageSelector() {
     if (page !== currentPage) setPage(page);
   }
   function renderPageButtons() {
+    if (isLoadingCases) {
+      return (
+        <Button
+          key={1}
+          value={1}
+          borderColor={dynamicPageButtonBorderColor}
+          borderWidth={2}
+        >
+          {1}
+        </Button>
+      );
+    }
     let pageButtons = [];
     for (const i of createSublistAroundIndex(
       Array.from({ length: totalPages }, (_, index) => index + 1),

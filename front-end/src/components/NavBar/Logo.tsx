@@ -1,5 +1,5 @@
 import { IconButton, Image, Tooltip, useColorMode } from "@chakra-ui/react";
-import Logopng from "../../../public/logo.png";
+import Logosvg from "../../../public/logo.svg";
 
 import { useNavigate } from "react-router";
 
@@ -16,7 +16,14 @@ function Logo() {
         overflow="hidden"
         onClick={() => navigate("/cases")}
       >
-        <Image cursor="pointer" src={Logopng} boxSize="100%" />
+        <Image
+          cursor="pointer"
+          transitionDuration={"0.5s"}
+          _hover={{ filter: "brightness(90%)" }}
+          src={Logosvg}
+          width="100%"
+          h="100%"
+        />
       </IconButton>
     </Tooltip>
   );

@@ -8,7 +8,8 @@ interface Props {
 }
 
 function RegisterImageUploader({ selectedImage, setSelectedImage }: Props) {
-  const [inputKey, setInputKey] = useState<string>(Math.random().toString(36));
+  const [inputKey] = useState<string>(Math.random().toString(36));
+  // const [inputKey, setInputKey] = useState<string>(Math.random().toString(36));
   const inputRef = useRef<HTMLInputElement | null>(null);
 
   function handleImageChange(e: ChangeEvent<HTMLInputElement>) {
