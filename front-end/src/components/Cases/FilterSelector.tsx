@@ -91,23 +91,40 @@ function FilterSelector({
       <MenuButton
         as={Button}
         rightIcon={<BsChevronDown />}
-        width={{
+        ////
+        // width={{
+        //   base:
+        //     filterName === openSelector
+        //       ? getFilterSelectorWidth(filterName)
+        //       : "70px",
+        //   md: "auto",
+        //   lg: "auto",
+        // }}
+        //////
+        minWidth={{
           base:
             filterName === openSelector
               ? getFilterSelectorWidth(filterName)
-              : "70px",
+              : "37px",
+          md: "auto",
+          lg: "auto",
+        }}
+        maxWidth={{
+          base: filterName === openSelector ? "230px" : "70px",
           md: "auto",
           lg: "auto",
         }}
         transform={{
           base:
             openSelector && openSelector !== filterName
-              ? "scale(0.9)"
+              ? "scale(0.97)"
               : "scale(1)",
         }}
-        transition={`all ${getFilterSelectorTransitionTime(
+        transition={`max-width ${getFilterSelectorTransitionTime(
           filterName
-        )} ease-in-out;`}
+        )} ease-in-out,min-width ${getFilterSelectorTransitionTime(
+          filterName
+        )} ease-in-out ;`}
       >
         <span style={{ display: "block", overflow: "hidden" }}>
           {breakpoint === "base" && filterName !== openSelector
